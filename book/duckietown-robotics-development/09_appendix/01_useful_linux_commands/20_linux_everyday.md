@@ -22,7 +22,7 @@ then you will go to your home directory, i.e., /home/user/
 To go up one directory use:
 
     $ cd ..
-    
+
 ### `ls` {#ls}
 
 List all the files and documents in the current directory. From `~/.bashrc`, we know some commonly used alias. See more by `man ls`.
@@ -41,6 +41,13 @@ Whenever you want to modify system files, you will need `sudo`. Commonly touched
 ## `visudo` {#visudo status=draft}
 
 TODO: to write
+
+## Giving commands
+
+### `Ctrl + r` {#Ctrl+r}
+
+You will face situations where you want to re-run the same command some time after you already ran it. You can of course tediously look for it by using the keyboard's arrow keys, but there is a more elegant way of doing this. Press <kbd>Ctrl</kbd>-<kbd>r</kbd> and start to write the beginning of the command you are looking for. The terminal will propose the last command you ran which started with the same letters to you. Press <kbd>Tab</kbd> for autocomplete and you are ready to re-run your command.
+
 
 ## Changing things around
 
@@ -78,7 +85,7 @@ This command must be executed as root. `sudo` required. This will reboot your la
 
 This command requires `sudo`. You can set a countdown to shutdown you machine. More by `man shutdown`.
 
- 
+
 
 ## UNIX processes
 
@@ -135,8 +142,8 @@ TODO: to write
 ### `df` {#df}
 
 TODO: to write
- 
- 
+
+
 
 
 
@@ -175,5 +182,3 @@ TODO: to write
 ## `wget` {#wget}
 
 TODO: to write
-
- 
