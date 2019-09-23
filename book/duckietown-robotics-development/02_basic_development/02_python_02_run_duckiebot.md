@@ -19,7 +19,7 @@ Let us go back to our script file my_script.py and change it to:
 
 ```python
 import os
-message = "Hello from {}!".format(os.environ['VEHICLE_NAME'])
+message = "Hello from &#123&#125!".format(os.environ['VEHICLE_NAME'])
 print(message)
 ```
 
