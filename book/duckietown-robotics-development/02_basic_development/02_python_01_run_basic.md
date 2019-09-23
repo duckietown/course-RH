@@ -5,7 +5,7 @@ Now that we know how to build a Docker image for Duckietown, let's put some code
 
 We will see how to write a simple Python program, but any language should do it.
 
-Open a terminal and go to the directory `my-program` created above. In Duckietown, Python code must belong to a Python package. Python packages are placed inside the directory code in `my-program`. Let go ahead and create a directory called `my_package` inside code.
+Open a terminal and go to the directory `my-program` created above. In Duckietown, Python code must belong to a Python package. Python packages are placed inside the directory code in `my-program`. Let go ahead and create a directory called `my_package` inside `code`.
 
     laptop $ mkdir -p ./code/my_package
 
@@ -43,6 +43,7 @@ Let us now re-build the image:
 
     laptop $ dts devel build -f --arch amd64
 
+Note: You must be in the `my-program` directory when you run this command.
 and run it:
 
     laptop $ docker run -it --rm duckietown/my-program:v1-amd64
@@ -51,8 +52,8 @@ This will show the following message:
 
 ```
 The environment variable VEHICLE_NAME is not set. Using '774a2521b42e'.
-Adding /code/my-program to PYTHONPATH
-Adding /code/dt-commons to PYTHONPATH
+&#gt Adding /code/my-program to PYTHONPATH
+&#gt Adding /code/dt-commons to PYTHONPATH
 Activating services broadcast...
 Done!
 
