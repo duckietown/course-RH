@@ -23,9 +23,9 @@ One of the easiest way to use and get an overview of your duckiebot's operations
 
 To set up the dashboard, follow this [tutorial](+opmanual_duckiebot#duckiebot-dashboard-setup).
 
-Then, explore this interface and try to understand its features. To better understand how to use it to move around the duckiebot, follow paragraph 17.4 [here](+opmanual_duckiebot#setup-ros-websocket-image)
+Then, explore this interface and try to understand its features. To better understand how to use it to move around the duckiebot, follow [](+opmanual_duckiebot#setup-ros-websocket-image)
 
-You may not yet get the image stream from the duckiebot. To see it, follow the instructions from paragraph 18.3 [here](+opmanual_duckiebot#image-dashboard)
+You may not yet get the image stream from the duckiebot. To see it, follow the instructions from [](+opmanual_duckiebot#image-dashboard)
 
 <end/>
 

@@ -19,8 +19,6 @@ Results: A Duckiebot that is ready to operate in Duckietown.
 
 First of all, you have to flash your SD card. Here you have the possibility to give your duckiebot a name and choose what network to connect to. We experienced people having issues when they called their Duckiebot `duckiebot`, so make sure to find a creative name that is different from that.
 
-Note: For ETH students taking the AMOD class 2019: When flashing your SD card, use the option `--wifi duckietown:quackquack` to ensure your Duckiebot connects to the network that we set up for you.
-
 Follow the initialization instructions [here](+opmanual_duckiebot#setup-duckiebot).
 
 
