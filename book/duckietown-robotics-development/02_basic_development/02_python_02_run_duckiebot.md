@@ -11,7 +11,7 @@ If we can ping the robot, we are good to go.
 
 Before we start, we need to configure the Duckiebot to accept new code. This is necessary because the Duckiebot by defaults runs only code released by the Duckietown community. In order to configure the robot to accept custom code, run the following command,
 
-    laptop $ dts devel watchtower stop
+    laptop $ dts devel watchtower stop -H MY_ROBOT.local
 
 Note: You need to do this once and the effect will be lost when the Duckiebot reboots.
 
