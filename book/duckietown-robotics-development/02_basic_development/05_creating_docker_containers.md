@@ -154,7 +154,7 @@ Now that you know your way around Dockerfiles, it is time to finally build somet
 
 #### Creating a color detector in Docker {#exercise:ex-docker-colordetector}
 
-Note: The following exercise will use the camera on your robot. The `picamera` library allows only one process to access the camera at a time. Therefore if there is another process on your bot that is already using the camera, your code will likely fail. For this reason make sure that the `dt-duckiebot-interface` and any other container that can use the camera are stopped. You can use [Portainer](#exercise:portainer) to do that)
+Note: The following exercise will use the camera on your robot. The `picamera` library allows only one process to access the camera at a time. Therefore, if there is another process on your bot that is already using the camera, your code will likely fail. Make sure that the `dt-duckiebot-interface` and any other container that can use the camera are stopped. You can use [Portainer](#exercise:portainer) to do that.
 
 We will divide the image that the camera acquires into `N_SPLITS` equal horizontal sectors. `N_SPLITS` will be an environment variable we pass to the container. Think of it as a configuration parameter. The container should find which color is most present in each sector. Or alternatively you can look at the color distribution for each split. It should print the result in a nicely formatted way with a frequency of about 1Hz.
 
