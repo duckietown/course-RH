@@ -17,7 +17,7 @@ Now that you know more about how to assemble a duckiebot, how to use a terminal,
 
 ## Remote connection with a browser and an interface  {status=ready}
 
-One of the easiest way to use and get an overview of your duckiebot's operations capacities is to use a duckietown designed web interface, that we call the **Dashboard**. This one will allow you to monitor and operate basic functions of the duckiebot.
+One of the easiest way to use and get an overview of your duckiebot's operations capacities is to use a duckietown designed web interface, that we call the _Dashboard_. This one will allow you to monitor and operate basic functions of the duckiebot.
 
 #### Using the Dashboard {#exercise:dashboard}
 
@@ -34,21 +34,20 @@ This interface is really useful for quick debugging and for moving around manual
 But this interface has its limits, as it hides everything that is actually running on the duckiebot. To better understand the duckiebot, let’s take a look at what is under the hood : we will use portainer.
 
 ## Remote connection with a browser and an interface {status=ready}
-To manage and use containers, the command line interface is not so easy to use. But there exist a tool that create a nice interface to manage containers: **portainer**. Portainer is itself a container that runs on a device. Let's learn how to use it.
-
+To manage and use containers, the command line interface is not so easy to use. But there exist a tool that create a nice interface to manage containers: [_Portainer_](https://www.portainer.io/). Portainer is itself a container that runs on a device. Let's learn how to use it.
 
 #### Using Portainer {#exercise:portainer}
-Luckily, We have one running directly on the duckiebots at startup. Go to `![hostname].local:9000` on your web browser. You should arrive on an interface. Navigate on the side window to **containers**. Here you will see all the containers that are running or that are stopped on your duckiebot.
+Luckily, We have one running directly on the duckiebots at startup. Go to `![hostname].local:9000` on your web browser. You should arrive on an interface. Navigate on the side window to `Containers`. Here you will see all the containers that are running or that are stopped on your duckiebot.
 
-Look for the one that has **duckiebot_interface** in the name. This one contains all the drivers you need to drive around, use the camera and the leds.
+Look for the one that has `duckiebot_interface` in the name. This one contains all the drivers you need to drive around, use the camera and the leds.
 
-Select it, click on stop, then try to move your duckiebot around again with the dashboard. It doesn’t work anymore. Select it again and start it. Now, find the **logs button**, right next to the name. This will open the logs output of the container. This can be very useful to debug new containers. In here you might see the error messages if something goes wrong.
+Select it, click on stop, then try to move your duckiebot around again with the dashboard. It doesn’t work anymore. Select it again and start it. Now, find the `logs` button, right next to the name. This will open the logs output of the container. This can be very useful to debug new containers. In here you might see the error messages if something goes wrong.
 
 <end/>
 
 With this interface, you can also attach a shell to the container, monitor its memory and cpu usage, and inspect its configuration.
 
-Portainer is really helpful to manage images and containers that are already on the duckiebot, but what about if you want to create a new container or run a new demo. You could still do it from there, but it is not very intuitive. We commonly use the **dt shell**, that you already have installed.
+Portainer is really helpful to manage images and containers that are already on the duckiebot, but what about if you want to create a new container or run a new demo. You could still do it from there, but it is not very intuitive. We commonly use the `dt shell`, that you already have installed.
 
 ## Starting a demo using the DT shell {status=ready}
 In the duckietown world, demos are containers that contain a set of functionalities ready to work, if the rest of the duckiebot is set up properly (e.g. dt-car-interface and dt-duckiebot-interface are running). They all follow the same workflow, described [here](+opmanual_duckiebot#running-demos).
