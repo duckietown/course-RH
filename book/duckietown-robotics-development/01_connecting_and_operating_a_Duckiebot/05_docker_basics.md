@@ -1,12 +1,12 @@
 # Docker basics {#docker-basics status=ready}
 
-Excerpt: The very fundamental Docker knowledge you need for Duckiebot operations.
+Excerpt: The very fundamental Docker knowledge needed for Duckiebot operations.
 
-It would be nice to give a computer, any computer with an Internet connection, a short string of characters (say via a keyboard), press enter, and return to see some program running. Forget about where the program was built or what software you happened to be running at the  time (this can be checked, and we can fetch the necessary dependencies). Sounds simple, right? In fact, this is an engineering task that has taken thousands of the world’s brightest developers many decades to implement.
+It would be nice to type on a computer, any computer with an Internet connection, a simple command in the form of a short string of characters, press enter, and return to see some program running. Forget about where the program was built or what software you happened to be running at the time (this can be checked, and we can fetch the necessary dependencies). Sounds simple, right? In fact, this is an engineering task that has taken thousands of the world’s brightest developers many decades to implement.
 
 Thanks to the magic of [container technology](https://en.wikipedia.org/wiki/OS-level_virtualisation) we now can run any Linux program on almost any networked device on the planet. All of the environment preparation, installation and configuration steps can be automated from start to finish. Depending on how much network bandwidth you have, it might take a while, but that's all right. All you need to do is type the string correctly.
 
-Docker is exactly this: a tool for portable, reproducible, and self-contained computing. Docker is used to perform operating-system-level virtualization, something often referred to as "containerization". While Docker is not the only software that does this, it is by far the most popular one.
+Docker is a tool for portable, reproducible, and self-contained computing. Docker is used to perform operating-system-level virtualization, something often referred to as _containerization_. While Docker is not the only software that does this, it is by far the most popular one.
 
 <!--suppress ALL -->
 <div class='requirements' markdown='1'>
@@ -21,12 +21,12 @@ Docker is exactly this: a tool for portable, reproducible, and self-contained co
 ## What’s so special about containerization? {status=ready}
 
 A (Docker) _container_ is a packaging around all the software (libraries, configuration files, services, binary
- executable, etc) that one needs to run a program. And by all, we don’t simply mean the source code or the
-  dependencies, we really mean all. Everything you need, from the lowest level OS components to the user interface. Hence a container does not care what flavor or release of Linux you try to run it on, it has anything it needs to work everywhere. Not to mention that Linux Docker containers can generally be also executed on Mac OS and Windows as well!
+ executable, etc.) that a computer needs to run a program. And by all, we don’t simply mean the source code or the
+  dependencies, we really mean all. Everything you need, from the lowest level OS components to the user interface. A container does not care what flavor or release of Linux you try to run it on, it has everything it needs to work everywhere inside it (it is a container, afterall). Not to mention that Linux Docker containers can generally be also executed on Mac OS and Windows as well!
 
-_Containerization_ is a process that allows partitioning the hardware and the core software (the kernel) of an operating systems in such a way that different containers can co-exist on the same system independently from one-another. Programs running in such a container have access only to the resources they are allow to and are completely independent of libraries and configurations of the other containers and the host machine. Because of this feature, Docker containers are extremely portable.
+_Containerization_ is a process that allows partitioning the hardware and the core software (the kernel) of an operating systems in such a way that different containers can co-exist on the same system independently from one-another. Programs running in such a container have access only to the resources they are allow to and are completely independent of libraries and configurations of the other containers and the host machine. Because of this feature, Docker containers are extremely _portable_.
 
-Containers are often compared to virtual machines ([VMs](https://en.wikipedia.org/wiki/Virtual_machine)). The main difference is that VMs require a host operating system (OS) with a hypervisor and a number of guest OS, each with their own libraries and  application code. This can result in a significant overhead. Imagine running a simple Ubuntu server in a VM on Ubuntu: you will have most of the kernel libraries and binaries twice and a lot of the processes will  be duplicated on the host and on the guest. Containerization, on the other hand, leverages the existing kernel and OS, keeps track of what you already have and adds only the additional binaries, libraries and code necessary to run a given application. See the illustration bellow.
+Containers are often compared to virtual machines ([VMs](https://en.wikipedia.org/wiki/Virtual_machine)). The main difference is that VMs require a host operating system (OS) with a hypervisor (another program) and a number of guest OS, each with their own libraries and  application code. This can result in a significant overhead. Imagine running a simple Ubuntu server in a VM on Ubuntu: you will have most of the kernel libraries and binaries twice and a lot of the processes will  be duplicated on the host and on the guest. Containerization, on the other hand, leverages the existing kernel and OS, keeps track of what you already have and adds only the additional binaries, libraries and code necessary to run a given application. See the illustration bellow.
 
 <figure class="flow-subfigures" markdown="1">  
     <figcaption>Comparison between containers and VMs (from [docker.com](https://docs.docker.com/get-started/))</figcaption>
@@ -59,9 +59,9 @@ Docker images are build up from layers. The initial layer is the base layer, typ
 
 Each layer on top of the base layer constitutes a change to the  layers below. The Docker internal mechanisms translate this sequence of  changes to a file system that the container can then use. If one makes a  small change to a file, then typically only a single layer will be  changed and when Docker attempts to pull the new version, it will need  to download and store only the changed layer, saving space, time and  bandwidth.
 
-In the Docker world images get organized by their repository name,  image name and tags. As with Git and GitHub, Docker images can be stored in image registers that reside on the Internet and allow easy worldwide access to your code. The most popular Docker register is called DockerHub and it is what we use in Duckietown.
+In the Docker world images get organized by their _repository name_,  _image name_ and _tags_. As with Git and GitHub, Docker images can be stored in image registers that reside on the Internet and allow easy worldwide access to your code. The most popular Docker register is called _DockerHub_ and it is what we use in Duckietown.
 
-An image stored on DockerHub has a name of the form `duckietown/rpi-ros-kinetic-base:daffy`. Here the repository name is `duckietown`, the image name is `rpi-ros-kinetic-base`, and the tag is `daffy`.
+A Duckietown image stored on DockerHub has a name of the form `duckietown/rpi-ros-kinetic-base:daffy`. Here the repository name is `duckietown`, the image name is `rpi-ros-kinetic-base`, and the tag is `daffy`.
 
 All Duckietown-related images are in the `duckietown` repository. The images themselves can be very different and for various applications.
 
@@ -71,9 +71,10 @@ It is not necessary to specify a tag. If you don't, Docker assumes you are inter
 
 
 ## Working with Docker images {status=ready}
+
 We will now take a look at how you can use Docker in practice. For this, we assume you have already set up Docker on your computer as explained in the Laptop Setup page.
 
-If you want to get a new image from a Docker register (e.g. DockerHub) on your local machine then you have to _pull_ it. For example, you can get an Ubuntu 18.04 image by running the following command:
+If you want to get a new image from a Docker register (e.g., DockerHub) on your local machine then you have to _pull_ it. For example, you can get an Ubuntu 18.04 image by running the following command:
 
     laptop $ docker pull library/ubuntu:18.04
 
