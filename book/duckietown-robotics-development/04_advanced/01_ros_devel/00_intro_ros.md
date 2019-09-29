@@ -5,7 +5,7 @@ The [official wiki](http://wiki.ros.org/ROS/Introduction) describes ROS as:
 ... an open-source, meta-operating system for your robot. It provides the services you would expect from an operating system, including hardware abstraction, low-level device control, implementation of commonly-used functionality, message-passing between processes, and package management. It also provides tools and libraries for obtaining, building, writing, and running code across multiple computers.
 ```
 
-You probably have some idea what the above words mean. However, if this is your first encounter with ROS, you are already overestimating how complicated it is. Worry do not.
+You probably have some idea about what the above words mean. However, if this is your first encounter with ROS, you are already overestimating how complicated it is. Do not worry.
 
 Putting it in very simple terms, as a roboticist, ROS is what will prevent you from reinventing the wheel at every step. It is a framework which helps you manage the code you write for your robot, while providing you with a plethora of tools which will help you along the way. 
 
@@ -23,7 +23,7 @@ Putting it in very simple terms, as a roboticist, ROS is what will prevent you f
 
 ## Why ROS? {#why-ros status=ready}
 
-Your Duckiebot is a very simple robot which has only one sensor (the camera), and two actuators (the motors). You can probably write all the code for the basic funtionality of a Duckiebot yourself. You start by getting images from the camera, processing them to detect lanes, generating suitable motor commands, and finally executing them. You create a single program for all of this which looks some thing like this:
+Your Duckiebot is a very simple robot which has only one sensor (the camera), and two actuators (the motors). You can probably write all the code for the basic funtionality of a Duckiebot yourself. You start by getting images from the camera, processing them to detect lanes, generating suitable motor commands, and finally executing them. You create a single program for all of this which looks like this:
 
 ```python
 img = get_image_from_camera()
@@ -32,7 +32,7 @@ cmd = get_command_from_pose(pose)
 run_motors(cmd)
 ```
 
-The next day, your Duckiebot crashes into a duckie which was crossing the road, so you want to add duckie detection into your program to prevent such accidents. You modify your program and now it looks like this: 
+The next day, your Duckiebot crashes into a duckie which was crossing the road, so you want to add duckie detection into your program to prevent such accidents. You modify your program and it now looks like this: 
 
 ```python
 img = get_image_from_camera()
@@ -62,7 +62,7 @@ else:
 run_motors(cmd)
 ```
 
-It is easy to see that when you start thinking about having even mode advanced modes of operation such as intersection navigation, Duckiebot detection, traffic sign detection, auto-charging, your program will end up being a massive stack of if-else statements. What if you could split your program into different independent building blocks, one which only gets images from cameras, one which only detects duckie pedestrians, one which controlls the motors and so on. Would that help you with organizing your code in a better way? How would those blocks communicate with each other? Moreover, how do you switch from autonomous mode to manual mode while your Duckiebot is still running?
+It is easy to see that when you start thinking about having even more advanced modes of operation such as intersection navigation, Duckiebot detection, traffic sign detection, and auto-charging, your program will end up being a massive stack of if-else statements. What if you could split your program into different independent building blocks, one which only gets images from cameras, one which only detects duckie pedestrians, one which controlls the motors, and so on. Would that help you with organizing your code in a better way? How would those blocks communicate with each other? Moreover, how do you switch from autonomous mode to manual mode while your Duckiebot is still running?
 
 What happens when you try to do this for advanced robots with a lot of sensors and a large number of possible behaviors?
 
@@ -73,7 +73,7 @@ Look at the following system (TODO: proper diagram, make nodes ellipses and topi
 </figure>
 
 
-It performs exactly the same task as before. Unlike before, each of the building blocks are independent from the rest of the blocks, which means you can swap out certain parts of the code with those written by others. You can write the lane pose extraction algorithm, while your friend works on converting that pose to a motor command. During runtime, the lane pose extractor and duckie detection algorithm run in parallel, just helping you utilize your resources better. The only missing piece to get a working system is making these blocks communicate with each other. This is where ROS comes in. If you don't want to write your own driver for the camera, you could very easily use one from any ROS robot using the PiCamera.
+It performs exactly the same task as before. Unlike before, each of the building blocks is independent from the rest of the blocks, which means that you can swap out certain parts of the code with those written by others. You can write the lane pose extraction algorithm, while your friend works on converting that pose to a motor command. During runtime, the lane pose extractor and duckie detection algorithm run in parallel, just helping you utilize your resources better. The only missing piece to get a working system is making these blocks communicate with each other. This is where ROS comes in. If you don't want to write your own driver for the camera, you could very easily use one from any ROS robot using the PiCamera.
 
 In ROS terminology, each box is a `node`, and each solid arrow connection is a `topic`. It is intuitive that each `topic` carries a different type of `message`. The img `topic` has images which are matrices of numbers, whereas the pose `topic` may have rotation and translation components. ROS provides a lot of standard `message` types ranging from Int, Bool, String to Images, Poses, IMU. You can also define your own `messages`. 
 
@@ -87,7 +87,7 @@ Another key building block of ROS are the `parameters` for each node. Recall whe
 
 In ROS, code is organized in the form of `packages`. Each `package` is essentially a collection of `nodes` which perform very specific, related tasks. ROS `packages` also contain `messages`, `services`, and `parameter` files used by the nodes. A standard ROS package looks like this: (TODO: insert package image)
 
-When developing a large software stack, you may also find it easier to have all `messages`, `services`, and `parameter` files used by all nodes running on your robot in a single package rather than spread out inside packages which use them to avoid unneccessary redefinitions. The nodes however remain in their own packages. (Why? Does it have something to do with the fact that multiple `nodes` might use the same `message`, etc.?) 
+When developing a large software stack, you may also find it easier to have all `messages`, `services`, and `parameter` files used by all nodes running on your robot in a single package rather than spread out inside packages which use them to avoid unneccessary redefinitions. The nodes, however, remain in their own packages. (Why? Does it have something to do with the fact that multiple `nodes` might use the same `message`, etc.?) 
 
 Note that the above diagram is just one of the ways to organize the flow of data. What happens actually on your Duckiebot is a little different. 
 
