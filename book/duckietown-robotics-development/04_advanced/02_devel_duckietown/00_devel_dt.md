@@ -19,7 +19,7 @@ In this section, you will learn everything about creating a Duckietown-compliant
 ## Basic Project Structure {#basic-structure status-ready}
 In Duckietown, everything runs in Docker containers. All you need in order to run a piece of software that uses ROS in Duckietown is a Duckietown-compliant Docker image with your software in it.
 
-A boilerplate is provided by [here](https://github.com/duckietown/template-ros). The repository contains a lot of files, but do not worry, we will analyze them one by one.
+A boilerplate is provided [here](https://github.com/duckietown/template-ros). The repository contains a lot of files, but do not worry, we will analyze them one by one.
 
 First of all, you will need to make a copy of the template in your own GitHub account. To do so, visit [this](https://github.com/duckietown/template-ros) URL and click on the fork button.
 
@@ -61,7 +61,7 @@ ARG REPO_NAME="my-ros-program"
 
 Save the changes. 
 
-We can now build the image, even though there is not going to be much going on inside it until we place our code in it.
+We can now build the image, even though there won't be much going on inside it until we place our code in it.
 
 Open a terminal and move to the directory created by the git clone instruction above. Run the following command:
 
@@ -236,9 +236,9 @@ This part assumes that you have a Duckiebot up and running with hostname ![MY_RO
 
     laptop $ ping ![MY_ROBOT].local
 
-If we can ping the robot, we are good to go.
+If you can ping the robot, you are good to go.
 
-Before we start, we need to configure the Duckiebot to accept new code. This is necessary because the Duckiebot by defaults runs only code released by the Duckietown community. In order to configure the robot to accept custom code, run the following command,
+Before you start, you need to configure the Duckiebot to accept new code. This is necessary because the Duckiebot by defaults runs only code released by the Duckietown community. In order to configure the robot to accept custom code, run the following command,
 
     laptop $ dts devel watchtower stop -H MY_ROBOT.local
 
@@ -266,7 +266,7 @@ Since `roscore` is already running on the Duckiebot, we need to **remove** the f
 roscore &; sleep 5
 ```
 
-We can now modify slightly the instructions for building the image so that the image gets built directly on the robot instead of your laptop or desktop machine. Run the command
+We can now slightly modify the instructions for building the image so that the image gets built directly on the robot instead of your laptop or desktop machine. Run the command
 
     laptop $ dts devel build -f --arch arm32v7 -H MY_ROBOT.local
 
