@@ -2,7 +2,7 @@
 
 Excerpt: Learn how to make the most of Docker containers.
 
-We already introduced in [](#docker-basics) what Docker containers are and how you can start them and do basic operations. Recall that a Docker container is a closed environment and any change you do there is cannot affect your host system or other containers. This can be great if you want to protect your laptop from possible mischief coming from inside a container, but at the same time limits what you can do with it. Thankfully, Docker has some very powerful ways to interact with your system and the outside world.
+We already introduced in [](#docker-basics) what Docker containers are and how you can start them and do basic operations. Recall that a Docker container is a closed environment and any change you do there cannot affect your host system or other containers. This can be great if you want to protect your laptop from possible mischief coming from inside a container, but at the same time limits what you can do with it. Thankfully, Docker has some very powerful ways to interact with your system and the outside world.
 
 <div class='requirements' markdown='1'>
   Requires: [Laptop setup](+opmanual_duckiebot#laptop-setup)
