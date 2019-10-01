@@ -17,11 +17,11 @@ Note: You need to do this once and the effect will be lost when the Duckiebot re
 
 Let us go back to our script file my_script.py and change it to:
 
-```python
-import os
-message = "Hello from {}!".format(os.environ['VEHICLE_NAME'])
-print(message)
-```
+<pre>
+<code>import os
+message = "Hello from &#123;&#125;!".format(os.environ['VEHICLE_NAME'])
+print(message)</code>
+</pre>
 
 We can now modify slightly the instructions for building the image so that the image gets built directly on the robot instead of your laptop or desktop machine. Run the command
 
