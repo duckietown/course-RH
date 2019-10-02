@@ -26,7 +26,7 @@ A (Docker) _container_ is a packaging around all the software (libraries, config
 
 _Containerization_ is a process that allows partitioning the hardware and the core software (the kernel) of an operating systems in such a way that different containers can co-exist on the same system independently from one-another. Programs running in such a container have access only to the resources they are allow to and are completely independent of libraries and configurations of the other containers and the host machine. Because of this feature, Docker containers are extremely _portable_.
 
-Containers are often compared to virtual machines ([VMs](https://en.wikipedia.org/wiki/Virtual_machine)). The main difference is that VMs require a host operating system (OS) with a hypervisor (another program) and a number of guest OS, each with their own libraries and  application code. This can result in a significant overhead. Imagine running a simple Ubuntu server in a VM on Ubuntu: you will have most of the kernel libraries and binaries twice and a lot of the processes will  be duplicated on the host and on the guest. Containerization, on the other hand, leverages the existing kernel and OS, keeps track of what you already have and adds only the additional binaries, libraries and code necessary to run a given application. See the illustration bellow.
+Containers are often compared to virtual machines ([VMs](https://en.wikipedia.org/wiki/Virtual_machine)). The main difference is that VMs require a host operating system (OS) with a hypervisor (another program) and a number of guest OS, each with their own libraries and  application code. This can result in a significant overhead. Imagine running a simple Ubuntu server in a VM on Ubuntu: you will have most of the kernel libraries and binaries twice and a lot of the processes will  be duplicated on the host and on the guest. Containerization, on the other hand, leverages the existing kernel and OS, keeps track of what you already have and adds only the additional binaries, libraries and code necessary to run a given application. See the illustration below.
 
 <figure class="flow-subfigures" markdown="1">  
     <figcaption>Comparison between containers and VMs (from [docker.com](https://docs.docker.com/get-started/))</figcaption>
@@ -120,9 +120,9 @@ In this manual, we will use the following icon to show that the command should b
 
 You are now in your new `ubuntu` container! Try to play around, you can try to use some basic bash commands like `ls`, `cd`, `cat` to make sure that you are not in your host machine.
 
-If you are sure about the difference between the host and the container, you might want to see what happens when you do `rm -rf /` __IN THE CONTAINER__. Do that extremely carefully because that wipes our all of the root of a system. You do not want to run this on your host. By running the above command in a Docker container you will destroy the OS inside the container - but you can just exit and start another one. If instead you have confused host and container, at this point you probably need to re-install your OS.
+If you are sure about the difference between the host and the container, you might want to see what happens when you do `rm -rf /` __IN THE CONTAINER__. Do that extremely carefully because that wipes out all of the root of a system. You do not want to run this on your host. By running the above command in a Docker container you will destroy the OS inside the container - but you can just exit and start another one. If instead you have confused host and container, at this point you probably need to re-install your OS.
 
-You can check which containers you are running using the docker `ps` command - analogous to the Linux `ps` command. Open a new terminal window (don'’'t close the other one just yet) and type:
+You can check which containers you are running using the docker `ps` command - analogous to the Linux `ps` command. Open a new terminal window (do not close the other one just yet) and type:
 
     laptop $ docker ps
 
@@ -132,7 +132,7 @@ An alternative syntax is
 
 These commands list all running containers.
 
-Now you can go back to your `ubuntu` container and type `exit`. This will bring you back to you host shell and will stop the container. If you again run the `docker ps` command you will see nothing running. So does this mean that this container and all changes you might have made in it are gone? What about all these precious changes you made in it? Are they forever lost into the entropy abyss of electric noise in your computer's memory? Not at all, `docker ps` and `docker container list` only list the currently running containers.
+Now you can go back to your `ubuntu` container and type `exit`. This will bring you back to your host shell and will stop the container. If you again run the `docker ps` command you will see nothing running. So does this mean that this container and all changes you might have made in it are gone? What about all these precious changes you made in it? Are they forever lost into the entropy abyss of electric noise in your computer's memory? Not at all, `docker ps` and `docker container list` only list the currently running containers.
 
 You can see all containers, including the stopped ones with:
 

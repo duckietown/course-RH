@@ -52,7 +52,8 @@ Portainer is really helpful to manage images and containers that are already on 
 ## Starting a demo using the DT shell {status=ready}
 In the duckietown world, demos are containers that contain a set of functionalities ready to work, if the rest of the duckiebot is set up properly (e.g. dt-car-interface and dt-duckiebot-interface are running). They all follow the same workflow, described [here](+opmanual_duckiebot#running-demos).
 
-#### Using the dt shell {#exercise:dt-shell-demo}
+
+#### Try out the lane-following demo {#exercise:dt-shell-demo}
 
 Let’s now start a lane_following demo. To do so, follow these [instructions](+opmanual_duckiebot#demo-lane-following).
 
