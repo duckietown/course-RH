@@ -33,7 +33,6 @@ This interface is really useful for quick debugging and for moving around manual
 
 But this interface has its limits, as it hides everything that is actually running on the duckiebot. To better understand the duckiebot, let’s take a look at what is under the hood : we will use portainer.
 
-## Remote connection with a browser and an interface {status=ready}
 To manage and use containers, the command line interface is not so easy to use. But there exist a tool that create a nice interface to manage containers: [_Portainer_](https://www.portainer.io/). Portainer is itself a container that runs on a device. Let's learn how to use it.
 
 #### Using Portainer {#exercise:portainer}
