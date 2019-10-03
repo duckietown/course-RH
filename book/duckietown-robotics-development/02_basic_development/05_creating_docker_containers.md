@@ -196,19 +196,15 @@ with picamera.PiCamera() as camera:
 ```
 
 
-Once you have your `color_detector.py` file ready to be tested, you can build it directly on your bot by running
-:
+Once you have your `color_detector.py` file ready to be tested, you can build it directly on your bot by running:
  
-    $ docker -H DUCKIEBOT_NAME.local build -t colordetector
+    $ docker -H ![DUCKIEBOT_NAME].local build -t colordetector
     
-Do you remember what `-H` does? It takes the context
-     (the folder in which you are) and ships it to the device specified by `-H` and build the container there. One
-      the container is built (typically it takes more time the first time), you can test it with:
+Do you remember what `-H` does? It takes the context (the folder in which you are) and ships it to the device specified by `-H` and build the container there. Once the container is built (typically it takes more time the first time), you can test it with:
        
-    $ docker -H DUCKIEBOT_NAME.local run -it --privileged colordetector
+    $ docker -H ![DUCKIEBOT_NAME].local run -it --privileged colordetector
 
-Again there is the `-H` option (why?) and we also have the `--privileged` option. Do you remember what it does? Try
- to remove it and see what happens.
+Again there is the `-H` option (why?) and we also have the `--privileged` option. Do you remember what it does? Try to remove it and see what happens.
 
 We omitted to mention what to do about a lot of implementation details which can significantly affect the performance of your color detector. For example, what should the value of `N_SPLITS` be? Should we consider the whole width of the image or just a central part? How many colors should we detect, which ones and what is the best way to do it? Should you use RGB or HSV color space? All this is left for you to decide. This is typically the case in robotics: you know what the final result should be, but there are multiple ways to get there and it is up to you to decide which is the best solution for the particular case. Experiment and find what makes your color detector really good. We recommend investing some time in this, as this color detector will be a building block in the next module.
 
@@ -221,13 +217,14 @@ Say that you want to share your awesome color detector with your friend. How can
 
 To do this, first make sure you have a DockerHub account. Let’s say your account name is `duckquackermann`. Then sharing your container with the world is as easy as building it under your account name:
 
-    laptop $ docker build -t duckquackermann/colordetector .
+    laptop $ docker -H ![DUCKIEBOT_NAME].local build -t duckquackermann/colordetector .
 
 Then push it to DockerHub:
 
-    laptop $ docker push duckquackermann/colordetector
+    laptop $ docker -H ![DUCKIEBOT_NAME].local push duckquackermann/colordetector
 
-You will probably have to first connect your local client with your DockerHub account. Just run `docker login` to do this. Now your code can be executed on any single Duckiebot around the world with a single command: 
+Note: You will probably have to first connect your Duckiebot's Docker client with your DockerHub account. So first open an [SSH connection](#exercise:ex-ssh) to the robot and then run `docker login` in it. You will be prompted to provide your DockerHub username and password. If you want to be able to push images directly from your laptop, you should do the same there.
 
+After you've pushed your image to DockerHub your code can be executed on any single Duckiebot around the world with a single command: 
 
-    $ docker -H DUCKIEBOT_NAME.local run -it --privileged duckquackermann/colordetector
+    $ docker -H ![DUCKIEBOT_NAME].local run -it --privileged duckquackermann/colordetector

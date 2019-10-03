@@ -23,7 +23,7 @@ Git is a great tool, that is **mandatory** to anyone doing any sort of code. Lea
 
 #### Git tutorial {#exercise:git}
 
-To learn how to use all of git's funstionailities, complete [this tutorial](https://learngitbranching.js.org/). 
+To learn how to use all of git's functionalities, complete [this tutorial](https://learngitbranching.js.org/). 
 
 ## What is github {status:ready}
 
