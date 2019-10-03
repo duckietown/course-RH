@@ -107,7 +107,7 @@ Start by creating a new repository from the template, like in the [previous sect
 - [Getting data in and out of your container](#docker-poweruser)
 - [Creating a basic Duckietown ROS enabled Docker image](#basic-structure)
 
-create a Docker image which can analyze bag files and produce an output similar to the one shown below. The min, max, average, and median values printed are statistics of the time difference between two consecutive messages. The `XXX` and `X.XX` are 
+create a Docker image which can analyze bag files and produce an output similar to the one shown below. The min, max, average, and median values printed are statistics of the time difference between two consecutive messages. 
 
 ```
 /tesla/camera_node/camera_info:
