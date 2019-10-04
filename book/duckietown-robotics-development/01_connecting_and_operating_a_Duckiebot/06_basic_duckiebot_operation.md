@@ -9,7 +9,7 @@ Now that you know more about how to assemble a duckiebot, how to use a terminal,
 <div class='requirements' markdown='1'>
   Requires: [Laptop setup](+opmanual_duckiebot#laptop-setup)
 
-  Results: Know how to use the Dashboard, Portainer and the DT shell for demos. 
+  Results: Know how to use the Dashboard, Portainer and the DT shell for demos.
 </div>
 
 <minitoc/>
@@ -21,7 +21,7 @@ One of the easiest way to use and get an overview of your Duckiebot's operations
 
 #### Using the Dashboard {#exercise:dashboard}
 
-To set up the dashboard, follow this [tutorial](+opmanual_duckiebot#duckiebot-dashboard-setup). Once on the dashboard, explore the interface and try to understand its features. 
+To set up the dashboard, follow this [tutorial](+opmanual_duckiebot#duckiebot-dashboard-setup). Once on the dashboard, explore the interface and try to understand its features.
 
 Through the dashboard you can, e.g., move the Duckiebot. You can find a tutorial on how to do so on [](+opmanual_duckiebot#setup-ros-websocket-image).
 
@@ -51,7 +51,8 @@ With this interface, you can also attach a shell to the container, monitor its m
 Portainer is really helpful to manage images and containers that are already on the duckiebot, but what about if you want to create a new container or run a new demo. You could still do it from there, but it is not very intuitive. We commonly use the `dt shell`, that you already have installed.
 
 ## Starting a demo using the DT shell {status=ready}
-In the duckietown world, demos are containers that contain a set of functionalities ready to work, if the rest of the duckiebot is set up properly (e.g. dt-car-interface and dt-duckiebot-interface are running). They all follow the same workflow, described [here](+opmanual_duckiebot#running-demos).
+In the Duckietown world, demos are containers that contain a set of functionalities ready to work, if the rest of the Duckiebot is set up properly (e.g. dt-car-interface and dt-duckiebot-interface are running). This is also the moment where the work done in [](#rh-calibration) finally pays off. In order for the demo to work nicely, every Duckiebot must have undergone a calibration procedure to account for its motors' and camera's characteristics. In other words, the calibration procedure ensures that every Duckiebot will behave in the same way when it is given the same set of inputs or commands. 
+The demos all follow the same workflow, which is described [here](+opmanual_duckiebot#running-demos).
 
 
 #### Try out the lane-following demo {#exercise:dt-shell-demo}
