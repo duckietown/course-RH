@@ -23,7 +23,7 @@ You can use `docker run` with the `-v host_dir:container_dir` option. Here `-v` 
 
 #### Docker volume mounting {#exercise:ex-docker-volumemounting}
 
-Run a new Ubuntu container where you mount you home directory in the container’s home directory:
+Run a new Ubuntu container where you mount your home directory in the container’s home directory:
 
     laptop $ docker run -it -v ~:/home ubuntu
 
