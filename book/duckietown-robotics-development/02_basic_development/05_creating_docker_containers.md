@@ -149,7 +149,7 @@ Here are some of the most commonly used Dockerfile keywords. You will see them i
 
 ## Creating your first functional Docker image {status=ready}
 
-Now that you know your way around Dockerfiles, it is time to finally build something meaningful that works on your Duckiebot! We are going to build a very basic vision system: we will try to measure how much of a the image stream the camera sees is covered with pixels of a particular color.
+Now that you know your way around Dockerfiles, it is time to finally build something meaningful that works on your Duckiebot! We are going to build a very basic vision system: we will try to measure how much of the image stream the camera sees is covered with pixels of a particular color.
 
 
 #### Creating a color detector in Docker {#exercise:ex-docker-colordetector}
@@ -182,23 +182,24 @@ import picamera.array
 from time import sleep
 
 with picamera.PiCamera() as camera:
-  camera.resolution = (320, 240)
+    camera.resolution = (320, 240)
 
-  while True:
-      with picamera.array.PiRGBArray(camera) as output:
-          camera.capture(output, 'rgb')
-          output = output.array
+    while True:
+        with picamera.array.PiRGBArray(camera) as output:
+            camera.capture(output, 'rgb')
+            output = output.array
 
-          # You can now treat output as a normal numpy array
-          # Do your magic here
+            # You can now treat output as a normal numpy array
+            # Do your magic here
 
-          sleep(1)
+            sleep(1)
 ```
 
 
 Once you have your `color_detector.py` file ready to be tested, you can build it directly on your bot by running:
  
-    $ docker -H ![DUCKIEBOT_NAME].local build -t colordetector
+
+    $ docker -H ![DUCKIEBOT_NAME].local build -t colordetector .
     
 Do you remember what `-H` does? It takes the context (the folder in which you are) and ships it to the device specified by `-H` and build the container there. Once the container is built (typically it takes more time the first time), you can test it with:
        

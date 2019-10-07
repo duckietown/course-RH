@@ -107,6 +107,7 @@ Start by creating a new repository from the template, like in the [previous sect
 - [Getting data in and out of your container](#docker-poweruser)
 - [Creating a basic Duckietown ROS enabled Docker image](#basic-structure)
 
+
 create a Docker image which can analyze bag files and produce an output similar to the one shown below. The min, max, average, and median values printed are statistics of the time difference between two consecutive messages. The `NNN` and `N.NN` are just placeholders, eg. `NNN` could be 100 and `N.NN` could be 0.05. 
 
 ```
@@ -133,7 +134,8 @@ create a Docker image which can analyze bag files and produce an output similar 
     max: N.NN
     average: N.NN
     median: N.NN
-```
+  ``` 
+
 
 Note: Make sure to mount the folder containing the bag file to the Docker container, instead of copying it. 
 
