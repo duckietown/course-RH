@@ -607,7 +607,7 @@ Run the following command:
 Right now, you are inside a ROS-enabled container which is connected to the `rosmaster` running on your laptop. But you want to connect to the `rosmaster` on your duckiebot. To do this, inside the container, run:
 
     laptop $ export ROS_MASTER_URI=http://![MY_ROBOT_IP]:11311/
-    laptop $ export ROS_IP=![MY_IP]
+    laptop $ export ROS_IP=http://![MY_IP]:11311/
 
 Replace `![MY_ROBOT_IP]` and `![MY_IP]` from the IP addresses extracted above, in that order. More information about these environment variables [here](wiki.ros.org/ROS/EnvironmentVariables).
 
