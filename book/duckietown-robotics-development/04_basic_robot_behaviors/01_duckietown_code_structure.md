@@ -54,11 +54,9 @@ Note: Make sure to look at the `daffy` branches of these repositories!
 
 - [`dt-core`](https://github.com/duckietown/dt-core/tree/daffy)
 
-As you will see in the nodes, there's a lot of inline documentation provided. You can also access it [here](LINK) in more readable form. 
+As you will see in the nodes, there's a lot of inline documentation provided. You can also access it [here](http://rosapi.duckietown.p-petrov.com) in a more readable form. 
 
 Note: Unfortunately, for the moment only `dt-ros-commons`, `dt-duckiebot-interface`, and `dt-car-interface` are documented. We are working on providing similar level of documentation for `dt-core` as well.
-
-TODO: Add the ROS API docs link
 
 ##Various configurations of the Duckietown codebase
 
