@@ -38,7 +38,7 @@ Knowing how to use git is the first step. The second step, which is of the same 
 ### Commits
 
 - Commits need to be **granular**: One commit contains on fix, or one function. It cannot have two new functions, and three bug fix. This means that it is better to do too many commits that not enough. This is helpful when doing cherry picks, or when checking out a previous version of the code.
-- Commits need to have **meaningful names**: The name of the commit should describe its content.
+- Commits need to have **meaningful messages**: The message of the commit should describe its content.
 
 ### Branches, forks, pull request and peer review
 
