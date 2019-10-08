@@ -25,9 +25,9 @@ Note: Currently `dt-core` is not using `DTROS`. Nevertheless, soon the nodes the
 
 #### Exploring how DTROS works {#exercise:exploring-dtros}
 
-First, take a look at the documentation of `DTROS` [here](LINK). Find out how its functionalities are implemented by looking at its implementation in the `dt-ros-commons` repository [here](https://github.com/duckietown/dt-ros-commons/tree/daffy/packages/duckietown/include/duckietown). In particular, make sure you can answer the following list of questions. To do that, it might be helpful to see how `DTROS` is being used in some of the other nodes. Take a look at [`camera_node`](https://github.com/duckietown/dt-duckiebot-interface/blob/daffy/packages/camera_driver/src/camera_node.py), the [`wheels_driver_node`](https://github.com/duckietown/dt-duckiebot-interface/blob/daffy/packages/wheels_driver/src/wheels_driver_node.py), and the other nodes in `dt-duckiebot-interface` and `dt-car-interface`.
+First, take a look at the documentation of `DTROS` [here](http://rosapi.duckietown.p-petrov.com/repositories/dt-ros-commons/docs/source/packages/duckietown.html#duckietown.DTROS). Find out how its functionalities are implemented by looking at its implementation in the `dt-ros-commons` repository [here](https://github.com/duckietown/dt-ros-commons/tree/daffy/packages/duckietown/include/duckietown). In particular, make sure you can answer the following list of questions. To do that, it might be helpful to see how `DTROS` is being used in some of the other nodes. Take a look at [`camera_node`](https://github.com/duckietown/dt-duckiebot-interface/blob/daffy/packages/camera_driver/src/camera_node.py), the [`wheels_driver_node`](https://github.com/duckietown/dt-duckiebot-interface/blob/daffy/packages/wheels_driver/src/wheels_driver_node.py), and the other nodes in `dt-duckiebot-interface` and `dt-car-interface`.
 
-- How do you initialize the `DTROS` parent class? How do you start your node? What does `    rospy.spin()` do? (_Hint: look at the nodes in `dt_duckiebot_interface`_)
+- How do you initialize the `DTROS` parent class? How do you start your node? What does `rospy.spin()` do? (_Hint: look at the nodes in `dt_duckiebot_interface`_)
 
 - When should you redefine the `onShutdown` method? Why do you still need to call the `onShutdown` method of `DTROS`? (_Hint: look at the nodes in `dt_duckiebot_interface` and at the official ROS documentation_)
 
@@ -40,9 +40,6 @@ First, take a look at the documentation of `DTROS` [here](LINK). Find out how it
 - What does the `~switch` service do? How can you use it? What is the benefit of using it?
 
 - What is the difference between the native ROS Subscriber and Publisher and `DTPublisher` and `DTSubscriber`?
-
-
-TODO: Add link
 
 <end/>
 
@@ -74,9 +71,9 @@ Using everything you have learnt so far, create a ROS node that implements the a
 
 - Use the [ROS template](https://github.com/duckietown/template-ros) and create your package and node there. Don't forget to add the `package.xml` and `CMakeLists.txt` files, and to make your Python code executable, as explained [before](#ros-pub-laptop).
 
-- Your controller needs to run in real time with frequency of at least 10-12 Hz. Therefore, processing the input image at its full resolution might not be possible. Consider reducing it (and potentially using only part of it). A neat way to do this is to change the configuration parameters of the `camera_node` running in `dt-duckiebot-interface`. In the template node code bellow that is already done for the exposure mode. Consult the ROS API docs for the `CameraNode` class if you are not sure which parameters you can change.
+- Your controller needs to run in real time with frequency of at least 10-12 Hz. Therefore, processing the input image at its full resolution might not be possible. Consider reducing it (and potentially using only part of it). A neat way to do this is to change the configuration parameters of the `camera_node` running in `dt-duckiebot-interface`. In the template node code bellow that is already done for the exposure mode. Consult the [ROS API docs](http://rosapi.duckietown.p-petrov.com/repositories/dt-duckiebot-interface/docs/source/packages/camera_driver.html#cameranode) for the `CameraNode` class if you are not sure which parameters you can change.
 
-- For now ignore the color that that your bot observes, focus only on the brightness. If you still want to change the color of the LEDs, use the `set_pattern` service provided by the `led_emitter_node`. Its use is also documented on the ROS API docs.
+- For now ignore the color that that your bot observes, focus only on the brightness. If you still want to change the color of the LEDs, use the `set_pattern` service provided by the `led_emitter_node`. Its use is also documented on the [ROS API docs](http://rosapi.duckietown.p-petrov.com/repositories/dt-duckiebot-interface/docs/source/packages/led_emitter.html#ledemitternode).
 
 - You will need to publish `WheelsCmdStamped` messages to `wheel_driver_node`. You can see their structure [here](https://github.com/duckietown/dt-ros-commons/blob/daffy/packages/duckietown_msgs/msg/WheelsCmdStamped.msg).
 
@@ -286,6 +283,6 @@ You should be able to change the avoiding behavior of your robot into an attract
 
 Add a color detector to your Braitenberg controller node. If your Duckiebot sees green light (perhaps of a different Duckiebot) it should be attracted to it, otherwise it should be repelled by it.
 
-If you have more than one robot, try to run your controller on a few of them. Set some to have green LEDs, and some red. Do you see complex behavior emerging? Changing the color of the LEDs can be done with the `set_pattern` service provided by the `led_emitter_node` in `dt-duckiebot-interface`. It is documented on the ROS API docs.
+If you have more than one robot, try to run your controller on a few of them. Set some to have green LEDs, and some red. Do you see complex behavior emerging? Changing the color of the LEDs can be done with the `set_pattern` service provided by the `led_emitter_node` in `dt-duckiebot-interface`. It is documented on the [ROS API docs](http://rosapi.duckietown.p-petrov.com/repositories/dt-duckiebot-interface/docs/source/packages/led_emitter.html#ledemitternode).
 
 Can you devise even more complex behavior and interactions? 
