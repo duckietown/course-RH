@@ -56,7 +56,7 @@ In the image above, the light intensity detected by a sensor is used proportiona
 
 Here's an example video of how this Braitenberg behavior would look like on Duckiebots. When the light a bot sees is green, it has attracting behavior. Otherwise, it will be avoiding. By the end of this series of exercises you will be able to create similar Duckiebot controllers. Note that while this is recorded in a dark room, with a few smart tricks you can also make your robots work in well-lit spaces.
 
-<figure id="example-embed">
+<figure id="video-braitenberg">
     <dtvideo src="vimeo:365020910"/>
 </figure>
 
