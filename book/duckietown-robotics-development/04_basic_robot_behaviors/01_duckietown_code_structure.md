@@ -4,7 +4,7 @@ Excerpt: Learn how the Duckietown code is organized.
 
 In order to develop new functionality within the Duckietown eco-system you need to know how the existing code is structured. This module will introduce you to the top-level structure and the references that can help you to find out more.
 
-While on the outside Duckietown seems to be all about a simple toy car with some duckies on top, once you deep dive you will find out that it is much bigger on the inside (just like a TARDIS). It's not only about cars, but also boats and drones. And you can run the same code on a real bot, in simulation, or in a competitive AI Driving Olympics environment. You can also use some of the dozen projects done before. As we clearly cannot cover everything in a concise way, this module will instead focus only on the code the runs on a Duckiebot during the standard demos, e.g. Lane Following and Indefinite Navigation.
+While on the outside Duckietown seems to be all about a simple toy car with some duckies on top, once you deep dive you will find out that it is much bigger on the inside (just like a TARDIS). It's not only about cars, but also boats and drones. And you can run the same code on a real Duckiebot, in simulation, or in a competitive AI Driving Olympics environment. You can also use some of the dozen projects done before. As we clearly cannot cover everything in a concise way, this module will instead focus only on the code the runs on a Duckiebot during the standard demos, e.g. Lane Following and Indefinite Navigation.
 
 <div class='requirements' markdown='1'>
   Requires: [Docker basics](#docker-basics)
@@ -18,7 +18,7 @@ While on the outside Duckietown seems to be all about a simple toy car with some
 
 ## Main images and repositories{status=ready}
 
-You probably noticed three container and image names popping up when you were running the demos, calibrating your bot, or developing some of the previous exercises: `dt-duckiebot-interface`, `dt-car-interface`, and `dt-core`. You probably wonder why are there three of these and what does each one of them do?
+You probably noticed three container and image names popping up when you were running the demos, calibrating your Duckiebot, or developing some of the previous exercises: `dt-duckiebot-interface`, `dt-car-interface`, and `dt-core`. You probably wonder why are there three of these and what does each one of them do?
 
 Let's first look at the bigger picture: the container hierarchy in Duckietown.
 
@@ -31,12 +31,12 @@ As you can see in the above image, all three of the containers actually inherit 
 
 The image from which everything starts is `ros:kinetic-ros-base-xenial`. It is an official ROS image that is configured to work smoothly with ROS Kinetic. Even though this image is already extremely powerful, it is not well suited to directly work on a Duckiebot. Therefore, we add a few additonal components and confgure it properly and the result it `duckietown/dt-ros-kinetic-base`.
 
-The `duckietown/dt-ros-kinetic-base` image has everything you need in order to start developing code thatdirectly works on your Duckiebot. However, as there are a few components that all Duckietown ROS nodes share, it is convient to package them in an image. These are `duckitown-utils` (a library with a number of useful functions), `duckietown_msgs` (a ROS package that containes all the ROS message types used in Duckietown), and `DTROS`. `DTROS` is a 'mother' node for all other nodes in Duckietown. We will look at it in more detail soon.
+The `duckietown/dt-ros-kinetic-base` image has everything you need in order to start developing code that directly works on your Duckiebot. However, as there are a few components that all Duckietown ROS nodes share, it is convient to package them in an image. These are `duckitown-utils` (a library with a number of useful functions), `duckietown_msgs` (a ROS package that containes all the ROS message types used in Duckietown), and `DTROS`. `DTROS` is a 'mother' node for all other nodes in Duckietown. We will look at it in more detail soon.
 
 We finally can focus on `dt-duckiebot-interface`, `dt-car-interface`, and `dt-core`. The first, 
-`dt-duckiebot-interface`, contains all the hardware drivers you need to operate your bot. In particular these are the drivers for the camera (in the `camera_driver` package), the ones for the motors (`wheels_driver`), and the LED drivers (`led_emitter`). Thanks to these nodes, you don't need to interact write low level code to control your bot. Instead, you can simply use the convenient ROS topics and services provided by these nodes.
+`dt-duckiebot-interface`, contains all the hardware drivers you need to operate your Duckiebot. In particular these are the drivers for the camera (in the `camera_driver` package), the ones for the motors (`wheels_driver`), and the LED drivers (`led_emitter`). Thanks to these nodes, you don't need to interact write low level code to control your Duckiebot. Instead, you can simply use the convenient ROS topics and services provided by these nodes.
 
-The `dt-car-interface` image provides additional basic functionality that is not on hardware level. It is all you need to be able to drive your bot around, in particular the parts that handle the commands sent by a (virtual) joystick (the `joy_mapper` package) and the forward and inverse kinematics that convert the desired robot movement to wheel commands (`dagu_car` package). It might not immediately clear at first why these are not part of `dt-duckiebot-interface` or `dt-core`. In some use cases, e.g. for the demos or controlling a robot via a joystick it is beneficial to have these two packages. For others, e.g. when deploying a completely different pipeline, e.g. end-to-end reinforcement learning, one would prefer to interact directly with the drivers. We will see more examples of use cases shortly.
+The `dt-car-interface` image provides additional basic functionality that is not on hardware level. It is all you need to be able to drive your Duckiebot around, in particular the parts that handle the commands sent by a (virtual) joystick (the `joy_mapper` package) and the forward and inverse kinematics that convert the desired robot movement to wheel commands (`dagu_car` package). It might not immediately clear at first why these are not part of `dt-duckiebot-interface` or `dt-core`. In some use cases, e.g. for the demos or controlling a robot via a joystick it is beneficial to have these two packages. For others, e.g. when deploying a completely different pipeline, e.g. end-to-end reinforcement learning, one would prefer to interact directly with the drivers. We will see more examples of use cases shortly.
 
 The `dt-core` image provides all the high level robot behavior that you observe when running a demo. The image processing pipeline, decision-making modules, lane and intersection contollers, and many others  reside there. 
 
@@ -64,7 +64,7 @@ As we already mentioned, the Duckietown codebase can be used in various configur
 
 ### Driving with a (virtual) joystick
 
-If you only want to drive your bot around, you need the `joy_mapper` node that translates the joystick `Joy` messages to car command messages, the `kinematics` node that in turn converts these to wheel command messages, and the `wheels_driver` node that controls the motors. So the `dt-duckiebot-interface` and `dt-car-interface` images are enough.
+If you only want to drive your Duckiebot around, you need the `joy_mapper` node that translates the joystick `Joy` messages to car command messages, the `kinematics` node that in turn converts these to wheel command messages, and the `wheels_driver` node that controls the motors. So the `dt-duckiebot-interface` and `dt-car-interface` images are enough.
 
 <figure> 
   <figcaption>Driving with a (virtual) joystick</figcaption>
