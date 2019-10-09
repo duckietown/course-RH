@@ -1,4 +1,4 @@
-# [RH4] Implementing basic robot behaviors {#part:basic-robot-behavior status=ready}
+# [RH4] Implementing Basic Robot Behaviors {#part:basic-robot-behavior status=ready}
 
 Excerpt: Learn how to create new robot behavior by reusing parts of the Duckietown code 
 
