@@ -48,7 +48,7 @@ First, take a look at the documentation of `DTROS` [here](http://rosapi.duckieto
 Through a series of exercises you will implement a very basic brightness- and color- based controller for your Duckiebot that can result in a surprisingly advanced robot behavior. In his book _Vehicles: Experiments in Synthetic Psychology_, Valentino Braitenberg describes some extremely basic vehicle designs that are capable of demonstrating complex behaviors. By using only a pair of 'sensors' that can only detect brightness, two motors, and direct links between the sensors and the motors, these vehicles can exhibit love, aggression, fear, foresight and many other complex traits.
 
 <figure> 
-  <figcaption>Avoiding and attracting Braitenberg behavior</figcaption>
+  <figcaption>Avoiding and attracting Braitenberg behavior (illustration from [Thomas Schoch](https://commons.wikimedia.org/wiki/File:Braitenberg_Vehicle_2ab.png))</figcaption>
   <img style="width:15em" src="images/Braitenberg_Vehicle.png" />
 </figure>
 
