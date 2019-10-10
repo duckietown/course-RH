@@ -27,7 +27,7 @@ Let's first look at the bigger picture: The container hierarchy in Duckietown.
   <img style="width:30em" src="images/container_stack.png" />
 </figure>
 
-As you can see in the above image, all three of the containers actually inherit the same container. Recall that 'inheritance' in a Docker images means that the 'child' image has a `FROM` statement with the 'parent' image.
+As you can see in the above image, all three of the containers actually inherit the same container. Recall that 'inheritance' in a Docker images means that the 'child' image has a `FROM` statement with the 'parent' image in its Dockerfile.
 
 The image from which everything starts is `ros:kinetic-ros-base-xenial`. It is an official ROS image that is configured to work smoothly with ROS Kinetic. Even though this image is already extremely powerful, it is not well suited to directly work on a Duckiebot. Therefore, we add a few additonal components and configure it which results in `duckietown/dt-ros-kinetic-base`.
 
