@@ -66,4 +66,4 @@ No matter the chosen solution, you then do your work, commit it, and then push i
 - Propose modifications
 - And then, when all conversation are resolved, approve and merge the pull request
 
-A pull request must never be approved and merged by the person who submitted it. Peer review is one of the most important part of software development. Not only does it allow for error proofing, but also it allows for someone to made a code suggestion alone, that can then be easily discussed and improved, even when it was functional to start with.
+A pull request must never be approved and merged by the person who submitted it. Peer review is one of the most important part of software development. Not only it does allow for error proofing, but it also allows for someone to make a code suggestion alone. This way the code can be easily discussed and improved, even when it was functional to start with.
