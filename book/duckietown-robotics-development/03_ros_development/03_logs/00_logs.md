@@ -134,7 +134,8 @@ create a Docker image which can analyze bag files and produce an output similar 
     max: N.NN
     average: N.NN
     median: N.NN
-  ``` 
+
+``` 
 
 
 Note: Make sure to mount the folder containing the bag file to the Docker container, instead of copying it. 
