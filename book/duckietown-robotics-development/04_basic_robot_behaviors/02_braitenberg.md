@@ -75,11 +75,18 @@ Using everything you have learnt so far, create a ROS node that implements the a
 
 - For now ignore the color that your bot observes, focus only on the brightness. If you still want to change the color of the LEDs, use the `set_pattern` service provided by the `led_emitter_node`. Its use is also documented on the [ROS API docs](http://rosapi.duckietown.p-petrov.com/repositories/dt-duckiebot-interface/docs/source/packages/led_emitter.html#ledemitternode).
 
+- If your Duckiebot keeps on moving even after you stop your node, you will have to edit the provided `onShutdown` method. Make sure that the last commands your node publishes to `wheel_driver_node` are zero.
+
 - You will need to publish `WheelsCmdStamped` messages to `wheel_driver_node`. You can see their structure [here](https://github.com/duckietown/dt-ros-commons/blob/daffy/packages/duckietown_msgs/msg/WheelsCmdStamped.msg).
 
-- The template loads the kinematics calibration on your Duckiebot so you don't need to worry about trimming your Braitenberg controller. Simply use the provided `speedToCmd` method apply gain, trim, and the motor constant to your wheel commands. 
+- The template loads the kinematics calibration on your Duckiebot so you don't need to worry about trimming your Braitenberg controller. Simply use the provided `speedToCmd` method apply gain, trim, and the motor constant to your wheel commands. However, in order for that to happen you need to make sure to mount the `/data` folder of your Duckiebot, where all calibrations are stored, to your container. To do that, just add `-v /data:/data` to your Docker run.
 
-- If your Duckiebot keeps on moving even after you stop your node, you will have to edit the provided `onShutdown` method. Make sure that the last commands your node publishes to `wheel_driver_node` are zero.
+- You can also make use of the `dts duckiebot demo` command instead of `docker run`. It will mount the `/data` folder, setup your network and ROS environment variables, and give you access to the devices you need. To run this, simply use:
+
+    laptop $ dts duckiebot demo --duckiebot_name ![DUCKIEBOT_NAME] --demo_name ![DEMO_NAME] --package_name ![PACKAGE_NAME] --image [IMAGE]
+    
+This command will start the `DEMO_NAME.launch` launch file in the `PACKAGE_NAME` package from the `![IMAGE]` Docker image on the `DUCKIEBOT_NAME` Duckiebot. Make sure that you first build you image on the Duckiebot!
+
 
 __Template:__
 
