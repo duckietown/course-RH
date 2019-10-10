@@ -101,7 +101,7 @@ from duckietown_msgs.msg import Twist2DStamped, WheelsCmdStamped
 
 
 class BraitenbergNode(DTROS):
-    """Handles the imagery.
+    """Braitenberg Behaviour
 
     This node implements Braitenberg vehicle behavior on a Duckiebot.
 
