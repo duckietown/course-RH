@@ -19,7 +19,7 @@ You will now learn how to add your own code to already existing Duckietown codeb
 
 ## Exploring DTROS
 
-The `DTROS` class is often referred to as the 'mother node' in Duckietown. It provides some very useful functionalities that the other nodes inherit. It has modified ROS Subscribers and Publishers which can be switched on and off. It also provides an interface to the ROS parameters of this node that allows dynamical changes while the node is running. For this reason we strongly suggest you to always base your nodes on `DTROS`. Instead of explaining all the details of `DTROS`, we instead invite you to investigate them yourself.
+The `DTROS` class is often referred to as the 'mother node' in Duckietown. It provides some very useful functionalities that the other nodes inherit. It has modified ROS Subscribers and Publishers which can be switched on and off. It also provides an interface to the ROS parameters of the node using it which allows dynamical changes while the node is running. For this reason we strongly suggest you to always base your nodes on `DTROS`. Instead of explaining all the details of `DTROS`, we instead invite you to investigate them yourself.
 
 Note: Currently `dt-core` is not using `DTROS`. Nevertheless, soon the nodes there will be converted to the `DTROS` framework as well.
 
@@ -63,21 +63,21 @@ Here's an example video of how this Braitenberg behavior would look like on Duck
 
 #### Avoiding Braitenberg vechicles {#exercise:braitenberg-avoiding}
 
-Using everything you have learnt so far, create a ROS node that implements the avoiding Braitenberg behavior. Here are some details and suggestions you might want to take into account:
+Using everything you have learnt so far, create a ROS node that implements the avoiding Braitenberg behavior. You should run this ROS node in a container running on your Duckiebot. Here are some details and suggestions you might want to take into account:
 
-- Use the `dt-duckiebot-interface` and all the drivers it provides. In particular, you will need to subscribe to the images that the `camera_node` publishes and to publish wheel commands to `wheel_driver_node`. To do that simply make sure that the `dt-duckiebot-interface` container is running. Then, whenever you start the container with your code, they will share their ROS Master, so that connecting your subscribers and publishers to the ones of  `dt-duckiebot-interface` can be directly done through simple `remap` commands in your launch file. 
+- Use the `dt-duckiebot-interface` and all the drivers it provides. In particular, you will need to subscribe to the images that the `camera_node` publishes and to publish wheel commands to `wheel_driver_node`. To do that simply make sure that the `dt-duckiebot-interface` container is running. Then, whenever you start the container with your code and `--net host`(why?), they will share their ROS Master, so that your subscribers and publishers can find each other.
 
 - Use the nodes in `dt-duckiebot-interface` as a reference for code and documentation style. You will find a number of useful code snippets there.
 
 - Use the [ROS template](https://github.com/duckietown/template-ros) and create your package and node there. Don't forget to add the `package.xml` and `CMakeLists.txt` files, and to make your Python code executable, as explained [before](#ros-pub-laptop).
 
-- Your controller needs to run in real time with a frequency of at least 10-12 Hz. Therefore, processing the input image at its full resolution might not be possible. Consider reducing it (and potentially using only part of it). A neat way to do this is to change the configuration parameters of the `camera_node` running in `dt-duckiebot-interface`. In the template node code below that is already done for the exposure mode. Consult the [ROS API docs](http://rosapi.duckietown.p-petrov.com/repositories/dt-duckiebot-interface/docs/source/packages/camera_driver.html#cameranode) for the `CameraNode` class if you are not sure about which parameters you can change.
+- Your controller needs to run in real time with a frequency of at least 10-12 Hz. Therefore, processing the input image at its full resolution might not be possible and you should consider reducing it. A neat way to do this is to change the configuration parameters of the `camera_node` running in `dt-duckiebot-interface`. In the template node code below that is already done for the exposure mode. Consult the [ROS API docs](http://rosapi.duckietown.p-petrov.com/repositories/dt-duckiebot-interface/docs/source/packages/camera_driver.html#cameranode) for the `CameraNode` class if you are not sure about which parameters you can change.
 
-- For now ignore the color that your bot observes, focus only on the brightness. If you still want to change the color of the LEDs, use the `set_pattern` service provided by the `led_emitter_node`. Its use is also documented on the [ROS API docs](http://rosapi.duckietown.p-petrov.com/repositories/dt-duckiebot-interface/docs/source/packages/led_emitter.html#ledemitternode).
+- For now ignore the color that your bot observes, focus only on the brightness of the image on its left and right side. If you still want to change the color of the LEDs, use the `set_pattern` service provided by the `led_emitter_node`. Its use is also documented on the [ROS API docs](http://rosapi.duckietown.p-petrov.com/repositories/dt-duckiebot-interface/docs/source/packages/led_emitter.html#ledemitternode). You do not need to call this service from inside your Python file. You would need to create a Docker container on your Duckiebot using `duckietown/dt-core:daffy` as the image (why?) to run the required command. What other arguments should you use while creating this container? 
 
 - If your Duckiebot keeps on moving even after you stop your node, you will have to edit the provided `onShutdown` method. Make sure that the last commands your node publishes to `wheel_driver_node` are zero.
 
-- You will need to publish `WheelsCmdStamped` messages to `wheel_driver_node`. You can see their structure [here](https://github.com/duckietown/dt-ros-commons/blob/daffy/packages/duckietown_msgs/msg/WheelsCmdStamped.msg).
+- You will need to publish `WheelsCmdStamped` messages to `wheel_driver_node`. You can see the message structure [here](https://github.com/duckietown/dt-ros-commons/blob/daffy/packages/duckietown_msgs/msg/WheelsCmdStamped.msg).
 
 - The template loads the kinematics calibration on your Duckiebot so you don't need to worry about trimming your Braitenberg controller. Simply use the provided `speedToCmd` method apply gain, trim, and the motor constant to your wheel commands. However, in order for that to happen you need to make sure to mount the `/data` folder of your Duckiebot, where all calibrations are stored, to your container. To do that, just add `-v /data:/data` to your Docker run.
 
@@ -87,6 +87,7 @@ Using everything you have learnt so far, create a ROS node that implements the a
     
 This command will start the `DEMO_NAME.launch` launch file in the `PACKAGE_NAME` package from the `![IMAGE]` Docker image on the `DUCKIEBOT_NAME` Duckiebot. Make sure that you first build you image on the Duckiebot!
 
+- Once you have finished this exercise, you should have a Duckiebot which goes towards the left if your program senses that the right side has more brightness, and vice versa.
 
 __Template:__
 
@@ -306,7 +307,7 @@ if __name__ == '__main__':
 
 #### Attracting Braitenberg vechicles {#exercise:braitenberg-attracting}
 
-You should be able to change the avoiding behavior of your robot into an attracting one by editing just a few lines of code. Give it a try!
+You should be able to change the avoiding behavior of your robot into an attracting one by editing just a few lines of code. Give it a try! Once you have finished this exercise, you should have a Duckiebot which goes towards the right if your program senses that the right side has more brightness, and vice versa.
 
 <end/>
 
