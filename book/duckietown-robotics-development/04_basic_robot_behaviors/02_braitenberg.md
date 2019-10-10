@@ -81,9 +81,7 @@ Using everything you have learnt so far, create a ROS node that implements the a
 
 - The template loads the kinematics calibration on your Duckiebot so you don't need to worry about trimming your Braitenberg controller. Simply use the provided `speedToCmd` method apply gain, trim, and the motor constant to your wheel commands. However, in order for that to happen you need to make sure to mount the `/data` folder of your Duckiebot, where all calibrations are stored, to your container. To do that, just add `-v /data:/data` to your Docker run.
 
-- You can also make use of the `dts duckiebot demo` command instead of `docker run`. It will mount the `/data` folder, setup your network and ROS environment variables, and give you access to the devices you need. To run this, simply use:
-
-    laptop $ dts duckiebot demo --duckiebot_name ![DUCKIEBOT_NAME] --demo_name ![DEMO_NAME] --package_name ![PACKAGE_NAME] --image [IMAGE]
+- You can also make use of the `dts duckiebot demo` command instead of `docker run`. It will mount the `/data` folder, setup your network and ROS environment variables, and give you access to the devices you need. To run this, simply use `dts duckiebot demo --duckiebot_name ![DUCKIEBOT_NAME] --demo_name ![DEMO_NAME] --package_name ![PACKAGE_NAME] --image [IMAGE]`.
     
 This command will start the `DEMO_NAME.launch` launch file in the `PACKAGE_NAME` package from the `![IMAGE]` Docker image on the `DUCKIEBOT_NAME` Duckiebot. Make sure that you first build you image on the Duckiebot!
 
