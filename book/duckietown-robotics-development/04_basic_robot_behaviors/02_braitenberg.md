@@ -19,7 +19,7 @@ You will now learn how to add your own code to already existing Duckietown codeb
 
 ## Exploring DTROS
 
-The `DTROS` class is often referred to as the 'mother node' in Duckietown. It provides some very useful functionalities that the other nodes inherit. It has modified ROS Subscribers and Publishers which can be switched on and off. It also provides an interface to the ROS parameters of this node that allows dynamical changes while the node is running. For this reason we strongly suggest you to always base your nodes on `DTROS`. Instead of explaining all the details of `DTROS`, we instead invite you to investigate them yourself.
+The `DTROS` class is often referred to as the 'mother node' in Duckietown. It provides some very useful functionalities that the other nodes inherit. It has modified ROS Subscribers and Publishers which can be switched on and off. It also provides an interface to the ROS parameters of the node using it which allows dynamical changes while the node is running. For this reason we strongly suggest you to always base your nodes on `DTROS`. Instead of explaining all the details of `DTROS`, we instead invite you to investigate them yourself.
 
 Note: Currently `dt-core` is not using `DTROS`. Nevertheless, soon the nodes there will be converted to the `DTROS` framework as well.
 
@@ -63,23 +63,31 @@ Here's an example video of how this Braitenberg behavior would look like on Duck
 
 #### Avoiding Braitenberg vechicles {#exercise:braitenberg-avoiding}
 
-Using everything you have learnt so far, create a ROS node that implements the avoiding Braitenberg behavior. Here are some details and suggestions you might want to take into account:
+Using everything you have learnt so far, create a ROS node that implements the avoiding Braitenberg behavior. You should run this ROS node in a container running on your Duckiebot. Here are some details and suggestions you might want to take into account:
 
-- Use the `dt-duckiebot-interface` and all the drivers it provides. In particular, you will need to subscribe to the images that the `camera_node` publishes and to publish wheel commands to `wheel_driver_node`. To do that simply make sure that the `dt-duckiebot-interface` container is running. Then, whenever you start the container with your code, they will share their ROS Master, so that connecting your subscribers and publishers to the ones of  `dt-duckiebot-interface` can be directly done through simple `remap` commands in your launch file. 
+- Use the `dt-duckiebot-interface` and all the drivers it provides. In particular, you will need to subscribe to the images that the `camera_node` publishes and to publish wheel commands to `wheel_driver_node`. To do that simply make sure that the `dt-duckiebot-interface` container is running. Then, whenever you start the container with your code and `--net host`(why?), they will share their ROS Master, so that your subscribers and publishers can find each other.
 
 - Use the nodes in `dt-duckiebot-interface` as a reference for code and documentation style. You will find a number of useful code snippets there.
 
 - Use the [ROS template](https://github.com/duckietown/template-ros) and create your package and node there. Don't forget to add the `package.xml` and `CMakeLists.txt` files, and to make your Python code executable, as explained [before](#ros-pub-laptop).
 
-- Your controller needs to run in real time with a frequency of at least 10-12 Hz. Therefore, processing the input image at its full resolution might not be possible. Consider reducing it (and potentially using only part of it). A neat way to do this is to change the configuration parameters of the `camera_node` running in `dt-duckiebot-interface`. In the template node code below that is already done for the exposure mode. Consult the [ROS API docs](http://rosapi.duckietown.p-petrov.com/repositories/dt-duckiebot-interface/docs/source/packages/camera_driver.html#cameranode) for the `CameraNode` class if you are not sure about which parameters you can change.
+- Your controller needs to run in real time with a frequency of at least 10-12 Hz. Therefore, processing the input image at its full resolution might not be possible and you should consider reducing it. A neat way to do this is to change the configuration parameters of the `camera_node` running in `dt-duckiebot-interface`. In the template node code below that is already done for the exposure mode. Consult the [ROS API docs](http://rosapi.duckietown.p-petrov.com/repositories/dt-duckiebot-interface/docs/source/packages/camera_driver.html#cameranode) for the `CameraNode` class if you are not sure about which parameters you can change.
 
-- For now ignore the color that your bot observes, focus only on the brightness. If you still want to change the color of the LEDs, use the `set_pattern` service provided by the `led_emitter_node`. Its use is also documented on the [ROS API docs](http://rosapi.duckietown.p-petrov.com/repositories/dt-duckiebot-interface/docs/source/packages/led_emitter.html#ledemitternode).
-
-- You will need to publish `WheelsCmdStamped` messages to `wheel_driver_node`. You can see their structure [here](https://github.com/duckietown/dt-ros-commons/blob/daffy/packages/duckietown_msgs/msg/WheelsCmdStamped.msg).
-
-- The template loads the kinematics calibration on your Duckiebot so you don't need to worry about trimming your Braitenberg controller. Simply use the provided `speedToCmd` method apply gain, trim, and the motor constant to your wheel commands. 
+- For now ignore the color that your bot observes, focus only on the brightness of the image on its left and right side. If you still want to change the color of the LEDs, use the `set_pattern` service provided by the `led_emitter_node`. Its use is also documented on the [ROS API docs](http://rosapi.duckietown.p-petrov.com/repositories/dt-duckiebot-interface/docs/source/packages/led_emitter.html#ledemitternode). You do not need to call this service from inside your Python file. You would need to create a Docker container on your Duckiebot using `duckietown/dt-duckiebot-interface:daffy` as the image (why?) to run the required command. What other arguments should you use while creating this container? 
 
 - If your Duckiebot keeps on moving even after you stop your node, you will have to edit the provided `onShutdown` method. Make sure that the last commands your node publishes to `wheel_driver_node` are zero.
+
+- You will need to publish `WheelsCmdStamped` messages to `wheel_driver_node`. You can see the message structure [here](https://github.com/duckietown/dt-ros-commons/blob/daffy/packages/duckietown_msgs/msg/WheelsCmdStamped.msg).
+
+- The template loads the kinematics calibration on your Duckiebot so you don't need to worry about trimming your Braitenberg controller. Simply use the provided `speedToCmd` method apply gain, trim, and the motor constant to your wheel commands. However, in order for that to happen you need to make sure to mount the `/data` folder of your Duckiebot, where all calibrations are stored, to your container. To do that, just add `-v /data:/data` to your Docker run.
+
+- You can also make use of the `dts duckiebot demo` command instead of `docker run`. It will mount the `/data` folder, setup your network and ROS environment variables, and give you access to the devices you need. To run this, simply use:
+
+    laptop $ dts duckiebot demo --duckiebot_name ![DUCKIEBOT_NAME] --demo_name ![DEMO_NAME] --package_name ![PACKAGE_NAME] --image [IMAGE]
+    
+This command will start the `DEMO_NAME.launch` launch file in the `PACKAGE_NAME` package from the `![IMAGE]` Docker image on the `DUCKIEBOT_NAME` Duckiebot. Make sure that you first build you image on the Duckiebot!
+
+- Once you have finished this exercise, you should have a Duckiebot which goes towards the left if your program senses that the right side has more brightness, and vice versa.
 
 __Template:__
 
@@ -93,39 +101,45 @@ import rospy
 import yaml
 
 from duckietown import DTROS
-from std_msgs.msg import Float64
-from sensor_msgs.msg import CompressedImage, CameraInfo
-from duckietown_msgs.msg import Twist2DStamped, WheelsCmdStamped
+from sensor_msgs.msg import CompressedImage
+from duckietown_msgs.msg import WheelsCmdStamped
 
 
 class BraitenbergNode(DTROS):
-    """Handles the imagery.
+    """Braitenberg Behaviour
 
     This node implements Braitenberg vehicle behavior on a Duckiebot.
 
     Args:
-        node_name (:obj:`str`): a unique, descriptive name for the node that ROS will use
+        node_name (:obj:`str`): a unique, descriptive name for the node
+            that ROS will use
 
     Configuration:
-        ~gain (:obj:`float`): scaling factor applied to the desired velocity, taken from the 
-            robot-specific kinematics calibration 
-        ~trim (:obj:`float`): trimming factor that is typically used to offset differences in the
-            behaviour of the left and right motors, it is recommended to use a value that results in
-            the robot moving in a straight line when forward command is given, taken from the 
-            robot-specific kinematics calibration 
-        ~baseline (:obj:`float`): the distance between the two wheels of the robot, taken from the 
-            robot-specific kinematics calibration 
-        ~radius (:obj:`float`): radius of the wheel, taken from the robot-specific kinematics calibration 
-        ~k (:obj:`float`): motor constant, assumed equal for both motors, taken from the 
-            robot-specific kinematics calibration 
-        ~limit (:obj:`float`): limits the final commands sent to the motors, taken from the 
-            robot-specific kinematics calibration 
+        ~gain (:obj:`float`): scaling factor applied to the desired
+            velocity, taken from the robot-specific kinematics
+            calibration
+        ~trim (:obj:`float`): trimming factor that is typically used
+            to offset differences in the behaviour of the left and
+            right motors, it is recommended to use a value that results
+            in the robot moving in a straight line when forward command
+            is given, taken from the robot-specific kinematics calibration
+        ~baseline (:obj:`float`): the distance between the two wheels
+            of the robot, taken from the robot-specific kinematics
+            calibration
+        ~radius (:obj:`float`): radius of the wheel, taken from the
+            robot-specific kinematics calibration
+        ~k (:obj:`float`): motor constant, assumed equal for both
+            motors, taken from the robot-specific kinematics calibration
+        ~limit (:obj:`float`): limits the final commands sent to the
+            motors, taken from the robot-specific kinematics calibration
 
     Subscriber:
-        ~image/compressed (:obj:`CompressedImage`): The acquired camera images
+        ~image/compressed (:obj:`CompressedImage`): The acquired camera
+            images
 
     Publisher:
-        ~wheels_cmd (:obj:`duckietown_msgs.msg.WheelsCmdStamped`): The wheel commands that the motors will execute
+        ~wheels_cmd (:obj:`duckietown_msgs.msg.WheelsCmdStamped`): The
+            wheel commands that the motors will execute
 
     """
 
@@ -150,22 +164,28 @@ class BraitenbergNode(DTROS):
         # Wait for the automatic gain control
         # of the camera to settle, before we stop it
         rospy.sleep(2.0)
-        rospy.set_param('/%s/camera_node/exposure_mode'%self.veh_name, 'off')
+        rospy.set_param('/%s/camera_node/exposure_mode'%
+                        self.veh_name, 'off')
 
         self.log("Initialized")
 
     def speedToCmd(self, speed_l, speed_r):
-        """Applies the robot-specific gain and trim to the output velocities
+        """Applies the robot-specific gain and trim to the
+        output velocities
 
-        Applies the motor constant k to convert the deisred wheel speeds to wheel commands. Additionally,
-        applies the gain and trim from the robot-specific kinematics configuration.
+        Applies the motor constant k to convert the deisred wheel speeds
+        to wheel commands. Additionally, applies the gain and trim from
+        the robot-specific kinematics configuration.
 
         Args:
-            speed_l (:obj:`float`): Desired speed for the left wheel (e.g between 0 and 1)
-            speed_r (:obj:`float`): Desired speed for the right wheel (e.g between 0 and 1)
+            speed_l (:obj:`float`): Desired speed for the left
+                wheel (e.g between 0 and 1)
+            speed_r (:obj:`float`): Desired speed for the right
+                wheel (e.g between 0 and 1)
 
         Returns:
-            The respective left and right wheel commands that need to be packed in a `WheelsCmdStamped` message
+            The respective left and right wheel commands that need to be
+                packed in a `WheelsCmdStamped` message
 
         """
 
@@ -174,38 +194,48 @@ class BraitenbergNode(DTROS):
         k_l = self.parameters['~k']
 
         # adjusting k by gain and trim
-        k_r_inv = (self.parameters['~gain'] + self.parameters['~trim']) / k_r
-        k_l_inv = (self.parameters['~gain'] - self.parameters['~trim']) / k_l
+        k_r_inv = (self.parameters['~gain'] + self.parameters['~trim'])\
+                  / k_r
+        k_l_inv = (self.parameters['~gain'] - self.parameters['~trim'])\
+                  / k_l
 
         # conversion from motor rotation rate to duty cycle
         u_r = speed_r * k_r_inv
         u_l = speed_l * k_l_inv
 
         # limiting output to limit, which is 1.0 for the duckiebot
-        u_r_limited = self.trim(u_r, -self.parameters['~limit'], self.parameters['~limit'])
-        u_l_limited = self.trim(u_l, -self.parameters['~limit'], self.parameters['~limit'])
+        u_r_limited = self.trim(u_r,
+                                -self.parameters['~limit'],
+                                self.parameters['~limit'])
+        u_l_limited = self.trim(u_l,
+                                -self.parameters['~limit'],
+                                self.parameters['~limit'])
 
         return u_l_limited, u_r_limited
 
     def readParamFromFile(self):
         """
-        Reads the saved parameters from `/data/config/calibrations/kinematics/DUCKIEBOTNAME.yaml` or
-        uses the default values if the file doesn't exist. Adjsuts the ROS paramaters for the node
-        with the new values.
+        Reads the saved parameters from
+        `/data/config/calibrations/kinematics/DUCKIEBOTNAME.yaml` or
+        uses the default values if the file doesn't exist. Adjsuts
+        the ROS paramaters for the node with the new values.
 
         """
         # Check file existence
         fname = self.getFilePath(self.veh_name)
-        # Use the default values from the config folder if a robot-specific file does not exist.
+        # Use the default values from the config folder if a
+        # robot-specific file does not exist.
         if not os.path.isfile(fname):
-            self.log("Kinematics calibration file %s does not exist! Using the default file." % fname, type='warn')
+            self.log("Kinematics calibration file %s does not "
+                     "exist! Using the default file." % fname, type='warn')
             fname = self.getFilePath('default')
 
         with open(fname, 'r') as in_file:
             try:
                 yaml_dict = yaml.load(in_file)
             except yaml.YAMLError as exc:
-                self.log("YAML syntax error. File: %s fname. Exc: %s" %(fname, exc), type='fatal')
+                self.log("YAML syntax error. File: %s fname. Exc: %s"
+                         %(fname, exc), type='fatal')
                 rospy.signal_shutdown()
                 return
 
@@ -230,7 +260,8 @@ class BraitenbergNode(DTROS):
             name (:obj:`str`): the Duckiebot name
 
         Returns:
-            :obj:`str`: the full path to the robot-specific calibration file
+            :obj:`str`: the full path to the robot-specific
+                calibration file
 
         """
         cali_file_folder = '/data/config/calibrations/kinematics/'
@@ -257,8 +288,9 @@ class BraitenbergNode(DTROS):
 
         Publishes a zero velocity command at shutdown."""
 
-        # MAKE SURE THAT THE LAST WHEEL COMMAND YOU PUBLISH IS ZERO, OTHERWISE YOUR
-        # DUCKIEBOT WILL CONTINUE MOVING AFTER THE NODE IS STOPPED
+        # MAKE SURE THAT THE LAST WHEEL COMMAND YOU PUBLISH IS ZERO,
+        # OTHERWISE YOUR DUCKIEBOT WILL CONTINUE MOVING AFTER
+        # THE NODE IS STOPPED
 
         # PUT YOUR CODE HERE
 
@@ -275,7 +307,7 @@ if __name__ == '__main__':
 
 #### Attracting Braitenberg vechicles {#exercise:braitenberg-attracting}
 
-You should be able to change the avoiding behavior of your robot into an attracting one by editing just a few lines of code. Give it a try!
+You should be able to change the avoiding behavior of your robot into an attracting one by editing just a few lines of code. Give it a try! Once you have finished this exercise, you should have a Duckiebot which goes towards the right if your program senses that the right side has more brightness, and vice versa.
 
 <end/>
 
