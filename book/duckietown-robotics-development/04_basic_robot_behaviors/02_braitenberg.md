@@ -100,39 +100,45 @@ import rospy
 import yaml
 
 from duckietown import DTROS
-from std_msgs.msg import Float64
-from sensor_msgs.msg import CompressedImage, CameraInfo
-from duckietown_msgs.msg import Twist2DStamped, WheelsCmdStamped
+from sensor_msgs.msg import CompressedImage
+from duckietown_msgs.msg import WheelsCmdStamped
 
 
 class BraitenbergNode(DTROS):
-    """Handles the imagery.
+    """Braitenberg Behaviour
 
     This node implements Braitenberg vehicle behavior on a Duckiebot.
 
     Args:
-        node_name (:obj:`str`): a unique, descriptive name for the node that ROS will use
+        node_name (:obj:`str`): a unique, descriptive name for the node
+            that ROS will use
 
     Configuration:
-        ~gain (:obj:`float`): scaling factor applied to the desired velocity, taken from the 
-            robot-specific kinematics calibration 
-        ~trim (:obj:`float`): trimming factor that is typically used to offset differences in the
-            behaviour of the left and right motors, it is recommended to use a value that results in
-            the robot moving in a straight line when forward command is given, taken from the 
-            robot-specific kinematics calibration 
-        ~baseline (:obj:`float`): the distance between the two wheels of the robot, taken from the 
-            robot-specific kinematics calibration 
-        ~radius (:obj:`float`): radius of the wheel, taken from the robot-specific kinematics calibration 
-        ~k (:obj:`float`): motor constant, assumed equal for both motors, taken from the 
-            robot-specific kinematics calibration 
-        ~limit (:obj:`float`): limits the final commands sent to the motors, taken from the 
-            robot-specific kinematics calibration 
+        ~gain (:obj:`float`): scaling factor applied to the desired
+            velocity, taken from the robot-specific kinematics
+            calibration
+        ~trim (:obj:`float`): trimming factor that is typically used
+            to offset differences in the behaviour of the left and
+            right motors, it is recommended to use a value that results
+            in the robot moving in a straight line when forward command
+            is given, taken from the robot-specific kinematics calibration
+        ~baseline (:obj:`float`): the distance between the two wheels
+            of the robot, taken from the robot-specific kinematics
+            calibration
+        ~radius (:obj:`float`): radius of the wheel, taken from the
+            robot-specific kinematics calibration
+        ~k (:obj:`float`): motor constant, assumed equal for both
+            motors, taken from the robot-specific kinematics calibration
+        ~limit (:obj:`float`): limits the final commands sent to the
+            motors, taken from the robot-specific kinematics calibration
 
     Subscriber:
-        ~image/compressed (:obj:`CompressedImage`): The acquired camera images
+        ~image/compressed (:obj:`CompressedImage`): The acquired camera
+            images
 
     Publisher:
-        ~wheels_cmd (:obj:`duckietown_msgs.msg.WheelsCmdStamped`): The wheel commands that the motors will execute
+        ~wheels_cmd (:obj:`duckietown_msgs.msg.WheelsCmdStamped`): The
+            wheel commands that the motors will execute
 
     """
 
@@ -157,22 +163,28 @@ class BraitenbergNode(DTROS):
         # Wait for the automatic gain control
         # of the camera to settle, before we stop it
         rospy.sleep(2.0)
-        rospy.set_param('/%s/camera_node/exposure_mode'%self.veh_name, 'off')
+        rospy.set_param('/%s/camera_node/exposure_mode'%
+                        self.veh_name, 'off')
 
         self.log("Initialized")
 
     def speedToCmd(self, speed_l, speed_r):
-        """Applies the robot-specific gain and trim to the output velocities
+        """Applies the robot-specific gain and trim to the
+        output velocities
 
-        Applies the motor constant k to convert the deisred wheel speeds to wheel commands. Additionally,
-        applies the gain and trim from the robot-specific kinematics configuration.
+        Applies the motor constant k to convert the deisred wheel speeds
+        to wheel commands. Additionally, applies the gain and trim from
+        the robot-specific kinematics configuration.
 
         Args:
-            speed_l (:obj:`float`): Desired speed for the left wheel (e.g between 0 and 1)
-            speed_r (:obj:`float`): Desired speed for the right wheel (e.g between 0 and 1)
+            speed_l (:obj:`float`): Desired speed for the left
+                wheel (e.g between 0 and 1)
+            speed_r (:obj:`float`): Desired speed for the right
+                wheel (e.g between 0 and 1)
 
         Returns:
-            The respective left and right wheel commands that need to be packed in a `WheelsCmdStamped` message
+            The respective left and right wheel commands that need to be
+                packed in a `WheelsCmdStamped` message
 
         """
 
@@ -181,38 +193,48 @@ class BraitenbergNode(DTROS):
         k_l = self.parameters['~k']
 
         # adjusting k by gain and trim
-        k_r_inv = (self.parameters['~gain'] + self.parameters['~trim']) / k_r
-        k_l_inv = (self.parameters['~gain'] - self.parameters['~trim']) / k_l
+        k_r_inv = (self.parameters['~gain'] + self.parameters['~trim'])\
+                  / k_r
+        k_l_inv = (self.parameters['~gain'] - self.parameters['~trim'])\
+                  / k_l
 
         # conversion from motor rotation rate to duty cycle
         u_r = speed_r * k_r_inv
         u_l = speed_l * k_l_inv
 
         # limiting output to limit, which is 1.0 for the duckiebot
-        u_r_limited = self.trim(u_r, -self.parameters['~limit'], self.parameters['~limit'])
-        u_l_limited = self.trim(u_l, -self.parameters['~limit'], self.parameters['~limit'])
+        u_r_limited = self.trim(u_r,
+                                -self.parameters['~limit'],
+                                self.parameters['~limit'])
+        u_l_limited = self.trim(u_l,
+                                -self.parameters['~limit'],
+                                self.parameters['~limit'])
 
         return u_l_limited, u_r_limited
 
     def readParamFromFile(self):
         """
-        Reads the saved parameters from `/data/config/calibrations/kinematics/DUCKIEBOTNAME.yaml` or
-        uses the default values if the file doesn't exist. Adjsuts the ROS paramaters for the node
-        with the new values.
+        Reads the saved parameters from
+        `/data/config/calibrations/kinematics/DUCKIEBOTNAME.yaml` or
+        uses the default values if the file doesn't exist. Adjsuts
+        the ROS paramaters for the node with the new values.
 
         """
         # Check file existence
         fname = self.getFilePath(self.veh_name)
-        # Use the default values from the config folder if a robot-specific file does not exist.
+        # Use the default values from the config folder if a
+        # robot-specific file does not exist.
         if not os.path.isfile(fname):
-            self.log("Kinematics calibration file %s does not exist! Using the default file." % fname, type='warn')
+            self.log("Kinematics calibration file %s does not "
+                     "exist! Using the default file." % fname, type='warn')
             fname = self.getFilePath('default')
 
         with open(fname, 'r') as in_file:
             try:
                 yaml_dict = yaml.load(in_file)
             except yaml.YAMLError as exc:
-                self.log("YAML syntax error. File: %s fname. Exc: %s" %(fname, exc), type='fatal')
+                self.log("YAML syntax error. File: %s fname. Exc: %s"
+                         %(fname, exc), type='fatal')
                 rospy.signal_shutdown()
                 return
 
@@ -237,7 +259,8 @@ class BraitenbergNode(DTROS):
             name (:obj:`str`): the Duckiebot name
 
         Returns:
-            :obj:`str`: the full path to the robot-specific calibration file
+            :obj:`str`: the full path to the robot-specific
+                calibration file
 
         """
         cali_file_folder = '/data/config/calibrations/kinematics/'
@@ -264,8 +287,9 @@ class BraitenbergNode(DTROS):
 
         Publishes a zero velocity command at shutdown."""
 
-        # MAKE SURE THAT THE LAST WHEEL COMMAND YOU PUBLISH IS ZERO, OTHERWISE YOUR
-        # DUCKIEBOT WILL CONTINUE MOVING AFTER THE NODE IS STOPPED
+        # MAKE SURE THAT THE LAST WHEEL COMMAND YOU PUBLISH IS ZERO,
+        # OTHERWISE YOUR DUCKIEBOT WILL CONTINUE MOVING AFTER
+        # THE NODE IS STOPPED
 
         # PUT YOUR CODE HERE
 
