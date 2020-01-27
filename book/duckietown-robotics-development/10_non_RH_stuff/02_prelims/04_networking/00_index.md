@@ -8,7 +8,6 @@ Excerpt: The magic world of packets.
 
 ## Background information {status=draft}
 
-<div class='requirements' markdown="1">
 
 Preliminary reading:
 
@@ -22,4 +21,9 @@ Preliminary reading:
 
 See: XXX (ref to find).
 
+<div class='requirements' markdown="1">
+Requires: what are IP addresses
+Requires: what are subnets
+Requires: how DNS works
+Requires: how `.local` names work
 </div>
