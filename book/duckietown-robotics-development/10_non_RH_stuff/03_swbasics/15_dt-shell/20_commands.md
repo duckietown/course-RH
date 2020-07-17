@@ -63,7 +63,7 @@ Run `dts> commands --installed` to see the list of commands already installed.
 Run `dts> uninstall ![command_name]` to remove a command.
 
 
-## Custom commands {#dt-shell-custom-commands status=ready}
+## Custom commands
 
 `dts` downloads all the commands from the git repository
 [`duckietown/duckietown-shell-commands`](https://github.com/duckietown/duckietown-shell-commands).
