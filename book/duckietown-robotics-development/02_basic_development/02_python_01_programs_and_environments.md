@@ -24,28 +24,20 @@ In Duckietown, everything runs in Docker containers. All you need in order to ru
 
 A boilerplate is provided by the following [repository](https://github.com/duckietown/template-basic).
 
-The repository contains a lot of files, but do not worry, we will analyze them one by one.
-
-First of all, you will need to make a copy of the template in your own GitHub account. To do so, go to the repository and click on the fork button.
+The repository contains a lot of files, but do not worry, we will analyze them one by one. Click on the green button that says "Use this template". 
 
 <figure>
-  <img style="width:10em" src="images/fork.png"/>
+  <img style="width:10em" src="images/use_this_template.png"/>
 </figure>
 
-Now that you have a copy of the template, you can create new repositories based off of it. In order to do so, go to [GitHub](https://github.com/) and click on the button `[+]` at the top-right corner of the page and then click on *New Repository*.
+
+This will take you to a page that looks like the following:
 
 <figure>
-  <img style="width:10em" src="images/new_repo.png"/>
+  <img style="width:40em" src="images/create_a_repo_2.png"/>
 </figure>
 
-You will see a page that looks like the following:
-
-<figure>
-  <img style="width:40em" src="images/create_a_repo.png"/>
-</figure>
-
-In the section *Repository template*, select *`![YOUR_NAME]/template-basic`*. Pick a name for your repository (say `my
--program`) and press the button *Create repository*. Note, you can replace `my-program` with the name of the repository that you prefer, make sure you use the right name in the instructions below.
+Pick a name for your repository (say `my-program`) and press the button *Create repository*. Note, you can replace `my-program` with the name of the repository that you prefer, make sure you use the right name in the instructions below.
 
 This will create a new repository and copy everything from the repository `template-basic` to your new repository. You can now open a terminal and clone your newly created repository.
 
@@ -66,16 +58,15 @@ to
 ARG REPO_NAME="my-program"
 ```
 
-Save the changes. We can now build the image, even though there is not going to be much going on inside it until we place our code in it. To do that, we need to enable development features in the duckietown-shell by running the following in a terminal:
+and then similarly update the `DESCRIPTION` and the `MAINTAINER` ARGs. 
 
-    laptop $ dts install devel
+Save the changes. We can now build the image, even though there is not going to be much going on inside it until we place our code in it. 
 
 Now, in a terminal, move to the directory created by the `git clone` instruction above and run the following command:
 
-    laptop $ dts devel build -f --arch amd64
+    laptop $ dts devel build -f
 
-If you correctly installed Docker and `dts`, you should see a long log that ends with something like
- the following:
+If you correctly installed Docker and `dts`, you should see a long log that ends with something like (but not necessary exactly like) the following:
 
 <figure id="fig:build">
   <img alt="build" style="width:40em" src="images/dts_devel_build.png"/>
@@ -83,21 +74,17 @@ If you correctly installed Docker and `dts`, you should see a long log that ends
 
 You can now run your container by executing the following command.
 
-    laptop $ docker run -it --rm duckietown/my-program:v1-amd64
+    laptop $ dts devel run
 
 This will show the following message:
 
 ```
-The environment variable VEHICLE_NAME is not set. Using '774a2521b42e'.
-Adding /code/my-program to PYTHONPATH
-Adding /code/dt-commons to PYTHONPATH
-Activating services broadcast...
-Done!
-
+The environment variable VEHICLE_NAME is not set. Using '![LAPTOP_HOSTNAME]'.
+WARNING: robot_type file does not exist. Using 'duckiebot' as default type.
+WARNING: robot_configuration file does not exist.
+=&gt; Launching app...
 This is an empty launch script. Update it to launch your application.
-
-Deactivating services broadcast...
-Done!
+&lt;= App terminated!
 ```
 
 Congratulations! You just built and run your first Duckietown-compliant Docker image.
