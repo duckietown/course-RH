@@ -26,7 +26,7 @@ A boilerplate is provided [here](https://github.com/duckietown/template-ros). Th
 Click on the green button that says "Use this template". 
 
 <figure>
-  <img style="width:10em" src="images/use_this_template.png"/>
+  <img style="width:40em" src="images/use_this_template.png"/>
 </figure>
 
 

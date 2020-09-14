@@ -27,7 +27,7 @@ A boilerplate is provided by the following [repository](https://github.com/ducki
 The repository contains a lot of files, but do not worry, we will analyze them one by one. Click on the green button that says "Use this template". 
 
 <figure>
-  <img style="width:10em" src="images/use_this_template.png"/>
+  <img style="width:40em" src="images/use_this_template.png"/>
 </figure>
 
 
