@@ -37,7 +37,7 @@ This will take you to a page that looks like the following:
   <img style="width:40em" src="images/create_a_repo_2.png"/>
 </figure>
 
-Pick a name for your repository (say `my-program`) and press the button *Create repository*. Note, you can replace `my-program` with the name of the repository that you prefer, make sure you use the right name in the instructions below.
+Pick a name for your repository (say `my-program`) and press the button *Create repository from template*. Note, you can replace `my-program` with the name of the repository that you prefer, make sure you use the right name in the instructions below.
 
 This will create a new repository and copy everything from the repository `template-basic` to your new repository. You can now open a terminal and clone your newly created repository.
 
@@ -65,6 +65,9 @@ Save the changes. We can now build the image, even though there is not going to 
 Now, in a terminal, move to the directory created by the `git clone` instruction above and run the following command:
 
     laptop $ dts devel build -f
+
+Note: If the above command is not recognized, you will first have to install it with `dts install devel`.
+
 
 If you correctly installed Docker and `dts`, you should see a long log that ends with something like (but not necessary exactly like) the following:
 

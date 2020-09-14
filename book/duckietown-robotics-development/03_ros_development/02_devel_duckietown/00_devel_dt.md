@@ -23,28 +23,22 @@ In Duckietown, everything runs in Docker containers. All you need in order to ru
 
 A boilerplate is provided [here](https://github.com/duckietown/template-ros). The repository contains a lot of files, but do not worry, we will analyze them one by one.
 
-First of all, you will need to make a copy of the template in your own GitHub account. To do so, visit [this](https://github.com/duckietown/template-ros) URL and click on the fork button.
+Click on the green button that says "Use this template". 
 
 <figure>
-  <img style="width:10em" src="images/fork.png"/>
+  <img style="width:10em" src="images/use_this_template.png"/>
 </figure>
 
-Now that you have a copy of the template, you can create new repositories based off of it. In order to do so, go to [GitHub](https://github.com/) and click on the button [+] at the top-right corner of the page and then click on New Repository.
+
+This will take you to a page that looks like the following:
 
 <figure>
-  <img style="width:15em" src="images/new_repo.png"/>
+  <img style="width:40em" src="images/create_a_repo_2.png"/>
 </figure>
 
-You will see a page that looks like the following:
+Pick a name for your repository (say `my-ros-program`) and press the button *Create repository from template*. Note, you can replace `my-ros-program` with the name of the repository that you prefer, make sure you use the right name in the instructions below.
 
-<figure>
-  <img style="width:45em" src="images/new_repo_page.png"/>
-</figure>
-
-In the section **Repository template**, select **YOUR_NAME/template-ros**. Pick a name for your repository (say `my-ros-program`) and press the button **Create repository**. Note, you can replace `my-ros-program` with the name of the repository that you prefer. Note that no capital letters are allowed and make sure you use the right name in the instructions below.
-
-This will create a new repository and copy everything from the repository `template-ros` to your new repository. You can now open a terminal and clone your newly created repository.
-
+This will create a new repository and copy everything from the repository `template-ros-basic` to your new repository. You can now open a terminal and clone your newly created repository.
 
     laptop $ git clone https://github.com/![YOUR_NAME]/my-ros-program
     laptop $ cd my-ros-program
@@ -63,6 +57,8 @@ to
 ARG REPO_NAME="my-ros-program"
 ```
 
+Similarly update the `DESCRIPTION` and `MAINTAINER` ARGs.
+
 Save the changes.
 
 We can now build the image, even though there won't be much going on inside it until we place our code in it.
@@ -70,7 +66,7 @@ We can now build the image, even though there won't be much going on inside it u
 Open a terminal and move to the directory created by the git clone instruction above. Run the following command:
 
 
-    laptop $ dts devel build -f --arch amd64
+    laptop $ dts devel build -f
 
 Note: If the above command is not recognized, you will first have to install it with `dts install devel`.
 
@@ -82,14 +78,18 @@ If you correctly installed Docker and the duckietown-shell, you should see a lon
 You can now run your container by executing the following command.
 
 
-    laptop $ docker run -it --rm duckietown/my-ros-program:v1-amd64
+    laptop $ docker devel run 
 
 
 This will show the following message:
 
 ```
-The environment variable VEHICLE_NAME is not set. Using '63734f6b4e7c'.
+The environment variable VEHICLE_NAME is not set. Using '![LAPTOP_HOSTNAME]'.
+WARNING: robot_type file does not exist. Using 'duckiebot' as default type.
+WARNING: robot_configuration file does not exist.
+=&gt; Launching app...
 This is an empty launch script. Update it to launch your application.
+&lt;= App terminated!
 ```
 
 **CONGRATULATIONS!** You just built and run your first ROS-based Duckietown-compliant Docker image.
@@ -135,21 +135,21 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package()
 ```
 
-Now that we have a ROS package, we can create a ROS node inside it. Create the directory `src` inside `my_package` and use your favorite text editor to create the file `./packages/my_package/src/my_node.py` and place the following code inside it:
+Now that we have a ROS package, we can create a ROS node inside it. Create the directory `src` inside `my_package` and use your favorite text editor to create the file `./packages/my_package/src/my_publisher_node.py` and place the following code inside it:
 
 ```python
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import os
 import rospy
-from duckietown import DTROS
+from duckietown.dtros import DTROS, NodeType
 from std_msgs.msg import String
 
-class MyNode(DTROS):
+class MyPublisherNode(DTROS):
 
     def __init__(self, node_name):
         # initialize the DTROS parent class
-        super(MyNode, self).__init__(node_name=node_name)
+        super(MyPublisherNode, self).__init__(node_name=node_name, node_type=NodeType.GENERIC)
         # construct publisher
         self.pub = rospy.Publisher('chatter', String, queue_size=10)
 
@@ -164,22 +164,22 @@ class MyNode(DTROS):
 
 if __name__ == '__main__':
     # create the node
-    node = MyNode(node_name='my_node')
+    node = MyPublisherNode(node_name='my_publisher_node')
     # run node
     node.run()
     # keep spinning
     rospy.spin()
 ```
 
-And don’t forget to declare the file `my_node.py` as an executable, by running the command:
+And don’t forget to declare the file `my_publisher_node.py` as an executable, by running the command:
 
-    laptop $ chmod +x ./packages/my_package/src/my_node.py
+    laptop $ chmod +x ./packages/my_package/src/my_publisher_node.py
 
 
-We now need to tell Docker we want this script to be the one executed when we run the command `docker run ...`. In order to do so, open the file `launch.sh` and replace the line
+We now need to tell Docker we want this script to be the one executed when we run the command `docker run ...`. In order to do so, open the file `./launchers/default.sh` and replace the line
 
 ```bash
-echo "This is an empty launch script. Update it to launch your application."
+dt-exec echo "This is an empty launch script. Update it to launch your application."
 ```
 
 with the following lines
@@ -187,16 +187,18 @@ with the following lines
 <pre trim="1" class="html">
 <code trim="1" class="html">roscore &#38;
 sleep 5
-rosrun my_package my_node.py
+dt-exec rosrun my_package my_publisher_node.py
 </code></pre>
 
 Let us now re-build the image
 
-    laptop $ dts devel build -f --arch amd64
+    laptop $ dts devel build -f 
+
+Note: It is a good idea to make sure that the `dt-ros-commons` image on your laptop is up to date. You can do so by running on the laptop `docker pull duckietown/dt-ros-commons:![VERSION]-![ARCH]` where `![VERSION]` in this case is `daffy` and `![ARCH]` is `amd64`. 
 
 and run it
 
-    laptop $ docker run -it --rm duckietown/my-ros-program:v1-amd64
+    laptop $ dts devel run
 
 This will show the following message:
 
