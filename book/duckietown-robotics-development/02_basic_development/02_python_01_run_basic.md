@@ -41,11 +41,11 @@ If you are curious about why that is important, we can tell you that it helps us
  
 Let us now re-build the image:
 
-    laptop $ dts devel build -f --arch amd64
+    laptop $ dts devel build -f 
 
 and run it:
 
-    laptop $ docker run -it --rm duckietown/my-program:v1-amd64
+    laptop $ dts devel run
 
 This will show the following message:
 
