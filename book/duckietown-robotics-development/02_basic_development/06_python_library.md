@@ -128,7 +128,7 @@ Using the repo you have already created:
 
 Make sure that there are no other remains:
 
-    laptp $ grep -r . pondcleaner
+    laptop $ grep -r . pondcleaner
 
 Update the branch names in `README.md`.
 
