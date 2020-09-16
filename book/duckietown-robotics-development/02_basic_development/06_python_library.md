@@ -128,7 +128,7 @@ Using the repo you have already created:
 
 Make sure that there are no other remains:
 
-    grep -r . pondcleaner
+    laptp $ grep -r . pondcleaner
 
 Update the branch names in `README.md`.
 
@@ -209,7 +209,7 @@ The tool can be called by:
     laptop $ make bump    # bump the version, tag the tree
     
 If you need to include the version in a new file, list it inside the file `.bumpversion.cfg` using the
-syntax `[bumpversion:file:&lt;FILE_PATH&gt;]`.
+syntax `[bumpversion:file: &lt;FILE_PATH &gt;]`.
 
 #### Releasing the package
 
