@@ -34,6 +34,7 @@ If you run into any issues during the assembly, there are different ways to find
 #### Duckiebot assembly {#exercise:assembly}
 
 Assemble the hardware of your Duckiebot according to the assembly instructions. Based on the Duckiebot model you have, please choose one of the following instruction guides:
+
 * [`DB18`](+opmanual_duckiebot#assembling-duckiebot-db18) 
 * [`DB19`](+opmanual_duckiebot#assembling-duckiebot-db19) 
 * [`DB-beta`](+opmanual_duckiebot#assembling-duckiebot-db-beta) (only ETHZ students taking AMoD 2020 course) 
