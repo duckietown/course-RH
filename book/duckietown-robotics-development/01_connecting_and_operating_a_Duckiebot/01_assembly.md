@@ -41,4 +41,4 @@ Assemble the hardware of your Duckiebot according to the assembly instructions. 
 
 ## Assembling your Duckietown
 
-Now it is time to assemble your city. You can find useful instruction [here](+opmanual_duckietown#dt-ops-assembly). Make sure you check out the [city appearance specifications](+opmanual_duckietown#dt-ops-appearance-specifications) too!”
+Now it is time to assemble your city. You can find useful instruction [here](+opmanual_duckietown#dt-ops-assembly). Make sure you check out the [city appearance specifications](+opmanual_duckietown#dt-ops-appearance-specifications) too!
