@@ -19,7 +19,7 @@ We have prepared detailed instructions on how to build your Duckiebot, and, if y
 
 ## Assembling the Duckiebot
 
-The content of the Duckiebox including a detailed set of instructions can be found in the [assembly instructions](+opmanual_duckiebot#assembling-duckiebot-db18). It is advisable to read through our [hardware preliminaries](+opmanual_duckiebot#db-opmanual-hw-prel) section before you get your hands on your own Duckiebot.
+The content of the Duckiebox including a detailed set of instructions can be found in the assembly instructions (see [exercise](#exercise:assembly) below). It is advisable to read through our [hardware preliminaries](+opmanual_duckiebot#db-opmanual-hw-prel) section before you get your hands on your own Duckiebot.
 
 The assembly instructions as well as the hardware preliminaries are part of the extensive documentation on Duckietown, which we refer to as the ["Duckumentation"](https://docs.duckietown.org/daffy/). The Duckumentation is an open-source set of documents that explains everything you need in order to find your way around the Duckietown universe.
 
