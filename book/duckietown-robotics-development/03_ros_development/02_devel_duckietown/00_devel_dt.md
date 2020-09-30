@@ -299,7 +299,7 @@ Now that we know how to create a simple publisher, let's create a subscriber whi
 Let us go back to our `src` folder and create a file called `my_subscriber_node.py` with the following content:
 
 ```python
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import os
 import rospy
