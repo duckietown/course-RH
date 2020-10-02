@@ -62,7 +62,7 @@ and then similarly update the `DESCRIPTION` and the `MAINTAINER` ARGs.
 
 Save the changes. We can now build the image, even though there is not going to be much going on inside it until we place our code in it. 
 
-Now, in a terminal, move to the directory created by the `git clone` instruction above and run the following command:
+Now, in a terminal, move to the directory created by the `git clone` instruction above and run the following command(beware that it might take some time):
 
     laptop $ dts devel build -f
 
