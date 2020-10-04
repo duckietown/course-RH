@@ -101,7 +101,7 @@ Notice that as soon as we run the container Docker will execute the `ls -l` comm
 
 Environment variables are often used to control the behavior of one or more programs. As the name hints, these variables are associated with a particular (terminal) environment and are shared among processes. In fact, all processes started from an environment inherit its set of environment variables. If you are curious, you can check out the [Wikipedia](https://en.wikipedia.org/wiki/Environment_variable) article about them.
 
-In bash you can set an environment variable with `export VAR_NAME=var_value`, and to check a variable’s current value use <code>echo &dollar;VAR_NAME</code>. Python allows you to easily get the environment variable of the environment where the program was started in through the `os` module and its dictionary `os.environ['VAR_NAME']`.
+In bash you can set an environment variable with `export VAR_NAME=var_value`, and to check a variable’s current value use <code>echo $VAR_NAME</code>. Python allows you to easily get the environment variable of the environment where the program was started in through the `os` module and its dictionary `os.environ['VAR_NAME']`.
 
 
 #### Environment variables in Docker {#exercise:ex-docker-envvar}

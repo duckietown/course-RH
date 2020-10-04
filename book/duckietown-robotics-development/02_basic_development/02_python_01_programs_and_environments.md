@@ -22,7 +22,7 @@ We assume you are already quite comfortable with Python. Nevertheless, when you 
 
 In Duckietown, everything runs in Docker containers. All you need in order to run a piece of software in Duckietown is a Duckietown-compliant Docker image with your software in it.
 
-A boilerplate is provided by the following [repository](https://github.com/duckietown/template-basic).
+A boilerplate is provided by the following [repository](https://github.com/duckietown/template-basic/tree/ente).
 
 The repository contains a lot of files, but do not worry, we will analyze them one by one. Click on the green button that says "Use this template". 
 
