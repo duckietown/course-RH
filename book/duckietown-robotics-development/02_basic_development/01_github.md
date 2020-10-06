@@ -29,7 +29,7 @@ To learn how to use all of git's functionalities, complete [this tutorial](https
 
 *"GitHub is a code hosting platform for version control and collaboration. It lets you and others work together on projects from anywhere."* (source : github.com)
 
-Github is where all the code is stored. It provides tools to handle pull requests, issues, and much more. The [duckietown organization github page](https://github.com/duckietown) hosts all relevant code. It is comprised of many different repositories.
+Github is where all the code is stored. It provides tools to handle pull requests, issues, and much more. The [Duckietown organization github page](https://github.com/duckietown) hosts all relevant code. It is comprised of many different repositories.
 
 ## Being a good git citizen {status:ready}
 
