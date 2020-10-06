@@ -23,28 +23,22 @@ In Duckietown, everything runs in Docker containers. All you need in order to ru
 
 A boilerplate is provided [here](https://github.com/duckietown/template-ros). The repository contains a lot of files, but do not worry, we will analyze them one by one.
 
-First of all, you will need to make a copy of the template in your own GitHub account. To do so, visit [this](https://github.com/duckietown/template-ros) URL and click on the fork button.
+Click on the green button that says "Use this template". 
 
 <figure>
-  <img style="width:10em" src="images/fork.png"/>
+  <img style="width:40em" src="images/use_this_template.png"/>
 </figure>
 
-Now that you have a copy of the template, you can create new repositories based off of it. In order to do so, go to [GitHub](https://github.com/) and click on the button [+] at the top-right corner of the page and then click on New Repository.
+
+This will take you to a page that looks like the following:
 
 <figure>
-  <img style="width:15em" src="images/new_repo.png"/>
+  <img style="width:40em" src="images/create_a_repo_2.png"/>
 </figure>
 
-You will see a page that looks like the following:
-
-<figure>
-  <img style="width:45em" src="images/new_repo_page.png"/>
-</figure>
-
-In the section **Repository template**, select **YOUR_NAME/template-ros**. Pick a name for your repository (say `my-ros-program`) and press the button **Create repository**. Note, you can replace `my-ros-program` with the name of the repository that you prefer. Note that no capital letters are allowed and make sure you use the right name in the instructions below.
+Pick a name for your repository (say `my-ros-program`) and press the button *Create repository from template*. Note, you can replace `my-ros-program` with the name of the repository that you prefer, make sure you use the right name in the instructions below.
 
 This will create a new repository and copy everything from the repository `template-ros` to your new repository. You can now open a terminal and clone your newly created repository.
-
 
     laptop $ git clone https://github.com/![YOUR_NAME]/my-ros-program
     laptop $ cd my-ros-program
@@ -63,6 +57,8 @@ to
 ARG REPO_NAME="my-ros-program"
 ```
 
+Similarly update the `DESCRIPTION` and `MAINTAINER` ARGs.
+
 Save the changes.
 
 We can now build the image, even though there won't be much going on inside it until we place our code in it.
@@ -70,7 +66,7 @@ We can now build the image, even though there won't be much going on inside it u
 Open a terminal and move to the directory created by the git clone instruction above. Run the following command:
 
 
-    laptop $ dts devel build -f --arch amd64
+    laptop $ dts devel build -f
 
 Note: If the above command is not recognized, you will first have to install it with `dts install devel`.
 
@@ -82,14 +78,18 @@ If you correctly installed Docker and the duckietown-shell, you should see a lon
 You can now run your container by executing the following command.
 
 
-    laptop $ docker run -it --rm duckietown/my-ros-program:v1-amd64
+    laptop $ dts devel run 
 
 
 This will show the following message:
 
 ```
-The environment variable VEHICLE_NAME is not set. Using '63734f6b4e7c'.
+The environment variable VEHICLE_NAME is not set. Using '![LAPTOP_HOSTNAME]'.
+WARNING: robot_type file does not exist. Using 'duckiebot' as default type.
+WARNING: robot_configuration file does not exist.
+=&gt; Launching app...
 This is an empty launch script. Update it to launch your application.
+&lt;= App terminated!
 ```
 
 **CONGRATULATIONS!** You just built and run your first ROS-based Duckietown-compliant Docker image.
@@ -135,21 +135,21 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package()
 ```
 
-Now that we have a ROS package, we can create a ROS node inside it. Create the directory `src` inside `my_package` and use your favorite text editor to create the file `./packages/my_package/src/my_node.py` and place the following code inside it:
+Now that we have a ROS package, we can create a ROS node inside it. Create the directory `src` inside `my_package` and use your favorite text editor to create the file `./packages/my_package/src/my_publisher_node.py` and place the following code inside it:
 
 ```python
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import os
 import rospy
-from duckietown import DTROS
+from duckietown.dtros import DTROS, NodeType
 from std_msgs.msg import String
 
-class MyNode(DTROS):
+class MyPublisherNode(DTROS):
 
     def __init__(self, node_name):
         # initialize the DTROS parent class
-        super(MyNode, self).__init__(node_name=node_name)
+        super(MyPublisherNode, self).__init__(node_name=node_name, node_type=NodeType.GENERIC)
         # construct publisher
         self.pub = rospy.Publisher('chatter', String, queue_size=10)
 
@@ -164,22 +164,22 @@ class MyNode(DTROS):
 
 if __name__ == '__main__':
     # create the node
-    node = MyNode(node_name='my_node')
+    node = MyPublisherNode(node_name='my_publisher_node')
     # run node
     node.run()
     # keep spinning
     rospy.spin()
 ```
 
-And don’t forget to declare the file `my_node.py` as an executable, by running the command:
+And don’t forget to declare the file `my_publisher_node.py` as an executable, by running the command:
 
-    laptop $ chmod +x ./packages/my_package/src/my_node.py
+    laptop $ chmod +x ./packages/my_package/src/my_publisher_node.py
 
 
-We now need to tell Docker we want this script to be the one executed when we run the command `docker run ...`. In order to do so, open the file `launch.sh` and replace the line
+We now need to tell Docker we want this script to be the one executed when we run the command `docker run ...`. In order to do so, open the file `./launchers/default.sh` and replace the line
 
 ```bash
-echo "This is an empty launch script. Update it to launch your application."
+dt-exec echo "This is an empty launch script. Update it to launch your application."
 ```
 
 with the following lines
@@ -187,16 +187,18 @@ with the following lines
 <pre trim="1" class="html">
 <code trim="1" class="html">roscore &#38;
 sleep 5
-rosrun my_package my_node.py
+dt-exec rosrun my_package my_publisher_node.py
 </code></pre>
 
 Let us now re-build the image
 
-    laptop $ dts devel build -f --arch amd64
+    laptop $ dts devel build -f 
+
+Note: It is a good idea to make sure that the base image (`dt-ros-commons` in this case) is up to date. You can do so by adding the flag `--pull` to the command above, i.e., `dts devel build -f --pull`.
 
 and run it
 
-    laptop $ docker run -it --rm duckietown/my-ros-program:v1-amd64
+    laptop $ dts devel run
 
 This will show the following message:
 
@@ -228,7 +230,7 @@ ROS_MASTER_URI=http://172.17.0.4:11311/
 setting /run_id to 45fb649e-e14e-11e9-afd2-0242ac110004
 process[rosout-1]: started with pid [80]
 started core service [/rosout]
-[INFO] [1569606196.137620]: [/my_node] Initializing...
+[INFO] [1569606196.137620]: [/my_publisher_node] Initializing...
 [INFO] [1569606196.148146]: Publishing message: 'Hello World!'
 [INFO] [1569606197.149378]: Publishing message: 'Hello World!'
 [INFO] [1569606198.149470]: Publishing message: 'Hello World!'
@@ -247,12 +249,6 @@ This part assumes that you have a Duckiebot up and running with hostname `![MY_R
     laptop $ ping ![MY_ROBOT].local
 
 If you can ping the robot, you are good to go.
-
-Before you start, you need to configure the Duckiebot to accept new code. This is necessary because the Duckiebot by defaults runs only code released by the Duckietown community. In order to configure the robot to accept custom code, run the following command,
-
-    laptop $ dts devel watchtower stop -H ![MY_ROBOT].local
-
-Note: You need to do this every time you reboot your Duckiebot.
 
 Let us go back to our node file `my_node.py` and change the line:
 
@@ -276,13 +272,13 @@ sleep 5
 
 We can now slightly modify the instructions for building the image so that the image gets built directly on the robot instead of your laptop or desktop machine. Run the command:
 
-    laptop $ dts devel build -f --arch arm32v7 -H ![MY_ROBOT].local
+    laptop $ dts devel build -f -H ![MY_ROBOT].local
 
-As you can see, we changed two things, one is `--arch arm32v7` which tells Docker to build an image that will run on `ARM` architecture (which is the architecture the CPU on the robot is based on), the second is `-H ![MY_ROBOT].local` which tells Docker where to build the image.
+As you can see, we added the argument `-H ![MY_ROBOT].local`, which tells Docker to build the image on your `![MY_ROBOT]` instead of your laptop or desktop machine.
 
 Once the image is built, we can run it on the robot by running the command:
 
-    laptop $ docker -H ![MY_ROBOT].local run -it --rm --net=host duckietown/my-ros-program:v1
+    laptop $ dts devel run -H ![MY_ROBOT].local
 
 If everything worked as expected, you should see the following output,
 
@@ -300,10 +296,10 @@ The environment variable VEHICLE_NAME is not set. Using 'riplbot01'.
 
 Now that we know how to create a simple publisher, let's create a subscriber which can receive these messages.
 
-Let us go back to our `src` folder and create a file called `my_node_subscriber.py` with the following content:
+Let us go back to our `src` folder and create a file called `my_subscriber_node.py` with the following content:
 
 ```python
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import os
 import rospy
@@ -323,41 +319,42 @@ class MyNode(DTROS):
 
 if __name__ == '__main__':
     # create the node
-    node = MyNode(node_name='my_node_subscriber')
+    node = MyNode(node_name='my_subscriber_node')
     # keep spinning
     rospy.spin()
 
 ```
 
-Once again, don’t forget to declare the file `my_node_subscriber.py` as an executable, by running the command:
+Once again, don’t forget to declare the file `my_subscriber_node.py` as an executable, by running the command:
 
-    laptop $ chmod +x ./packages/my_package/src/my_node_subscriber.py
+    laptop $ chmod +x ./packages/my_package/src/my_subscriber_node.py
 
-Then edit the following line from `launch.sh`
+Then edit the following line from `./launchers/default.sh`
 
 ```bash
-rosrun my_package my_node.py
+dt-exec rosrun my_package my_publisher_node.py
 ```
 
 to 
 
-<pre trim="1" class="html"><code trim="1" class="html">rosrun my_package my_node.py &#38;
-rosrun my_package my_node_subscriber.py
-</code></pre>
+```bash
+dt-exec rosrun my_package my_publisher_node.py
+dt-exec rosrun my_package my_subscriber_node.py
+```
 
 Build the image on your Duckiebot again using
 
-    laptop $ dts devel build -f --arch arm32v7 -H MY_ROBOT.local
+    laptop $ dts devel build -f -H ![MY_ROBOT].local
 
 Once the image is built, we can run it on the robot by running the command
 
-    laptop $ docker -H MY_ROBOT.local run -it --rm --net=host duckietown/my-ros-program:v1
+    laptop $ dts devel run -H ![MY_ROBOT].local
 
 You should see the following output
 
 ```
-[INFO] [1569750046.911664]: [/my_node] Initializing...
-[INFO] [1569750046.914195]: [/my_node_subscriber] Initializing...
+[INFO] [1569750046.911664]: [/my_publisher_node] Initializing...
+[INFO] [1569750046.914195]: [/my_subscriber_node] Initializing...
 [INFO] [1569750046.924943]: Publishing message: 'Hello from riplbot01'
 [INFO] [1569750047.926225]: Publishing message: 'Hello from riplbot01'
 [INFO] [1569750047.928526]: I heard Hello from riplbot01

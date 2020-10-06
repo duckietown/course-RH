@@ -1,10 +1,10 @@
-# Custom commands {#dt-shell-custom-commands}
+# Custom commands {#dt-shell-custom-commands status=ready}
 
 
 ### Downloading the commands {#dt-shell-pull-commands-repo}
 
 You can download the source code of the commands by forking the `duckietown-shell-commands`
-repository and pulling your fork locally. The repository can be found 
+repository and pulling your fork locally. The repository can be found
 [here](https://github.com/duckietown/duckietown-shell-commands).
 
 
@@ -183,11 +183,11 @@ public `git` repository that you can pull. Alternatively (but not suggested) you
 in the `./lib/` directory and push it together with the commands.
 
 `dt-shell` prepends the `./lib/` path to the `$PYTHON_PATH` environment variable before calling your command function.
-If you have your library in `./lib/my_lib/foo.py`, you can add the line 
+If you have your library in `./lib/my_lib/foo.py`, you can add the line
 
-```python 
+```python
 from my_lib import foo
-``` 
+```
 
 at the very top
 of your `command.py` file.

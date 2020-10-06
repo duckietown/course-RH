@@ -101,10 +101,10 @@ Notice that as soon as we run the container Docker will execute the `ls -l` comm
 
 Environment variables are often used to control the behavior of one or more programs. As the name hints, these variables are associated with a particular (terminal) environment and are shared among processes. In fact, all processes started from an environment inherit its set of environment variables. If you are curious, you can check out the [Wikipedia](https://en.wikipedia.org/wiki/Environment_variable) article about them.
 
-In bash you can set an environment variable with `export VAR_NAME=var_value`, and to check a variable’s current value use `echo $VAR_NAME`. Python allows you to easily get the environment variable of the environment where the program was started in through the `os` module and its dictionary `os.environ['VAR_NAME']`.
+In bash you can set an environment variable with `export VAR_NAME=var_value`, and to check a variable’s current value use <code>echo \$VAR_NAME</code>. Python allows you to easily get the environment variable of the environment where the program was started in through the `os` module and its dictionary `os.environ['VAR_NAME']`.
 
 
-#### Environment variables in Docker {#exercise:ex-docker-envvar} 
+#### Environment variables in Docker {#exercise:ex-docker-envvar}
 
 Open a terminal and set a new environment variable `MY_VAR` with any value you like. Then start an interactive Python session in the same terminal and check the value of `MY_VAR` using the above function.
 
@@ -197,12 +197,12 @@ with picamera.PiCamera() as camera:
 
 
 Once you have your `color_detector.py` file ready to be tested, you can build it directly on your bot by running:
- 
+
 
     $ docker -H ![DUCKIEBOT_NAME].local build -t colordetector .
-    
+
 Do you remember what `-H` does? It takes the context (the folder in which you are) and ships it to the device specified by `-H` and build the container there. Once the container is built (typically it takes more time the first time), you can test it with:
-       
+
     $ docker -H ![DUCKIEBOT_NAME].local run -it --privileged colordetector
 
 Again there is the `-H` option (why?) and we also have the `--privileged` option. Do you remember what it does? Try to remove it and see what happens.
@@ -226,6 +226,6 @@ Then push it to DockerHub:
 
 Note: You will probably have to first connect your Duckiebot's Docker client with your DockerHub account. So first open an [SSH connection](#exercise:ex-ssh) to the robot and then run `docker login` in it. You will be prompted to provide your DockerHub username and password. If you want to be able to push images directly from your laptop, you should do the same there.
 
-After you've pushed your image to DockerHub your code can be executed on any single Duckiebot around the world with a single command: 
+After you've pushed your image to DockerHub your code can be executed on any single Duckiebot around the world with a single command:
 
     $ docker -H ![DUCKIEBOT_NAME].local run -it --privileged duckquackermann/colordetector
