@@ -2,7 +2,7 @@
 
 Excerpt: Learn how to use the AIDO submission system.
 
-The duckietown platform is one of many possibilities. In particular it is used for a international competition named [AIDO](https://www.duckietown.org/research/ai-driving-olympics). You will probably have part in it in one way or the other. You need to be able to participate in it.
+The Duckietown platform is one of many possibilities. In particular it is used for a international competition named [AIDO](https://www.duckietown.org/research/ai-driving-olympics). You will probably have part in it in one way or the other. You need to be able to participate in it.
 
 <!-- !!! UPDATE THIS !!! -->
 <div class='requirements' markdown='1'>

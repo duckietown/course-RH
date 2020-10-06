@@ -3,7 +3,7 @@
 Excerpt: Learn how to do proper python development 
 
 
-## Get the duckietown library template
+## Get the Duckietown library template
 
 A boilerplate is provided by the [library template repository](https://github.com/duckietown/template-library).
 
