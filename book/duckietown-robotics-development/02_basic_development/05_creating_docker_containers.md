@@ -180,6 +180,29 @@ Note: If you are using a DB-Beta, so a NVIDIA Jetson Nano powered Duckiebot, you
 
 Working with the camera can sometimes be tricky so you can use this template for `color_detector.py` to get started:
 
+Use this if you are using a Raspberry Pi equipped Duckiebot:
+
+```python
+import picamera
+import picamera.array
+from time import sleep
+
+with picamera.PiCamera() as camera:
+    camera.resolution = (320, 240)
+
+    while True:
+        with picamera.array.PiRGBArray(camera) as output:
+            camera.capture(output, 'rgb')
+            output = output.array
+
+            # You can now treat output as a normal numpy array
+            # Do your magic here
+
+            sleep(1)
+```
+
+Instead use this fucntion template if you are using a DB-Beta: 
+
 ```python
 #!/usr/bin/env python3
 import cv2
