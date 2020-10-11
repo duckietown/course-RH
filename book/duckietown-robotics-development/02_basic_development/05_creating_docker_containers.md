@@ -154,7 +154,7 @@ Now that you know your way around Dockerfiles, it is time to finally build somet
 
 #### Creating a color detector in Docker {#exercise:ex-docker-colordetector}
 
-Note: The following exercise will use the camera on your robot. The `picamera` library allows only one process to access the camera at a time. Therefore, if there is another process on your bot that is already using the camera, your code will likely fail. Make sure that the `dt-duckiebot-interface` and any other container that can use the camera are stopped. You can use [Portainer](#exercise:portainer) to do that.
+Note: The following exercise will use the camera on your robot, bear in mind that only one process can access the camera at a time. Therefore, if there is another process on your bot that is already using the camera, your code will likely fail. Make sure that the `dt-duckiebot-interface` and any other container that can use the camera are stopped. You can use [Portainer](#exercise:portainer) to do that.
 
 We will divide the image that the camera acquires into `N_SPLITS` equal horizontal sectors. `N_SPLITS` will be an environment variable we pass to the container. Think of it as a configuration parameter. The container should find which color is most present in each sector. Or alternatively you can look at the color distribution for each split. It should print the result in a nicely formatted way with a frequency of about 1Hz.
 
@@ -163,7 +163,7 @@ You can start your Dockerfile from `duckietown/dt-duckiebot-interface:daffy-arm3
 ```Dockerfile
 FROM duckietown/dt-duckiebot-interface:daffy-arm32v7
 
-WORKDIR /color_detector
+WORKDIR /color_detector_dir
 
 COPY requirements.txt ./
 
@@ -171,28 +171,28 @@ RUN pip install -r requirements.txt
 
 COPY color_detector.py .
 
-CMD python ./color_detector.py
+CMD python3 ./color_detector.py
 ```
 
-Working with `picamera` can sometimes be tricky so you can use this template for `color_detector.py` to get started:
+Working with the camera can sometimes be tricky so you can use this template for `color_detector.py` to get started:
 
 ```python
-import picamera
-import picamera.array
+#!/usr/bin/env python3
+import cv2
+import numpy as np
 from time import sleep
 
-with picamera.PiCamera() as camera:
-    camera.resolution = (320, 240)
+cap = cv2.VideoCapture(2)
 
-    while True:
-        with picamera.array.PiRGBArray(camera) as output:
-            camera.capture(output, 'rgb')
-            output = output.array
+while(True):
+    # Capture frame-by-frame
+    ret, frame = cap.read()
 
-            # You can now treat output as a normal numpy array
-            # Do your magic here
+    #Put here your code!
+    # You can now treat output as a normal numpy array
+    # Do your magic here
 
-            sleep(1)
+    sleep(1)
 ```
 
 
