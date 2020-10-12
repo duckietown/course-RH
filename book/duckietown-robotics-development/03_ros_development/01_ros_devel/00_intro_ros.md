@@ -90,9 +90,6 @@ In ROS, code is organized in the form of _packages_. Each package is essentially
 </figure>
 
 
-When developing a large software stack, you may also find it easier to have all messages, services, and parameter files used by all nodes running on your robot in a single package rather than spread out inside packages which use them to avoid unneccessary redefinitions. The nodes, however, remain in their own packages. (Why? Does it have something to do with the fact that multiple nodes might use the same message, etc.?) 
-
-
 Note that the above diagram is just one of the ways to organize the flow of data. What happens actually on your Duckiebot is a little different. 
 
 ## Installation (Optional) {#ros-installation status=ready}
