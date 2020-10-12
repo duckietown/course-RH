@@ -87,9 +87,9 @@ This will show the following message:
 The environment variable VEHICLE_NAME is not set. Using '![LAPTOP_HOSTNAME]'.
 WARNING: robot_type file does not exist. Using 'duckiebot' as default type.
 WARNING: robot_configuration file does not exist.
-=> Launching app...
+= Launching app...
 This is an empty launch script. Update it to launch your application.
-<= App terminated!
+= App terminated!
 ```
 
 **CONGRATULATIONS!** You just built and run your first ROS-based Duckietown-compliant Docker image.
@@ -323,7 +323,7 @@ class MySubscriberNode(DTROS):
 
 if __name__ == '__main__':
     # create the node
-    node = MySubscriberNode(node_name='my_subscriber_node')
+    node = MySubscriberNode(node_name='my_subscriber_node')..
     # keep spinning
     rospy.spin()
 
