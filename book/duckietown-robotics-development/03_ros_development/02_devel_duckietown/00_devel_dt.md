@@ -87,9 +87,9 @@ This will show the following message:
 The environment variable VEHICLE_NAME is not set. Using '![LAPTOP_HOSTNAME]'.
 WARNING: robot_type file does not exist. Using 'duckiebot' as default type.
 WARNING: robot_configuration file does not exist.
-=&gt; Launching app...
+=> Launching app...
 This is an empty launch script. Update it to launch your application.
-&lt;= App terminated!
+<= App terminated!
 ```
 
 **CONGRATULATIONS!** You just built and run your first ROS-based Duckietown-compliant Docker image.
@@ -211,15 +211,15 @@ Press Ctrl-C to interrupt
 Done checking log file disk usage. Usage is &lt;1GB.
 
 started roslaunch server http://172.17.0.4:46725/
-ros_comm version 1.12.14
+ros_comm version 1.15.8
 
 
 SUMMARY
 ========
 
 PARAMETERS
- * /rosdistro: kinetic
- * /rosversion: 1.12.14
+ * /rosdistro: noetic
+ * /rosversion: 1.15.8
 
 NODES
 
@@ -230,10 +230,14 @@ ROS_MASTER_URI=http://172.17.0.4:11311/
 setting /run_id to 45fb649e-e14e-11e9-afd2-0242ac110004
 process[rosout-1]: started with pid [80]
 started core service [/rosout]
-[INFO] [1569606196.137620]: [/my_publisher_node] Initializing...
-[INFO] [1569606196.148146]: Publishing message: 'Hello World!'
-[INFO] [1569606197.149378]: Publishing message: 'Hello World!'
-[INFO] [1569606198.149470]: Publishing message: 'Hello World!'
+
+[INFO] [1602534741.100483]: [/my_publisher_node] Initializing...
+[INFO] [1602534741.137653]: [/my_publisher_node] Health status changed [STARTING] -> [STARTED]
+[INFO] [1602534741.139893]: Publishing message: 'Hello World!'
+[INFO] [1602534742.141385]: Publishing message: 'Hello World!'
+[INFO] [1602534743.141426]: Publishing message: 'Hello World!'
+[INFO] [1602534744.141346]: Publishing message: 'Hello World!'
+
 </code></pre>
 
 **CONGRATULATIONS!** You just built and run your own Duckietown-compliant ROS publisher!
@@ -303,23 +307,23 @@ Let us go back to our `src` folder and create a file called `my_subscriber_node.
 
 import os
 import rospy
-from duckietown import DTROS
+from duckietown.dtros import DTROS, NodeType
 from std_msgs.msg import String
 
-class MyNode(DTROS):
+class MySubscriberNode(DTROS):
 
     def __init__(self, node_name):
         # initialize the DTROS parent class
-        super(MyNode, self).__init__(node_name=node_name)
+        super(MySubscriberNode, self).__init__(node_name=node_name, node_type=NodeType.GENERIC)
         # construct publisher
-        self.sub = rospy.Subscriber("chatter", String, self.callback)
+        self.sub = rospy.Subscriber('chatter', String, self.callback)
 
     def callback(self, data):
         rospy.loginfo("I heard %s", data.data)
 
 if __name__ == '__main__':
     # create the node
-    node = MyNode(node_name='my_subscriber_node')
+    node = MySubscriberNode(node_name='my_subscriber_node')
     # keep spinning
     rospy.spin()
 
@@ -329,17 +333,16 @@ Once again, don’t forget to declare the file `my_subscriber_node.py` as an exe
 
     laptop $ chmod +x ./packages/my_package/src/my_subscriber_node.py
 
-Then edit the following line from `./launchers/default.sh`
+Then add the following line in `./launchers/default.sh`
 
 ```bash
-dt-exec rosrun my_package my_publisher_node.py
+dt-exec rosrun my_package my_subscriber_node.py
 ```
 
-to 
+after
 
 ```bash
 dt-exec rosrun my_package my_publisher_node.py
-dt-exec rosrun my_package my_subscriber_node.py
 ```
 
 Build the image on your Duckiebot again using
