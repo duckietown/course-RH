@@ -1,7 +1,7 @@
 # Developing new Duckiebot functionality {#new-duckiebot-functionality status=ready}
 
 
-Excerpt: Learn how to develop new functionality within the Duckietown framework 
+Excerpt: Learn how to develop new functionality within the Duckietown framework
 
 You will now learn how to add your own code to already existing Duckietown codebase. In particular you will learn how to interface your nodes with the provided ones such that you don't have to rewrite already existing modules. Then, you will be able to master these skills by developing [Braitenberg vehicle](https://en.wikipedia.org/wiki/Braitenberg_vehicle) behavior on Duckiebots.
 
@@ -9,7 +9,7 @@ You will now learn how to add your own code to already existing Duckietown codeb
   Requires: [Docker basics](#docker-basics)
 
   Requires: [ROS basics](#part:sw-advanced)
-  
+
   Requires: [Knowledge of the software architecture on a Duckiebot](#duckietown-code-structure)
 
   Results: Skills on how to develop new code as part of the Duckietown framework
@@ -21,8 +21,6 @@ You will now learn how to add your own code to already existing Duckietown codeb
 
 The `DTROS` class is often referred to as the 'mother node' in Duckietown. It provides some very useful functionalities that the other nodes inherit. It has modified ROS Subscribers and Publishers which can be switched on and off. It also provides an interface to the ROS parameters of the node using it which allows dynamical changes while the node is running. For this reason we strongly suggest you to always base your nodes on `DTROS`. Instead of explaining all the details of `DTROS`, we instead invite you to investigate them yourself.
 
-Note: Currently `dt-core` is not using `DTROS`. Nevertheless, soon the nodes there will be converted to the `DTROS` framework as well.
-
 #### Exploring how DTROS works {#exercise:exploring-dtros}
 
 First, take a look at the documentation of `DTROS` [here](http://rosapi.duckietown.p-petrov.com/repositories/dt-ros-commons/docs/source/packages/duckietown.html#duckietown.DTROS). Find out how its functionalities are implemented by looking at their implementation in the `dt-ros-commons` repository [here](https://github.com/duckietown/dt-ros-commons/tree/daffy/packages/duckietown/include/duckietown). In particular, make sure you can answer the following list of questions. To do that, it might be helpful to see how `DTROS` is being used in some of the other nodes. Take a look at [`camera_node`](https://github.com/duckietown/dt-duckiebot-interface/blob/daffy/packages/camera_driver/src/camera_node.py), the [`wheels_driver_node`](https://github.com/duckietown/dt-duckiebot-interface/blob/daffy/packages/wheels_driver/src/wheels_driver_node.py), and the other nodes in `dt-duckiebot-interface` and `dt-car-interface`.
@@ -33,7 +31,7 @@ First, take a look at the documentation of `DTROS` [here](http://rosapi.duckieto
 
 - What is the difference between the `DTROS` `log` method  and the native ROS logging?
 
-- How are the parameters dynamically updated? What can you do to the frequency at which this happens? Why is `updateParameters` called immediately after initializing the parameters? What is the use of the `parametersChanged` attribute? (_Hint: see the implementation in [`camera_node`](https://github.com/duckietown/dt-duckiebot-interface/blob/daffy/packages/camera_driver/src/camera_node.py)_) 
+- How are the parameters dynamically updated? What can you do to the frequency at which this happens? Why is `updateParameters` called immediately after initializing the parameters? What is the use of the `parametersChanged` attribute? (_Hint: see the implementation in [`camera_node`](https://github.com/duckietown/dt-duckiebot-interface/blob/daffy/packages/camera_driver/src/camera_node.py)_)
 
 - Should you ever use `rospy.get_param()` in your node? If not, how should you access a ROS parameter? How do you initialize the parameters of your node? (_Hint: look at the nodes in `dt_duckiebot_interface` and at the official ROS documentation_)
 
@@ -47,7 +45,7 @@ First, take a look at the documentation of `DTROS` [here](http://rosapi.duckieto
 
 Through a series of exercises you will implement a very basic brightness- and color- based controller for your Duckiebot that can result in a surprisingly advanced robot behavior. In his book _Vehicles: Experiments in Synthetic Psychology_, Valentino Braitenberg describes some extremely basic vehicle designs that are capable of demonstrating complex behaviors. By using only a pair of 'sensors' that can only detect brightness, two motors, and direct links between the sensors and the motors, these vehicles can exhibit love, aggression, fear, foresight and many other complex traits.
 
-<figure> 
+<figure>
   <figcaption>Avoiding and attracting Braitenberg behavior (illustration from [Thomas Schoch](https://commons.wikimedia.org/wiki/File:Braitenberg_Vehicle_2ab.png))</figcaption>
   <img style="width:15em" src="images/Braitenberg_Vehicle.png" />
 </figure>
@@ -73,7 +71,7 @@ Using everything you have learnt so far, create a ROS node that implements the a
 
 - Your controller needs to run in real time with a frequency of at least 10-12 Hz. Therefore, processing the input image at its full resolution might not be possible and you should consider reducing it. A neat way to do this is to change the configuration parameters of the `camera_node` running in `dt-duckiebot-interface`. In the template node code below that is already done for the exposure mode. Consult the [ROS API docs](http://rosapi.duckietown.p-petrov.com/repositories/dt-duckiebot-interface/docs/source/packages/camera_driver.html#cameranode) for the `CameraNode` class if you are not sure about which parameters you can change.
 
-- For now ignore the color that your bot observes, focus only on the brightness of the image on its left and right side. If you still want to change the color of the LEDs, use the `set_pattern` service provided by the `led_emitter_node`. Its use is also documented on the [ROS API docs](http://rosapi.duckietown.p-petrov.com/repositories/dt-duckiebot-interface/docs/source/packages/led_emitter.html#ledemitternode). You do not need to call this service from inside your Python file. You would need to create a Docker container on your Duckiebot using `duckietown/dt-duckiebot-interface:daffy` as the image (why?) to run the required command. What other arguments should you use while creating this container? 
+- For now ignore the color that your bot observes, focus only on the brightness of the image on its left and right side. If you still want to change the color of the LEDs, use the `set_pattern` service provided by the `led_emitter_node`. Its use is also documented on the [ROS API docs](http://rosapi.duckietown.p-petrov.com/repositories/dt-duckiebot-interface/docs/source/packages/led_emitter.html#ledemitternode). You do not need to call this service from inside your Python file. You would need to create a Docker container on your Duckiebot using `duckietown/dt-duckiebot-interface:daffy` as the image (why?) to run the required command. What other arguments should you use while creating this container?
 
 - If your Duckiebot keeps on moving even after you stop your node, you will have to edit the provided `onShutdown` method. Make sure that the last commands your node publishes to `wheel_driver_node` are zero.
 
@@ -82,7 +80,7 @@ Using everything you have learnt so far, create a ROS node that implements the a
 - The template loads the kinematics calibration on your Duckiebot so you don't need to worry about trimming your Braitenberg controller. Simply use the provided `speedToCmd` method apply gain, trim, and the motor constant to your wheel commands. However, in order for that to happen you need to make sure to mount the `/data` folder of your Duckiebot, where all calibrations are stored, to your container. To do that, just add `-v /data:/data` to your Docker run.
 
 - You can also make use of the `dts duckiebot demo` command instead of `docker run`. It will mount the `/data` folder, setup your network and ROS environment variables, and give you access to the devices you need. To run this, simply use `dts duckiebot demo --duckiebot_name ![DUCKIEBOT_NAME] --demo_name ![DEMO_NAME] --package_name ![PACKAGE_NAME] --image [IMAGE]`.
-    
+
 This command will start the `DEMO_NAME.launch` launch file in the `PACKAGE_NAME` package from the `![IMAGE]` Docker image on the `DUCKIEBOT_NAME` Duckiebot. Make sure that you first build you image on the Duckiebot!
 
 - Once you have finished this exercise, you should have a Duckiebot which goes towards the left if your program senses that the right side has more brightness, and vice versa.
@@ -315,4 +313,4 @@ Add a color detector to your Braitenberg controller node. If your Duckiebot sees
 
 If you have more than one robot, try to run your controller on a few of them. Set some to have green LEDs, and some red. Do you see complex behavior emerging? Changing the color of the LEDs can be done with the `set_pattern` service provided by the `led_emitter_node` in `dt-duckiebot-interface`. It is documented on the [ROS API docs](http://rosapi.duckietown.p-petrov.com/repositories/dt-duckiebot-interface/docs/source/packages/led_emitter.html#ledemitternode).
 
-Can you devise even more complex behavior and interactions? 
+Can you devise even more complex behavior and interactions?
