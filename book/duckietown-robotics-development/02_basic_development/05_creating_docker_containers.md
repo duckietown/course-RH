@@ -176,8 +176,6 @@ CMD python3 ./color_detector.py
 
 Make sure you understand what each single line is doing. Keep in mind that you might need to modify it in order to work for you.
 
-Note: If you are using a DB-Beta, so a NVIDIA Jetson Nano powered Duckiebot, you will need to change the "dt-duckiebot-interface:daffy-arm32v7" tag to "dt-duckiebot-interface:jetson".
-
 Working with the camera can sometimes be tricky so you can use this template for `color_detector.py` to get started:
 
 Use this if you are using a Raspberry Pi equipped Duckiebot:
