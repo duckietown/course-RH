@@ -21,7 +21,7 @@ Robotics is innately married to hardware. However, when we develop and test our 
 ## Rosbag {#rosbag}
 
 
-A bag is a file format in ROS for storing ROS message data. Bags, named so because of their `.bag` extension, have an important role in ROS. Bags are typically created by a tool like `rosbag`, which subscribes to one or more ROS topics, and stores the serialized message data in a file as it is received. These bag files can also be played back in ROS to the same topics they were recorded from, or even remapped to new topics.
+A bag is a file format in ROS for storing ROS message data. Bags, named so because of their `.bag` extension, have an important role in ROS. Bags are typically created by a tool like `rosbag`, which subscribes to one or more ROS topics, and stores the sequence of messages in a file as it is received. These bag files can be played back in ROS ith the same topics that were recorded, or even using remapping to new topics. When a bag file is replayed the temporal order of the different messages is always kept.
 
 
 Please go through [this](http://wiki.ros.org/rosbag/Commandline) link for more information.
@@ -36,7 +36,9 @@ or simply
 
     $ rosbag record -a
 
-to record all messages being published.
+to record all messages being published. 
+
+Note: Be careful on recording all the messages published in a ROS system. There might be quite a lot of topics creating very by bag files very quickly, especially using images.
 
 
 ## Rosbag Python API: Reading {#rosbag-read}

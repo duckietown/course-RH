@@ -508,14 +508,14 @@ Edit the `./packages/my_package/launch/multiple_nodes.launch` file to contain th
 
   &lt;group ns="&#36;(arg veh)"&gt;  
 
-    <node pkg="my_package" type="my_publisher_node.py" name="my_publisher_node_1" output="screen"/>
-    <node pkg="my_package" type="my_publisher_node.py" name="my_publisher_node_2" output="screen"/>
+    &lt;node pkg="my_package" type="my_publisher_node.py" name="my_publisher_node_1" output="screen"/&gt;
+    &lt;node pkg="my_package" type="my_publisher_node.py" name="my_publisher_node_2" output="screen"/&gt;
 
-    <node pkg="my_package" type="my_subscriber_node.py" name="my_subscriber_node_1"  output="screen">
+    &lt;node pkg="my_package" type="my_subscriber_node.py" name="my_subscriber_node_1"  output="screen"&gt;
         &lt;remap from="~/chatter" to="/&#36;(arg veh)/my_publisher_node_1/chatter"/&gt;
     &lt;/node&gt;
 
-    <node pkg="my_package" type="my_subscriber_node.py" name="my_subscriber_node_2"  output="screen">
+    &lt;node pkg="my_package" type="my_subscriber_node.py" name="my_subscriber_node_2"  output="screen"&gt;
         &lt;remap from="~/chatter" to="/&#36;(arg veh)/my_publisher_node_2/chatter"/&gt;
     &lt;/node&gt;
 
