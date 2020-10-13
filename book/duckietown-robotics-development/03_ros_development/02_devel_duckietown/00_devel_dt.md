@@ -398,12 +398,12 @@ Create a folder called `launch` inside your package and then create a file insid
 
 <pre trim="1" class="html">
 <code trim="1" class="html">
-&lt;launch&gt;
+<launch>
 
-  &lt;node pkg="my_package" type="my_node.py" name="my_node" output="screen"/&gt;
-  &lt;node pkg="my_package" type="my_node_subscriber.py" name="my_node_subscriber"  output="screen"/&gt;
+  <node pkg="my_package" type="my_publisher_node.py" name="my_publisher_node" output="screen"/>
+  <node pkg="my_package" type="my_subscriber_node.py" name="my_subscriber_node"  output="screen"/>
 
-&lt;/launch&gt;
+</launch>
 </code>
 </pre>
 
@@ -441,8 +441,8 @@ Edit the `./packages/my_package/launch/multiple_nodes.launch` to look like this:
 
   &lt;group ns="&#36;(arg veh)"&gt;  
 
-    &lt;node pkg="my_package" type="my_node.py" name="my_node" output="screen"/&gt;
-    &lt;node pkg="my_package" type="my_node_subscriber.py" name="my_node_subscriber"  output="screen"/&gt;
+    <node pkg="my_package" type="my_publisher_node.py" name="my_publisher_node" output="screen"/>
+    <node pkg="my_package" type="my_subscriber_node.py" name="my_subscriber_node"  output="screen"/>
 
   &lt;/group&gt;
 
@@ -467,11 +467,10 @@ Edit the `./packages/my_package/launch/multiple_nodes.launch` file to have two p
 
   &lt;group ns="&#36;(arg veh)"&gt;  
 
-    &lt;node pkg="my_package" type="my_node.py" name="my_node_1" output="screen"/&gt;
-    &lt;node pkg="my_package" type="my_node.py" name="my_node_2" output="screen"/&gt;
-    &lt;node pkg="my_package" type="my_node_subscriber.py" name="my_node_subscriber_1"  output="screen"/&gt;
-    &lt;node pkg="my_package" type="my_node_subscriber.py" name="my_node_subscriber_2"  output="screen"/&gt;
-
+    <node pkg="my_package" type="my_publisher_node.py" name="my_publisher_node_1" output="screen"/>
+    <node pkg="my_package" type="my_publisher_node.py" name="my_publisher_node_2" output="screen"/>
+    <node pkg="my_package" type="my_subscriber_node.py" name="my_subscriber_node_1"  output="screen"/>
+    <node pkg="my_package" type="my_subscriber_node.py" name="my_subscriber_node_2"  output="screen"/>
 
    &lt;/group&gt;
 
@@ -479,7 +478,7 @@ Edit the `./packages/my_package/launch/multiple_nodes.launch` file to have two p
 </code>
 </pre>
 
-Check `rqt_graph`. All communications are happening on one topic. You still cannot differentiate between topics being published by multiple nodes. Turns out doing that is very simple. Open the file `./packages/my_package/src/my_node.py` and edit the declaration of the publisher from
+Check `rqt_graph`. All communications are happening on one topic. You still cannot differentiate between topics being published by multiple nodes. Turns out doing that is very simple. Open the file `./packages/my_package/src/my_publisher_node.py` and edit the declaration of the publisher from
 
 ```python
 ...
@@ -509,15 +508,15 @@ Edit the `./packages/my_package/launch/multiple_nodes.launch` file to contain th
 
   &lt;group ns="&#36;(arg veh)"&gt;  
 
-    &lt;node pkg="my_package" type="my_node.py" name="my_node_1" output="screen"/&gt;
-    &lt;node pkg="my_package" type="my_node.py" name="my_node_2" output="screen"/&gt;
+    <node pkg="my_package" type="my_publisher_node.py" name="my_publisher_node_1" output="screen"/>
+    <node pkg="my_package" type="my_publisher_node.py" name="my_publisher_node_2" output="screen"/>
 
-    &lt;node pkg="my_package" type="my_node_subscriber.py" name="my_node_subscriber_1"  output="screen"&gt;
-        &lt;remap from="~/chatter" to="/&#36;(arg veh)/my_node_1/chatter"/&gt;
+    <node pkg="my_package" type="my_subscriber_node.py" name="my_subscriber_node_1"  output="screen">
+        &lt;remap from="~/chatter" to="/&#36;(arg veh)/my_publisher_node_1/chatter"/&gt;
     &lt;/node&gt;
 
-    &lt;node pkg="my_package" type="my_node_subscriber.py" name="my_node_subscriber_2"  output="screen"&gt;
-        &lt;remap from="~/chatter" to="/&#36;(arg veh)/my_node_2/chatter"/&gt;
+    <node pkg="my_package" type="my_subscriber_node.py" name="my_subscriber_node_2"  output="screen">
+        &lt;remap from="~/chatter" to="/&#36;(arg veh)/my_publisher_node_2/chatter"/&gt;
     &lt;/node&gt;
 
    &lt;/group&gt;
@@ -533,8 +532,8 @@ Now, replace
 <pre trim="1" class="html">
 <code trim="1" class="html">
 
-&lt;node pkg="my_package" type="my_node_subscriber.py" name="my_node_subscriber_1"  output="screen"&gt;
-    &lt;remap from="~/chatter" to="/&#36;(arg veh)/my_node_1/chatter"/&gt;
+&lt;node pkg="my_package" type="my_subscriber_node.py" name="my_subscriber_node_1"  output="screen"&gt;
+    &lt;remap from="~/chatter" to="/&#36;(arg veh)/my_publisher_node_1/chatter"/&gt;
 &lt;/node&gt;
 </code>
 </pre>
@@ -544,8 +543,8 @@ with
 <pre trim="1" class="html">
 <code trim="1" class="html">
 
-&lt;node pkg="my_package" type="my_node_subscriber.py" name="my_node_subscriber_1"  output="screen"&gt;
-    &lt;remap from="~/chatter" to="my_node_1/chatter"/&gt;
+&lt;node pkg="my_package" type="my_subscriber_node.py" name="my_subscriber_node_1"  output="screen"&gt;
+    &lt;remap from="~/chatter" to="my_publisher_node_1/chatter"/&gt;
 &lt;/node&gt;
 
 </code>
@@ -558,8 +557,8 @@ How about if you replace it with this:
 <pre trim="1" class="html">
 <code trim="1" class="html">
 
-&lt;node pkg="my_package" type="my_node_subscriber.py" name="my_node_subscriber_1"  output="screen"&gt;
-    &lt;remap from="~/chatter" to="/my_node_1/chatter"/&gt;
+&lt;node pkg="my_package" type="my_subscriber_node.py" name="my_subscriber_node_1"  output="screen"&gt;
+    &lt;remap from="~/chatter" to="/my_publisher_node_1/chatter"/&gt;
 &lt;/node&gt;
 </code>
 </pre>
@@ -569,8 +568,8 @@ How about this?
 <pre trim="1" class="html">
 <code trim="1" class="html">
 
-&lt;remap from="my_node_subscriber_1/chatter" to="my_node_1/chatter"/&gt;
-&lt;node pkg="my_package" type="my_node_subscriber.py" name="my_node_subscriber_1"  output="screen"/&gt;
+&lt;remap from="my_subscriber_node_1/chatter" to="my_publisher_node_1/chatter"/&gt;
+&lt;node pkg="my_package" type="my_subscriber_node.py" name="my_subscriber_node_1"  output="screen"/&gt;
 </code>
 </pre>
 
@@ -579,8 +578,8 @@ Or this?
 <pre trim="1" class="html">
 <code trim="1" class="html">
 
-&lt;remap from="~my_node_subscriber_1/chatter" to="~my_node_1/chatter"/&gt;
-&lt;node pkg="my_package" type="my_node_subscriber.py" name="my_node_subscriber_1"  output="screen"/&gt;
+&lt;remap from="~my_subscriber_node_1/chatter" to="~my_publisher_node_1/chatter"/&gt;
+&lt;node pkg="my_package" type="my_subscriber_node.py" name="my_subscriber_node_1"  output="screen"/&gt;
 </code>
 </pre>
 
@@ -615,6 +614,6 @@ Now, run:
 
     laptop $ rostopic list
 
-You should see topics from your Duckiebot appearing here. Voila! You have successfully established connection between your laptop and Duckiebot through ROS!
+You should see topics from your Duckiebot appearing here. Voilà! You have successfully established connection between your laptop and Duckiebot through ROS!
 
 Are you confused about the `11311` above? You should not be. This is simply the default port number that ROS uses for communication. You can change it for any other free port.
