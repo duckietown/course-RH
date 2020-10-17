@@ -27,11 +27,19 @@ Let's first look at the bigger picture: The container hierarchy in Duckietown.
   <img style="width:30em" src="images/container_stack.png" />
 </figure>
 
-As you can see in the above image, all three of the containers actually inherit the same container. Recall that 'inheritance' in a Docker images means that the 'child' image has a `FROM` statement with the 'parent' image in its Dockerfile.
+As you can see in the above image, all three of the containers actually inherit the same container. Recall that 'inheritance' in a Docker images means that the 'child' image has a `FROM` statement with the 'parent' image in its Dockerfile. We typically say that the 'child' _is based on_ 'the parent'.
 
-The image from which everything starts is `ros:kinetic-ros-base-xenial`. It is an official ROS image that is configured to work smoothly with ROS Kinetic. Even though this image is already extremely powerful, it is not well suited to directly work on a Duckiebot. Therefore, we add a few additonal components and configure it which results in `duckietown/dt-ros-kinetic-base`.
+The image on which everything is based is `ubuntu`. It is simply the official Ubuntu image, with no added perks. Ubuntu 20.04 (Focal) is used for the `daffy` version of the Duckietown stack. Of course, as you can imagine, it is missing many key features that we would need. Also, it needs to be properly configured in order to work correctly with our software.
 
-The `duckietown/dt-ros-kinetic-base` image has everything you need in order to start developing code that directly works on your Duckiebot. However, as there are a few components that all Duckietown ROS nodes share, it is convient to package them in an image. These are `duckietown-utils` (a library with a number of useful functions), `duckietown_msgs` (a ROS package that contains all the ROS message types used in Duckietown), and `DTROS`. `DTROS` is a 'mother' node for all other nodes in Duckietown. You have already seen it while working with publishers and subscribers in [RH3](#dt-infrastructure), but we will look at it in more detail soon.
+The `duckietown/dt-base-environment` adds many of the core libraries and configurations that we need. It installs development tools such as `vim`, `git`, `nano` and libraries for handling `i2c` devices, processing images, and efficiently doing linear algebra. It adds compilers, linkers, and libraries necessary for the compiling/building of software from source. Furthermore, we add `pip` and a bunch of handy `python3` libraries, such as `numpy`, `scipy`, `matplotlib`, and `smbus` (used to communicate with motors, LEDs, etc). Finally, `duckietown/dt-base-environment` also provides the core ROS libraries, including `rospy`: ROS's Python bindings. The version of `ROS` used for the `daffy` version of the Duckietown stack is [ROS Noetic Ninjemys](http://wiki.ros.org/noetic).
+
+Then, `duckietown/dt-commons` builds on top of `duckietown/dt-base-environment`. We provide a number of Duckietown libraries here that deal with files handling, infrastructure communication, and everything else that makes our development tools run smoothly. This image configures the environment so that the hostname resolution is correctly performed also, and ensures that the environment variables pertaining to the type of the robot, its hardware, and its configuration are all properly set. It also makes sure that all Python libraries are discoverable, and that ROS is setup correctly.
+
+Building on top of it we have `duckietown/dt-ros-commons`, which has everything you need in order to start developing code that directly works on your Duckiebot. However, as there are a few components that all Duckietown ROS nodes share, it is convenient to package them in an image. These are `duckietown-utils` (a library with a number of useful functions), `duckietown_msgs` (a ROS package that contains all the ROS message types used in Duckietown), and `DTROS`. `DTROS` is a 'mother' node for all other nodes in Duckietown. You have already seen it while working with publishers and subscribers in [RH3](#dt-infrastructure), but we will look at it in more detail soon.
+
+The `duckietown/dt-ros-commons` is also the place where we keep protocols that are key for the communication between nodes found in different repositories. By placing them here, we ensure that all repositories work with the exact same protocol, and hence we prevent communication issues. Currently, the only protocol there is `LED_protocol`, which is used by the `led_emitter_node` in `dt-duckiebot-interface`, which emits LED-encoded messages, and by the `led_detector_node` in `dt-core`, which interprets the messages encoded in the LED flashing of other robots.
+
+Finally, `duckietown/dt-ros-commons` packs another handy node: the `ros_http_api_node`. It exposes the ROS environment as an HTTP API. The ROS HTTP API runs by default on any Duckietown device and allows access to ROS topics, parameters, services, nodes, etc, over HTTP, which is an extremely portable interface. This is the technology behind our web-based interfaces that communicate with ROS, such as the Duckietown Dashboard.
 
 We finally can focus on `dt-duckiebot-interface`, `dt-car-interface`, and `dt-core`. The first, 
 `dt-duckiebot-interface`, contains all the hardware drivers you need to operate your Duckiebot. In particular these are the drivers for the camera (in the `camera_driver` package), the ones for the motors (`wheels_driver`), and the LED drivers (`led_emitter`). Thanks to these nodes, you don't need to interact with low level code to control your Duckiebot. Instead, you can simply use the convenient ROS topics and services provided by these nodes.
@@ -44,7 +52,9 @@ If you are curious to see all the ROS packages available in each of these images
 
 Note: Make sure to look at the `daffy` branches of these repositories!
 
-- [`dt-ros-kinetic-base`](https://github.com/duckietown/dt-ros-kinetic-base/tree/daffy)
+- [`dt-base-environment`](https://github.com/duckietown/dt-base-environment/tree/daffy)
+
+- [`dt-commons`](https://github.com/duckietown/dt-commons/tree/daffy)
  
 - [`dt-ros-commons`](https://github.com/duckietown/dt-ros-commons/tree/daffy)
 
@@ -54,7 +64,7 @@ Note: Make sure to look at the `daffy` branches of these repositories!
 
 - [`dt-core`](https://github.com/duckietown/dt-core/tree/daffy)
 
-As you will see in the nodes, there's a lot of inline documentation provided. You can also access it [here](http://rosapi.duckietown.p-petrov.com) in a more readable form. 
+As you will see in the nodes, there's a lot of inline documentation provided. You can also access in the 'Code documentation' section [here](https://docs.duckietown.org/daffy/) in a more readable form. 
 
 Note: Unfortunately, for the moment only `dt-ros-commons`, `dt-duckiebot-interface`, and `dt-car-interface` are documented. We are working on providing similar level of documentation for `dt-core` as well.
 
