@@ -23,17 +23,15 @@ The `DTROS` class is often referred to as the 'mother node' in Duckietown. It pr
 
 #### Exploring how DTROS works {#exercise:exploring-dtros}
 
-First, take a look at the documentation of `DTROS` [here](http://rosapi.duckietown.p-petrov.com/repositories/dt-ros-commons/docs/source/packages/duckietown.html#duckietown.DTROS). Find out how its functionalities are implemented by looking at their implementation in the `dt-ros-commons` repository [here](https://github.com/duckietown/dt-ros-commons/tree/daffy/packages/duckietown/include/duckietown). In particular, make sure you can answer the following list of questions. To do that, it might be helpful to see how `DTROS` is being used in some of the other nodes. Take a look at [`camera_node`](https://github.com/duckietown/dt-duckiebot-interface/blob/daffy/packages/camera_driver/src/camera_node.py), the [`wheels_driver_node`](https://github.com/duckietown/dt-duckiebot-interface/blob/daffy/packages/wheels_driver/src/wheels_driver_node.py), and the other nodes in `dt-duckiebot-interface` and `dt-car-interface`.
+First, take a look at the documentation of `DTROS` [here](http://rosapi.duckietown.p-petrov.com/repositories/dt-ros-commons/docs/source/packages/duckietown.html#duckietown.DTROS). Find out how its functionalities are implemented by looking at their implementation in the `dt-ros-commons` repository [here](https://github.com/duckietown/dt-ros-commons/tree/daffy/packages/duckietown/include/duckietown). In particular, make sure you can answer the following list of questions. To do that, it might be helpful to see how `DTROS` is being used in some of the other nodes. Take a look at [`camera_node`](https://github.com/duckietown/dt-duckiebot-interface/blob/daffy/packages/camera_driver/src/camera_node.py), the [`kinematics_node`](https://github.com/duckietown/dt-car-interface/blob/daffy/packages/dagu_car/src/kinematics_node.py), and the other nodes in `dt-duckiebot-interface` and `dt-car-interface`.
 
 - How do you initialize the `DTROS` parent class? How do you start your node? What does `rospy.spin()` do? (_Hint: look at the nodes in `dt_duckiebot_interface`_)
 
-- When should you redefine the `onShutdown` method? Why do you still need to call the `onShutdown` method of `DTROS`? (_Hint: look at the nodes in `dt_duckiebot_interface` and at the official ROS documentation_)
+- When should you redefine the `on_shutdown` method? Why do you still need to call the `on_shutdown` method of `DTROS`? (_Hint: look at the nodes in `dt_duckiebot_interface` and at the official ROS documentation_)
 
-- What is the difference between the `DTROS` `log` method  and the native ROS logging?
+- What is the difference between the `DTROS` `log` method  and the native ROS logging? (_Hint: look at the `DTROS` [code](https://github.com/duckietown/dt-ros-commons/blob/daffy/packages/duckietown/include/duckietown/dtros/dtros.py)_)
 
-- How are the parameters dynamically updated? What can you do to the frequency at which this happens? Why is `updateParameters` called immediately after initializing the parameters? What is the use of the `parametersChanged` attribute? (_Hint: see the implementation in [`camera_node`](https://github.com/duckietown/dt-duckiebot-interface/blob/daffy/packages/camera_driver/src/camera_node.py)_)
-
-- Should you ever use `rospy.get_param()` in your node? If not, how should you access a ROS parameter? How do you initialize the parameters of your node? (_Hint: look at the nodes in `dt_duckiebot_interface` and at the official ROS documentation_)
+- How are the parameters dynamically updated? Should you ever use `rospy.get_param()` in your node? If not, how should you access a ROS parameter? How do you initialize the parameters of your node? (_Hint: look at the nodes in `dt_duckiebot_interface` and at the official ROS documentation_)
 
 - What does the `~switch` service do? How can you use it? What is the benefit of using it?
 
@@ -65,11 +63,11 @@ Using everything you have learnt so far, create a ROS node that implements the a
 
 - Use the `dt-duckiebot-interface` and all the drivers it provides. In particular, you will need to subscribe to the images that the `camera_node` publishes and to publish wheel commands to `wheel_driver_node`. To do that simply make sure that the `dt-duckiebot-interface` container is running. Then, whenever you start the container with your code and `--net host`(why?), they will share their ROS Master, so that your subscribers and publishers can find each other.
 
-- Use the nodes in `dt-duckiebot-interface` as a reference for code and documentation style. You will find a number of useful code snippets there.
+- Use the nodes in `dt-duckiebot-interface` as a reference for code and documentation style. You will find a number of useful code snippets there. Also, it may be useful to visit the development book's chapter about [structuring ROS nodes](https://docs.duckietown.org/daffy/opmanual_developer/out/dt_way_nodes.html).
 
 - Use the [ROS template](https://github.com/duckietown/template-ros) and create your package and node there. Don't forget to add the `package.xml` and `CMakeLists.txt` files, and to make your Python code executable, as explained [before](#ros-pub-laptop).
 
-- Your controller needs to run in real time with a frequency of at least 10-12 Hz. Therefore, processing the input image at its full resolution might not be possible and you should consider reducing it. A neat way to do this is to change the configuration parameters of the `camera_node` running in `dt-duckiebot-interface`. In the template node code below that is already done for the exposure mode. Consult the [ROS API docs](http://rosapi.duckietown.p-petrov.com/repositories/dt-duckiebot-interface/docs/source/packages/camera_driver.html#cameranode) for the `CameraNode` class if you are not sure about which parameters you can change.
+- Your controller needs to run in real time with a frequency of at least 10-12 Hz. Therefore, processing the input image at its full resolution might not be possible and you should consider reducing it. A neat way to do this is to change the configuration parameters of the `camera_node` running in `dt-duckiebot-interface`. In the template node code below that is already done for the exposure mode. Consult the [ROS API docs](http://rosapi.duckietown.p-petrov.com/repositories/dt-duckiebot-interface/docs/source/packages/camera_driver.html#cameranode) and the [code](https://github.com/duckietown/dt-duckiebot-interface/blob/daffy/packages/camera_driver/src/camera_node.py) for the `CameraNode` class if you are not sure about which parameters you can change.
 
 - For now ignore the color that your bot observes, focus only on the brightness of the image on its left and right side. If you still want to change the color of the LEDs, use the `set_pattern` service provided by the `led_emitter_node`. Its use is also documented on the [ROS API docs](http://rosapi.duckietown.p-petrov.com/repositories/dt-duckiebot-interface/docs/source/packages/led_emitter.html#ledemitternode). You do not need to call this service from inside your Python file. You would need to create a Docker container on your Duckiebot using `duckietown/dt-duckiebot-interface:daffy` as the image (why?) to run the required command. What other arguments should you use while creating this container?
 
@@ -79,9 +77,9 @@ Using everything you have learnt so far, create a ROS node that implements the a
 
 - The template loads the kinematics calibration on your Duckiebot so you don't need to worry about trimming your Braitenberg controller. Simply use the provided `speedToCmd` method apply gain, trim, and the motor constant to your wheel commands. However, in order for that to happen you need to make sure to mount the `/data` folder of your Duckiebot, where all calibrations are stored, to your container. To do that, just add `-v /data:/data` to your Docker run.
 
-- You can also make use of the `dts duckiebot demo` command instead of `docker run`. It will mount the `/data` folder, setup your network and ROS environment variables, and give you access to the devices you need. To run this, simply use `dts duckiebot demo --duckiebot_name ![DUCKIEBOT_NAME] --demo_name ![DEMO_NAME] --package_name ![PACKAGE_NAME] --image [IMAGE]`.
+<!-- - You can also make use of the `dts duckiebot demo` command instead of `docker run`. It will mount the `/data` folder, setup your network and ROS environment variables, and give you access to the devices you need. To run this, simply use `dts duckiebot demo --duckiebot_name ![DUCKIEBOT_NAME] --demo_name ![DEMO_NAME] --package_name ![PACKAGE_NAME] --image ![IMAGE]`.
 
-This command will start the `DEMO_NAME.launch` launch file in the `PACKAGE_NAME` package from the `![IMAGE]` Docker image on the `DUCKIEBOT_NAME` Duckiebot. Make sure that you first build you image on the Duckiebot!
+This command will start the `DEMO_NAME.launch` launch file in the `PACKAGE_NAME` package from the `![IMAGE]` Docker image on the `DUCKIEBOT_NAME` Duckiebot. Make sure that you first build you image on the Duckiebot! -->
 
 - Once you have finished this exercise, you should have a Duckiebot which goes towards the left if your program senses that the right side has more brightness, and vice versa.
 
