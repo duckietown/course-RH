@@ -29,7 +29,7 @@ First, take a look at the documentation of `DTROS` [here](https://docs.duckietow
 
 - When should you redefine the `on_shutdown` method? Why do you still need to call the `on_shutdown` method of `DTROS`? (_Hint: look at the nodes in `dt_duckiebot_interface` and at the official ROS documentation_)
 
-- What is the difference between the `DTROS` `log` method  and the native ROS logging? (_Hint: look at the `DTROS` [code](https://github.com/duckietown/dt-ros-commons/blob/daffy/packages/duckietown/include/duckietown/dtros/dtros.py)_)
+- What is the difference between the `DTROS` `log` method  and the native ROS logging? (_Hint: look at the `DTROS` implementation in `dt-ros-commons`_)
 
 - How are the parameters dynamically updated? Should you ever use `rospy.get_param()` in your node? If not, how should you access a ROS parameter? How do you initialize the parameters of your node? (_Hint: look at the nodes in `dt_duckiebot_interface` and at the official ROS documentation_)
 
@@ -71,7 +71,7 @@ Using everything you have learnt so far, create a ROS node that implements the a
 
 - For now ignore the color that your bot observes, focus only on the brightness of the image on its left and right side. If you still want to change the color of the LEDs, use the `set_pattern` service provided by the `led_emitter_node`. Its use is also documented on the [ROS API docs](http://rosapi.duckietown.p-petrov.com/repositories/dt-duckiebot-interface/docs/source/packages/led_emitter.html#ledemitternode). You do not need to call this service from inside your Python file. You would need to create a Docker container on your Duckiebot using `duckietown/dt-duckiebot-interface:daffy` as the image (why?) to run the required command. What other arguments should you use while creating this container?
 
-- If your Duckiebot keeps on moving even after you stop your node, you will have to edit the provided `onShutdown` method. Make sure that the last commands your node publishes to `wheel_driver_node` are zero.
+- If your Duckiebot keeps on moving even after you stop your node, you will have to edit the provided `on_shutdown` method. Make sure that the last commands your node publishes to `wheel_driver_node` are zero.
 
 - You will need to publish `WheelsCmdStamped` messages to `wheel_driver_node`. You can see the message structure [here](https://github.com/duckietown/dt-ros-commons/blob/daffy/packages/duckietown_msgs/msg/WheelsCmdStamped.msg).
 
