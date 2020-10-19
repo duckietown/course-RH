@@ -86,7 +86,7 @@ This command will start the `DEMO_NAME.launch` launch file in the `PACKAGE_NAME`
 __Template:__
 
 ```python
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import cv2
 import numpy as np
@@ -94,7 +94,7 @@ import os
 import rospy
 import yaml
 
-from duckietown import DTROS
+from duckietown.dtros import DTROS, NodeType, TopicType, DTParam, ParamType
 from sensor_msgs.msg import CompressedImage
 from duckietown_msgs.msg import WheelsCmdStamped
 
@@ -140,20 +140,36 @@ class BraitenbergNode(DTROS):
     def __init__(self, node_name):
 
         # Initialize the DTROS parent class
-        super(BraitenbergNode, self).__init__(node_name=node_name)
+        super(BraitenbergNode, self).__init__(node_name=node_name,
+                                              node_type=NodeType.BEHAVIOR)
         self.veh_name = rospy.get_namespace().strip("/")
-
-        # Use the kinematics calibration for the gain and trim
-        self.parameters['~gain'] = None
-        self.parameters['~trim'] = None
-        self.parameters['~baseline'] = None
-        self.parameters['~radius'] = None
-        self.parameters['~k'] = None
-        self.parameters['~limit'] = None
 
         # Set parameters using a robot-specific yaml file if such exists
         self.readParamFromFile()
-        self.updateParameters()
+
+        # Get static parameters
+        self._baseline = rospy.get_param('~baseline')
+        self._radius = rospy.get_param('~radius')
+        self._k = rospy.get_param('~k')
+        # Get editable parameters
+        self._gain = DTParam(
+            '~gain',
+            param_type=ParamType.FLOAT,
+            min_value=0.0,
+            max_value=3.0
+        )
+        self._trim = DTParam(
+            '~trim',
+            param_type=ParamType.FLOAT,
+            min_value=0.0,
+            max_value=3.0
+        )
+        self._limit = DTParam(
+            '~limit',
+            param_type=ParamType.FLOAT,
+            min_value=0.0,
+            max_value=1.0
+        )
 
         # Wait for the automatic gain control
         # of the camera to settle, before we stop it
@@ -184,14 +200,12 @@ class BraitenbergNode(DTROS):
         """
 
         # assuming same motor constants k for both motors
-        k_r = self.parameters['~k']
-        k_l = self.parameters['~k']
+        k_r = self._k
+        k_l = self._k
 
         # adjusting k by gain and trim
-        k_r_inv = (self.parameters['~gain'] + self.parameters['~trim'])\
-                  / k_r
-        k_l_inv = (self.parameters['~gain'] - self.parameters['~trim'])\
-                  / k_l
+        k_r_inv = (self._gain.value + self._trim.value) / k_r
+        k_l_inv = (self._gain.value - self._trim.value) / k_l
 
         # conversion from motor rotation rate to duty cycle
         u_r = speed_r * k_r_inv
@@ -199,11 +213,11 @@ class BraitenbergNode(DTROS):
 
         # limiting output to limit, which is 1.0 for the duckiebot
         u_r_limited = self.trim(u_r,
-                                -self.parameters['~limit'],
-                                self.parameters['~limit'])
+                                -self._limit.value,
+                                self._limit.value)
         u_l_limited = self.trim(u_l,
-                                -self.parameters['~limit'],
-                                self.parameters['~limit'])
+                                -self._limit.value,
+                                self._limit.value)
 
         return u_l_limited, u_r_limited
 
@@ -277,7 +291,7 @@ class BraitenbergNode(DTROS):
 
         return max(min(value, high), low)
 
-    def onShutdown(self):
+    def on_shutdown(self):
         """Shutdown procedure.
 
         Publishes a zero velocity command at shutdown."""
@@ -288,7 +302,7 @@ class BraitenbergNode(DTROS):
 
         # PUT YOUR CODE HERE
 
-        super(BraitenbergNode, self).onShutdown()
+        super(BraitenbergNode, self).on_shutdown()
 
 
 if __name__ == '__main__':
@@ -296,6 +310,7 @@ if __name__ == '__main__':
     camera_node = BraitenbergNode(node_name='braitenberg')
     # Keep it spinning to keep the node alive
     rospy.spin()
+
 ```
 <end/>
 
