@@ -19,7 +19,7 @@ You will now learn how to add your own code to already existing Duckietown codeb
 
 ## Exploring DTROS
 
-The `DTROS` class is often referred to as the 'mother node' in Duckietown. It provides some very useful functionalities that the other nodes inherit. It has modified ROS Subscribers and Publishers which can be switched on and off. It also provides an interface to the ROS parameters of the node using it which allows dynamical changes while the node is running. For this reason we strongly suggest you to always base your nodes on `DTROS`. Instead of explaining all the details of `DTROS`, we instead invite you to investigate them yourself.
+The `DTROS` class is often referred to as the 'mother node' in Duckietown. It provides some very useful functionalities that the other nodes inherit. It has modified ROS Subscribers and Publishers which can be switched on and off. It also provides an interface to the ROS parameters of the node using it which allows dynamical changes while the node is running. For this reason we strongly suggest you to always base your nodes on `DTROS`. For some guidelines on how to structure a node in the Duckietown infrastructure, take a look at the [dedicated chapter](https://docs.duckietown.org/daffy/opmanual_developer/out/dt_way_nodes.html#sec:dt_way_nodes) in the Developer Book. Instead of explaining all the details of `DTROS`, we instead invite you to investigate them yourself.
 
 #### Exploring how DTROS works {#exercise:exploring-dtros}
 
