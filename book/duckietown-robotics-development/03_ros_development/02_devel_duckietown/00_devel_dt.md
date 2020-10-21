@@ -398,20 +398,23 @@ Create a folder called `launch` inside your package and then create a file insid
 
 <pre trim="1" class="html">
 <code trim="1" class="html">
-<launch>
+&lt;launch&gt;
 
-  <node pkg="my_package" type="my_publisher_node.py" name="my_publisher_node" output="screen"/>
-  <node pkg="my_package" type="my_subscriber_node.py" name="my_subscriber_node"  output="screen"/>
+  &lt;node pkg="my_package" type="my_publisher_node.py" name="my_publisher_node" output="screen"/&gt;
+  &lt;node pkg="my_package" type="my_subscriber_node.py" name="my_subscriber_node"  output="screen"/&gt;
 
-</launch>
+&lt;/launch&gt;
 </code>
 </pre>
 
 
 Then replace the following lines inside `launch.sh` file
-<pre trim="1" class="html"><code trim="1" class="html">rosrun my_package my_node.py &#38;
+<pre trim="1" class="html">
+<code trim="1" class="html">
+rosrun my_package my_node.py &#38;
 rosrun my_package my_node_subscriber.py
-</code></pre>
+</code>
+</pre>
 
 with
 
@@ -437,16 +440,20 @@ Let's see how we can do this. First of all, we need to make sure that all the to
 
 Edit the `./packages/my_package/launch/multiple_nodes.launch` to look like this:
 
-<pre trim="1" class="html"> <code trim="1" class="html">&lt;launch&gt;
+<pre trim="1" class="html"> <code trim="1" class="html">
+&lt;launch&gt;
 
   &lt;group ns="&#36;(arg veh)"&gt;  
 
-    <node pkg="my_package" type="my_publisher_node.py" name="my_publisher_node" output="screen"/>
-    <node pkg="my_package" type="my_subscriber_node.py" name="my_subscriber_node"  output="screen"/>
+    &lt;node pkg="my_package" type="my_publisher_node.py" name="my_publisher_node" output="screen"/&gt;
+    &lt;node pkg="my_package" type="my_subscriber_node.py" name="my_subscriber_node"  output="screen"/&gt;
 
   &lt;/group&gt;
 
-&lt;/launch&gt;</code></pre>
+&lt;/launch&gt;
+
+</code>
+</pre>
 
 Then edit the roslaunch command in `./launch.sh` as follows:
 
@@ -467,10 +474,10 @@ Edit the `./packages/my_package/launch/multiple_nodes.launch` file to have two p
 
   &lt;group ns="&#36;(arg veh)"&gt;  
 
-    <node pkg="my_package" type="my_publisher_node.py" name="my_publisher_node_1" output="screen"/>
-    <node pkg="my_package" type="my_publisher_node.py" name="my_publisher_node_2" output="screen"/>
-    <node pkg="my_package" type="my_subscriber_node.py" name="my_subscriber_node_1"  output="screen"/>
-    <node pkg="my_package" type="my_subscriber_node.py" name="my_subscriber_node_2"  output="screen"/>
+    &lt;node pkg="my_package" type="my_publisher_node.py" name="my_publisher_node_1" output="screen"/&gt;
+    &lt;node pkg="my_package" type="my_publisher_node.py" name="my_publisher_node_2" output="screen"/&gt;
+    &lt;node pkg="my_package" type="my_subscriber_node.py" name="my_subscriber_node_1"  output="screen"/&gt;
+    &lt;node pkg="my_package" type="my_subscriber_node.py" name="my_subscriber_node_2"  output="screen"/&gt;
 
    &lt;/group&gt;
 
