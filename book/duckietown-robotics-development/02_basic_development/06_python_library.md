@@ -3,7 +3,7 @@
 Excerpt: Learn how to do proper python development 
 
 
-## Get the duckietown library template
+## Get the Duckietown library template
 
 A boilerplate is provided by the [library template repository](https://github.com/duckietown/template-library).
 
@@ -24,8 +24,8 @@ Pick a name for your repository (say `my-library`) and press the button *Create 
 
 This will create a new repository and copy everything from the repository `template-library` to your new repository. You can now open a terminal and clone your newly created repository.
 
-    laptop $ git clone https://github.com/![YOUR_NAME]/my-program
-    laptop $ cd my-program
+    laptop $ git clone https://github.com/![YOUR_NAME]/my-library
+    laptop $ cd my-library
 
 Note: Replace `YOUR_NAME` in the link above with your GitHub username.
 
@@ -155,19 +155,20 @@ This runs the test using a Docker container built from scratch
 with the pinned dependencies in `requirements.txt`.
 This is equivalent to what is run on CircleCI.
 
-To run the tests natively, use:
+To run the tests natively on your pc, use:
 
     laptop $ make test 
+
+Note: To do so you will need to have installed the libraries listed in the file `requirements.txt` on your computer.
+
+For that we assume you have already setup a Python virtual environment.
+
+Note: To do so you will need to `pip install virtualenv` then `virtualenv duckietown` then `source duckietown/bin/activate`. In order to install the requirements to run the test do `pip install -r requirements.txt`.
 
 
 ### Development
 
-We assume you have already setup a Python virtual environment.
-
-Note: To do so you will need to `pip install virtualenv` then `virtualenv duckietown` then `source duckietown/bin/activate`
-
-
-Then we suggest you run:
+In the same virtual environment as above run:
 
     laptop $ python setup.py develop 
     

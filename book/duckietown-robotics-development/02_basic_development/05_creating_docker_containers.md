@@ -101,7 +101,7 @@ Notice that as soon as we run the container Docker will execute the `ls -l` comm
 
 Environment variables are often used to control the behavior of one or more programs. As the name hints, these variables are associated with a particular (terminal) environment and are shared among processes. In fact, all processes started from an environment inherit its set of environment variables. If you are curious, you can check out the [Wikipedia](https://en.wikipedia.org/wiki/Environment_variable) article about them.
 
-In bash you can set an environment variable with `export VAR_NAME=var_value`, and to check a variable’s current value use <code>echo &dollar;VAR_NAME</code>. Python allows you to easily get the environment variable of the environment where the program was started in through the `os` module and its dictionary `os.environ['VAR_NAME']`.
+In bash you can set an environment variable with `export VAR_NAME=var_value`, and to check a variable’s current value use <code>echo \$VAR_NAME</code>. Python allows you to easily get the environment variable of the environment where the program was started in through the `os` module and its dictionary `os.environ['VAR_NAME']`.
 
 
 #### Environment variables in Docker {#exercise:ex-docker-envvar}
@@ -154,16 +154,16 @@ Now that you know your way around Dockerfiles, it is time to finally build somet
 
 #### Creating a color detector in Docker {#exercise:ex-docker-colordetector}
 
-Note: The following exercise will use the camera on your robot. The `picamera` library allows only one process to access the camera at a time. Therefore, if there is another process on your bot that is already using the camera, your code will likely fail. Make sure that the `dt-duckiebot-interface` and any other container that can use the camera are stopped. You can use [Portainer](#exercise:portainer) to do that.
+Note: The following exercise will use the camera on your robot, bear in mind that only one process can   access the camera at a time. Therefore, if there is another process on your bot that is already using the camera, your code will likely fail. Make sure that the `dt-duckiebot-interface` and any other container that can use the camera are stopped. You can use [Portainer](#exercise:portainer) to do that.
 
 We will divide the image that the camera acquires into `N_SPLITS` equal horizontal sectors. `N_SPLITS` will be an environment variable we pass to the container. Think of it as a configuration parameter. The container should find which color is most present in each sector. Or alternatively you can look at the color distribution for each split. It should print the result in a nicely formatted way with a frequency of about 1Hz.
 
-You can start your Dockerfile from `duckietown/dt-duckiebot-interface:daffy-arm32v7`. Most of the stuff you need should already be in there. Make a `requirements.txt` file where you list all your pip dependencies. We would expect that you would need at least `picamera` and `numpy`. Using a `requirements.txt` file is a good practice, especially when you work with big projects. The Dockerfile then copies this file and passes it to pip which installs all the packages you specify there. Finally copy your code in the container and specify it should be the starting command. Here’s an example Dockerfile. Make sure you understand what each single line is doing. Keep in mind that you might need to modify it in order to work for you:
+You can start your Dockerfile from `duckietown/dt-duckiebot-interface:daffy-arm32v7`. Most of the stuff you need should already be in there. Make a `requirements.txt` file where you list all your pip dependencies. We would expect that you would need at least `picamera` and `numpy`. Using a `requirements.txt` file is a good practice, especially when you work with big projects. The Dockerfile then copies this file and passes it to pip which installs all the packages you specify there. Finally copy your code in the container and specify it should be the starting command. Here’s an example Dockerfile: 
 
 ```Dockerfile
 FROM duckietown/dt-duckiebot-interface:daffy-arm32v7
 
-WORKDIR /color_detector
+WORKDIR /color_detector_dir
 
 COPY requirements.txt ./
 
@@ -171,10 +171,14 @@ RUN pip install -r requirements.txt
 
 COPY color_detector.py .
 
-CMD python ./color_detector.py
+CMD python3 ./color_detector.py
 ```
 
-Working with `picamera` can sometimes be tricky so you can use this template for `color_detector.py` to get started:
+Make sure you understand what each single line is doing. Keep in mind that you might need to modify it in order to work for you.
+
+Working with the camera can sometimes be tricky so you can use this template for `color_detector.py` to get started:
+
+Use this if you are using a Raspberry Pi equipped Duckiebot:
 
 ```python
 import picamera
@@ -193,6 +197,27 @@ with picamera.PiCamera() as camera:
             # Do your magic here
 
             sleep(1)
+```
+
+Instead use this fucntion template if you are using a DB-Beta: 
+
+```python
+#!/usr/bin/env python3
+import cv2
+import numpy as np
+from time import sleep
+
+cap = cv2.VideoCapture(2)
+
+while(True):
+    # Capture frame-by-frame
+    ret, frame = cap.read()
+
+    #Put here your code!
+    # You can now treat output as a normal numpy array
+    # Do your magic here
+
+    sleep(1)
 ```
 
 

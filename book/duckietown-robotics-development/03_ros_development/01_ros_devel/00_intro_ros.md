@@ -23,7 +23,7 @@ Putting it in very simple terms, as a roboticist, ROS is what will prevent you f
 
 ## Why ROS? {#why-ros status=ready}
 
-Your Duckiebot is a very simple robot which has only one sensor (the camera), and two actuators (the motors). You can probably write all the code for the basic funtionality of a Duckiebot yourself. You start by getting images from the camera, processing them to detect lanes, generating suitable motor commands, and finally executing them. You create a single program for all of this which looks like this:
+Your Duckiebot is a very simple robot which has very few sensors. In case of DB-18 only one sensor: the camera. However if you are working with newer configuration such as DB-19 or DB-Beta you will have the camera plus the wheel encoders. Every robot also has two actuators: the motors. You can probably write all the code for the basic funtionality of a Duckiebot yourself. You start by getting images from the camera, processing them to detect lanes, generating suitable motor commands, and finally executing them. You create a single program for all of this which looks like this:
 
 ```python
 img = get_image_from_camera()
@@ -62,7 +62,7 @@ else:
 run_motors(cmd)
 ```
 
-It is easy to see that when you start thinking about having even mode advanced modes of operation such as intersection navigation, Duckiebot detection, traffic sign detection, and auto-charging, your program will end up being a massive stack of if-else statements. What if you could split your program into different independent building blocks, one which only gets images from cameras, one which only detects duckie pedestrians, one which controlls the motors and so on. Would that help you with organizing your code in a better way? How would those blocks communicate with each other? Moreover, how do you switch from autonomous mode to manual mode while your Duckiebot is still running? And what will happen once you try to do this for advanced robots with a lot of sensors and a large number of possible behaviors?
+It is easy to see that when you start thinking about having even more advanced modes of operation such as intersection navigation, Duckiebot detection, traffic sign detection, and auto-charging, your program will end up being a massive stack of if-else statements. What if you could split your program into different independent building blocks, one which only gets images from cameras, one which only detects duckie pedestrians, one which controlls the motors and so on. Would that help you with organizing your code in a better way? How would those blocks communicate with each other? Moreover, how do you switch from autonomous mode to manual mode while your Duckiebot is still running? And what will happen once you try to do this for advanced robots with a lot of sensors and a large number of possible behaviors?
 
 ## Basics of ROS {#ros-basics status=ready}
 Look at the following system
@@ -71,9 +71,9 @@ Look at the following system
 </figure>
 
 
-It performs exactly the same task as before. Unlike before, each of the building blocks is independent from the rest of the blocks, which means that you can swap out certain parts of the code with those written by others. You can write the lane pose extraction algorithm, while your friend works on converting that pose to a motor command. During runtime, the lane pose extractor and duckie detection algorithm run in parallel, just helping you utilize your resources better. The only missing piece to get a working system is making these blocks communicate with each other. This is where ROS comes in. If you don't want to write your own driver for the camera, you could very easily use one from any ROS robot using the PiCamera.
+It performs exactly the same task as before. Unlike before, each of the building blocks is independent from the rest of the blocks, which means that you can swap out certain parts of the code with those written by others. You can write the lane pose extraction algorithm, while your friend works on converting that pose to a motor command. During runtime, the lane pose extractor and duckie detection algorithm run in parallel, just helping you utilize your resources better. The only missing piece to get a working system is making these blocks communicate with each other. This is where ROS comes in. 
 
-In ROS terminology, each box is a _node_, and each solid arrow connection is a _topic_. It is intuitive that each topic carries a different type of a _message_. The `img` topic has images which are matrices of numbers, whereas the `pose` topic may have rotation and translation components. ROS provides a lot of standard message types ranging from `Int`, `Bool`, `String` to images, poses, IMU measurements. You can also define your own custom messages. 
+In ROS terminology, each box is a _node_, and each solid arrow connection is a _topic_. It is intuitive that each topic carries a different type of a _message_. The `img` topic has images which are matrices of numbers, whereas the `pose` topic may have rotation and translation components. ROS provides a lot of standard message types ranging from `Int`, `Bool`, `String` to images, poses, IMU measurements. You can also define your own custom messages combining different message types in one. 
 
 The nodes which send out data on a topic are called _publishers_ of that topic and the ones which receive the data and use it are called _subscribers_ of that topic. As you can seem from the diagram above, a node can be a publisher for one topic and subscriber for another at the same time. 
 
@@ -81,7 +81,7 @@ You may have noticed a dashed arrow from the `joystick` node to the `mode_handle
 
 What manages the connections between nodes is the `rosmaster`. The `rosmaster` is responsible for helping individual nodes find one another and setting up connections between them. This can also be done over a network. Remember that you are able to [see what your Duckiebot sees](+opmanual_duckiebot#read-camera-data)? That was because your laptop connected to the `rosmaster` of your Duckiebot. So, without knowing, you are already doing distributed robotics! It is important to keep in mind though that a single node can be managed by only one `rosmaster` at a time.
 
-Another key building block of ROS are the _parameters_ for each node. Recall when you [calibrated your Duckiebot's wheels](+opmanual_duckiebot#wheel-calibration) or [camera](+opmanual_duckiebot#camera-calib). These calibration parameters need to be stored somewhere so that they are not lost when your Duckiebot powers off. The ROS parameters are also very useful for configuring the nodes and therefore, the behavior of your robot. Say, that you want your lane controller to react faster, then you simply need to change the proportional gain parameter. You can hard-code that, but then changing it would require you to modify the source code. ROS offers a much nicer framework for handling hundreds of parameters for large robotics projects. You will also need parameters in conjunction with services. (Why?) 
+Another key building block of ROS are the _parameters_ for each node. Recall when you [calibrated your Duckiebot's wheels](+opmanual_duckiebot#wheel-calibration) or [camera](+opmanual_duckiebot#camera-calib). These calibration parameters need to be stored somewhere so that they are not lost when your Duckiebot powers off. The ROS parameters are also very useful for configuring the nodes and therefore, the behavior of your robot. Say, that you want your lane controller to react faster, then you simply need to change the proportional gain parameter. You can hard-code that, but then changing it would require you to modify the source code. ROS offers a much nicer framework for handling hundreds of parameters for large robotics projects called `rosparam`. You can also use parameters in conjunction with services to dynamically modify their behaviour. 
 
 In ROS, code is organized in the form of _packages_. Each package is essentially a collection of nodes which perform very specific, related tasks. ROS packages also contain messages, services, and default parameter configuration files used by the nodes. A standard ROS package looks like this:
 
@@ -90,13 +90,10 @@ In ROS, code is organized in the form of _packages_. Each package is essentially
 </figure>
 
 
-When developing a large software stack, you may also find it easier to have all messages, services, and parameter files used by all nodes running on your robot in a single package rather than spread out inside packages which use them to avoid unneccessary redefinitions. The nodes, however, remain in their own packages. (Why? Does it have something to do with the fact that multiple nodes might use the same message, etc.?) 
-
-
 Note that the above diagram is just one of the ways to organize the flow of data. What happens actually on your Duckiebot is a little different. 
 
 ## Installation (Optional) {#ros-installation status=ready}
-If you wish to install ROS on your computer, you can do so using this [link](http://wiki.ros.org/ROS/Installation). Please note that this might not be possible depending on your OS. Regardless of what OS you use, you should be able to use ROS through Docker (Why?). All ROS development in Duckietown happens through Docker. This is why this step is not mandatory. Keep in mind that currently all Duckietown ROS software works in [ROS Kinetic Kame](https://wiki.ros.org/kinetic) and if you want to use a native installation with your Duckiebot, you should install this version, otherwise you will likely run into compatibility issues. However, we strongly recommend using Docker for all ROS related software development. 
+If you wish to install ROS on your computer, you can do so using this [link](http://wiki.ros.org/ROS/Installation). Please note that this might not be possible depending on your OS. Regardless of that, you should be able to use ROS through Docker, because it creates an environment which is completely independent of your OS. Quite powerful right? So much that all ROS development in Duckietown happens through Docker. This is why ROS installation on your pc is not mandatory. Keep in mind that currently all Duckietown ROS software works in [ROS Noetic Ninjemys](http://wiki.ros.org/noetic) and if you want to use a native installation with your Duckiebot, you should install this version, otherwise you will likely run into compatibility issues. However, we strongly recommend using Docker for all ROS related software development. 
 
 ## ROS Tutorials {#ros-tutorials status=ready}
 
