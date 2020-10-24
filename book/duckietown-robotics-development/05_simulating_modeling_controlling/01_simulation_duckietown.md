@@ -11,3 +11,23 @@ Excerpt: Setup, connect and operate the Duckietown simulator.
 <minitoc/>
 
 ## Why simulation?
+Daphne is an avid Duckietowner who loves Duckies. In her mission to "save the Duckies" from bugs in her code she used to spend a large portion of her time writing unit tests for her algorithms and ROS nodes. Some of these tests would check that the accuracy of her object detection pipeline was above a certain threshold, that the estimated offset of the Duckiebot from the lane given several input images was correct or that the output of the controller given several offsets gave sensible results. She noticed that this way of testing would fall short in several aspects:
+
+- The number of hand-crafted edge cases was not representative of the number of situations the Duckiebot would encounter in a single drive
+- Issues at the interface of these algorithms would not be caught
+- To increase code coverage and maintain it, a lot of time would need to go into writing tests, mock ups, gathering and labelling test data, etc
+- Quantifying controller performance was hard without having access to a model of the vehicle used to propagate the state forward in time
+
+Daphne also found that having to charge her robot's battery, setting up her Duckietown loop, placing her Duckiebot on the loop, connecting to it, and running the part of the pipeline that had to be tested everytime she or someone in her team wanted to merge new changes into the codebase was extremely time consuming.
+
+More over, Daphne and her real Duckiebot only have access to a small Duckietown loop. But she wants to ensure that her algorithms work in the most complicated and busy environments of Duckietown.
+
+All of the above were compelling reasons for Daphne to start looking at full-stack simulators that would allow her to simulataneously address the short-comings of unit testing, the inconvenience of manual testing and the ability to test scenarios that are not possible or too risky in real life. 
+
+Luckily, she found just the right thing at the [Duckietown gym](https://github.com/duckietown/gym-duckietown).
+
+Daphne's story is the story of every autonomous driving company, whose mission is instead to "save the humans" and which cannot afford to make mistakes on the real roads, and which require automated integration testing tools that can be run in faster-than-real-time under challenging conditions. As an example, Waymo has driven around 20 million miles on real roads, but around 15 billion miles in simulation!
+
+## The Duckietown Simulator
+
+In this part of the exercise, you will become familiar with the Duckietown simulator by reading the setup instructions here: [](+AIDO#dt-simulator) and driving a robot around a virtual city. Of course, you are welcome to try the other many features of this simulator.
