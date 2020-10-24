@@ -323,7 +323,7 @@ class MySubscriberNode(DTROS):
 
 if __name__ == '__main__':
     # create the node
-    node = MySubscriberNode(node_name='my_subscriber_node')..
+    node = MySubscriberNode(node_name='my_subscriber_node')
     # keep spinning
     rospy.spin()
 
