@@ -73,7 +73,7 @@ This repository describes a library called "`duckietown_pondcleaner`" and there 
    
 * `MANIFEST.in`: Deselects the tests to be included in the egg.
  
-* `setup.py`: Containes meta information, definition of the scripts, and 
+* `setup.py`: Contains meta information, definition of the scripts, and 
   the dependencies information.  
 
 ### Python code
