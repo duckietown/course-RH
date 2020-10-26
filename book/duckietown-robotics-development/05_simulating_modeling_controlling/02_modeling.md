@@ -14,12 +14,13 @@ Excerpt: Play around with representations and modeling methods for Duckiebots
 
 Super quick review of the slides material. Instructions on how to run the Jupyter Notebook demos:
 
-laptop $ dts init exercise
+    laptop $ dts init exercise
 
 Warning: a repository will be cloned inside the directory you are running the above command in.
 
-laptop $ cd mooc-exercises/representations
-laptop $ dts exercises notebooks
+    laptop $ cd mooc-exercises/representations
+
+    laptop $ dts exercises notebooks
 
 On your browser open the `.ipynb` file and start playing around!
 
@@ -27,7 +28,8 @@ On your browser open the `.ipynb` file and start playing around!
 
 Super quick review of the slides material. Instructions on how to run the Jupyter Notebook demos:
 
-laptop $ cd mooc-exercises/kinematics
-laptop $ dts exercises notebooks
+    laptop $ cd mooc-exercises/kinematics
+
+    laptop $ dts exercises notebooks
 
 On your browser open the `.ipynb` file and start playing around!

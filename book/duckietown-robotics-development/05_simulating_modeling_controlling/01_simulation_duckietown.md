@@ -31,3 +31,44 @@ Daphne's story is the story of every autonomous driving company, whose mission i
 ## The Duckietown Simulator
 
 In this part of the exercise, you will become familiar with the Duckietown simulator by reading the setup instructions here: [](+AIDO#dt-simulator) and driving a robot around a virtual city. Of course, you are welcome to try the other many features of this simulator.
+
+To demystify the simulator, here are a few tips to get started.
+
+The API is very simple; to run a minimal demo of the simulator, you simply need a (virtual) environment with the gym_duckietown pip3 package installed.
+
+To setup such an environment, the safest way is to run the following:
+
+    laptop $ cd ~ && virtualenv dt-sim
+    
+    laptop $ source dt-sim/bin/activate
+
+    laptop $ pip3 install duckietown-gym-daffy
+
+Now you need to create a simple python script with uses the gym-duckietown api to connect to the simulator.
+
+Create and run the following file, from within the environment you have setup above:
+
+```python
+#!/usr/bin/env python3
+import gym_duckietown
+from gym_duckietown.simulator import Simulator
+env = Simulator(
+        seed=123, # random seed
+        map_name="loop_empty",
+        max_steps=500001, # we don't want the gym to reset itself
+        domain_rand=0,
+        camera_width=640,
+        camera_height=480,
+        accept_start_angle_deg=4, # start close to straight
+        full_transparency=True,
+        distortion=True,
+    )   
+while True:
+    action = [0.1,0.1]
+    observation, reward, done, misc = env.step(action)
+    env.render()
+    if done:
+        env.reset()
+```
+
+What do you observe?
