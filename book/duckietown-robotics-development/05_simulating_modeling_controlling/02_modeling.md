@@ -12,7 +12,7 @@ Excerpt: Play around with representations and modeling methods for Duckiebots
 
 ## Representations 
 
-Super quick review of the slides material. Instructions on how to run the Jupyter Notebook demos:
+The following instructions are meant to let you test your understanding of representations from what you have learned in class through interactive Jupyter Notebook demos:
 
     laptop $ dts init exercise
 
@@ -26,7 +26,7 @@ On your browser open the `.ipynb` file and start playing around!
 
 ## Modelling of a differential drive vehicle
 
-Super quick review of the slides material. Instructions on how to run the Jupyter Notebook demos:
+The following instructions are meant to let you test your understanding of modeling of a differential drive vehicle from what you have learned in class through interactive Jupyter Notebook demos:
 
     laptop $ cd mooc-exercises/kinematics
 
