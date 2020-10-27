@@ -22,7 +22,7 @@ Daphne also found that having to charge her robot's battery, setting up her Duck
 
 More over, Daphne and her real Duckiebot only have access to a small Duckietown loop. But she wants to ensure that her algorithms work in the most complicated and busy environments of Duckietown.
 
-All of the above were compelling reasons for Daphne to start looking at full-stack simulators that would allow her to simulataneously address the shortcomings of unit testing, the inconvenience of manual testing and the ability to test scenarios that are not possible or too risky in real life. 
+All of the above were compelling reasons for Daphne to start looking at full-stack simulators that would allow her to simultaneously address the shortcomings of unit testing, the inconvenience of manual testing and the ability to test scenarios that are not possible or too risky in real life. 
 
 Luckily, she found just the right thing at the [Duckietown gym](https://github.com/duckietown/gym-duckietown).
 
@@ -34,9 +34,9 @@ In this part of the exercise, you will become familiar with the Duckietown simul
 
 To demystify the simulator, here are a few tips to get started.
 
-The API is very simple; to run a minimal demo of the simulator, you simply need a (virtual) environment with the gym_duckietown pip3 package installed.
+To run a minimal demo of the simulator, you simply need a (virtual) environment with the gym_duckietown pip3 package installed.
 
-To setup such an environment, the safest way is to run the following:
+To setup such an environment, the safest way is to run the following (you could also skip the virtual environment but you may have clashing packages installed):
 
     laptop $ cd ~ && virtualenv dt-sim
     
@@ -44,7 +44,7 @@ To setup such an environment, the safest way is to run the following:
 
     laptop $ pip3 install duckietown-gym-daffy
 
-Now you need to create a simple python script with uses the gym-duckietown api to connect to the simulator.
+Now you need to create a simple python script with uses the gym-duckietown api to connect to the simulator, the API is very simple as you will see.
 
 Create and run the following file, from within the environment you have setup above:
 
@@ -71,4 +71,42 @@ while True:
         env.reset()
 ```
 
-What do you observe?
+What do you observe? Does this make sense? Why is it driving straight? Can you make it drive backwards or turn? When is `done = True`? What is `observation`? 
+
+If you want to drive the robot around in simulation you might have read about the utility script `manual_control.py`. This is located in the root of the [gym_duckietown](https://github.com/duckietown/gym-duckietown) repository and can be run after making sure that all the dependencies are met. Clone the repository and in the root of it run the following:
+
+    laptop $ pip3 install -r requirements.txt
+    
+    laptop $ pip3 install -e .
+
+now run:
+
+    laptop $ ./manual_control.py --env-name Duckietown-udem1-v0
+
+You should be able to drive around with the arrow keys. If you are experiencing large delays and low frame rate, please replace the lines
+
+```python
+
+pyglet.clock.schedule_interval(update, 1.0 / 30)
+
+# Enter main event loop
+pyglet.app.run()
+
+```
+
+by
+
+```python
+import time
+
+...
+
+dt = 0.01
+while True:
+    update(dt)
+    time.sleep(dt)
+
+```
+
+
+
