@@ -22,11 +22,11 @@ Daphne also found that having to charge her robot's battery, setting up her Duck
 
 More over, Daphne and her real Duckiebot only have access to a small Duckietown loop. But she wants to ensure that her algorithms work in the most complicated and busy environments of Duckietown.
 
-All of the above were compelling reasons for Daphne to start looking at full-stack simulators that would allow her to simulataneously address the short-comings of unit testing, the inconvenience of manual testing and the ability to test scenarios that are not possible or too risky in real life. 
+All of the above were compelling reasons for Daphne to start looking at full-stack simulators that would allow her to simulataneously address the shortcomings of unit testing, the inconvenience of manual testing and the ability to test scenarios that are not possible or too risky in real life. 
 
 Luckily, she found just the right thing at the [Duckietown gym](https://github.com/duckietown/gym-duckietown).
 
-Daphne's story is the story of every autonomous driving company, whose mission is instead to "save the humans" and which cannot afford to make mistakes on the real roads, and which require automated integration testing tools that can be run in faster-than-real-time under challenging conditions. As an example, Waymo has driven around 20 million miles on real roads, but around 15 billion miles in simulation!
+Daphne's story is the story of every autonomous driving company, whose mission is instead to "save the humans" and which cannot afford to make mistakes on the real roads, and which require automated integration testing tools that can be run faster-than-real-time under challenging conditions. As an example, Waymo has driven around 20 million miles on real roads, but around 15 billion miles in simulation!
 
 ## The Duckietown Simulator
 
