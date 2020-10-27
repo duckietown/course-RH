@@ -34,6 +34,7 @@ In this part of the exercise, you will become familiar with the Duckietown simul
 
 To demystify the simulator, here are a few tips to get started.
 
+### Minimal demo
 To run a minimal demo of the simulator, you simply need a (virtual) environment with the gym_duckietown pip3 package installed.
 
 To setup such an environment, the safest way is to run the following (you could also skip the virtual environment but you may have clashing packages installed):
@@ -72,6 +73,9 @@ while True:
 ```
 
 What do you observe? Does this make sense? Why is it driving straight? Can you make it drive backwards or turn? When is `done = True`? What is `observation`? 
+
+
+### Driving around in the simulator
 
 If you want to drive the robot around in simulation you might have read about the utility script `manual_control.py`. This is located in the root of the [gym_duckietown](https://github.com/duckietown/gym-duckietown) repository and can be run after making sure that all the dependencies are met. Clone the repository and in the root of it run the following:
 
