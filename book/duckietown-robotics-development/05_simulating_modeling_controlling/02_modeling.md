@@ -14,7 +14,7 @@ Excerpt: Play around with representations and modeling methods for Duckiebots
 
 The following instructions are meant to let you test your understanding of representations from what you have learned in class through interactive Jupyter Notebook demos:
 
-    laptop $ dts init exercise
+    laptop $ dts exercises init
 
 Warning: a repository will be cloned inside the directory you are running the above command in.
 
