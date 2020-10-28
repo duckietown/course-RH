@@ -1,4 +1,4 @@
-# Odometry with Wheel Encoders {#odometry-modeling status=ready}
+# Odometry with Wheel Encoders {#odometry-modeling-encoder status=ready}
 
 Excerpt: Learn how to work with the wheel encoders from the Duckiebot
 
@@ -127,6 +127,5 @@ Do the following:
 - Publish the distance travelled per wheel to a new topic.
 
 - Manually drive your Duckiebot for ~10 seconds, and record a rosbag with the following values: wheel commands (left, right), encoder ticks (left, right), distance traveled per wheel (left, right).
-
 
 <end/>
