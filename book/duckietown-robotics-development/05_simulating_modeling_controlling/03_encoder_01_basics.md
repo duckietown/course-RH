@@ -1,4 +1,4 @@
-# Odometry with Wheel Encoders {#odometry-modeling-encoder status=ready}
+# Odometry with Wheel Encoders {#odometry-encoder status=ready}
 
 Excerpt: Learn how to work with the wheel encoders from the Duckiebot
 
