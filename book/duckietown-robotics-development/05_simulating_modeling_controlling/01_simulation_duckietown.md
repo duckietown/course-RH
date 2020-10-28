@@ -77,13 +77,7 @@ What do you observe? Does this make sense? Why is it driving straight? Can you m
 
 ### Driving around in the simulator
 
-If you want to drive the robot around in simulation you might have read about the utility script `manual_control.py`. This is located in the root of the [gym_duckietown](https://github.com/duckietown/gym-duckietown) repository and can be run after making sure that all the dependencies are met. Clone the repository and in the root of it run the following:
-
-    laptop $ pip3 install -r requirements.txt
-    
-    laptop $ pip3 install -e .
-
-now run:
+If you want to drive the robot around in simulation you might have read about the utility script `manual_control.py`. This is located in the root of the [gym_duckietown](https://github.com/duckietown/gym-duckietown) repository and can be run after making sure that all the dependencies are met. Clone the repository and in the root of it run:
 
     laptop $ ./manual_control.py --env-name Duckietown-udem1-v0
 
