@@ -28,76 +28,99 @@ Similarly as with the [Braitenberg Vehicles](#exercise:braitenberg-avoiding), we
 - [Launch Files](#ros-launch)
 - [Namespaces and remapping](#ros-namespace-remap)
 
+To calculate the distance from the wheel encoders, we might use the following approach.
 
-Here's a useful (but definitely incomplete!) template.
+$$ \Delta X = 2*\pi * R * {N_{ticks}/N_{total}} $$
+
+  - $$ \Delta X $$ is the distance travelled per wheel
+  - $$ N_{ticks} $$ is the number of ticks measured
+  - $$ N_{total} $$ is the number of ticks in one full revolution (e.g. 135).
+
+Below you can see the WheelEncoderStamped.msg from Duckietown messages:
+
+```
+# Enum: encoder type
+uint8 ENCODER_TYPE_ABSOLUTE = 0
+uint8 ENCODER_TYPE_INCREMENTAL = 1
+
+Header header
+uint32 data
+uint16 resolution
+uint8 type
+```
+
+Now you are ready to get started with the Duckietown encoders!
+Here's a useful (but definitely incomplete!) template that will help you get going. Note, this is not the only solution, any solution which implements the required functionality will be considered correct. 
 
 __Template:__
 
 ```python
 #!/usr/bin/env python3
-import os
 import numpy as np
+import os
 import rospy
-import yaml
-
 from duckietown.dtros import DTROS, NodeType, TopicType, DTParam, ParamType
 from duckietown_msgs.msg import Twist2DStamped, WheelEncoderStamped, WheelsCmdStamped
-
-from std_msgs.msg import Header
+from std_msgs.msg import Header, Float32
 
 class EncoderNode(DTROS):
 
-	def __init__(self, node_name):
+    def __init__(self, node_name):
         """Wheel Encoder Node
         This implements basic functionality with the wheel encoders.
         """
 
-		# initialize the DTROS parent class
-		super(EncoderNode, self).__init__(node_name=node_name, node_type=NodeType.PERCEPTION)
+        # initialize the DTROS parent class
+        super(EncoderNode, self).__init__(node_name=node_name, node_type=NodeType.PERCEPTION)
         self.veh_name = rospy.get_namespace().strip("/")
 
-        # Set parameters using a robot-specific yaml file if such exists
-        self.readParamFromFile()
+        # # Set parameters using a robot-specific yaml file if such exists
+        # self.readParamFromFile()
 
-        # Get static parameters
-        self._baseline = rospy.get_param('~baseline')
-        self._radius = rospy.get_param('~radius')
-        self._k = rospy.get_param('~k')
-
-
-        # # # #
-		# TODO: Initialize variables
-        # Note: Think about which variables you need to use for this exercise, and how to initialize them for using them with your code
-	    # # # #
+        # # Get static parameters
+        # self._baseline = rospy.get_param('~baseline')
+        self._radius = rospy.get_param(f'/{self.veh_name}/kinematics_node/radius', 100)
 
         # Subscribing to the wheel encoders
-		self.sub_encoder_ticks =rospy.Subscriber("left_wheel_encoder_node/tick", WheelEncoderStamped, self.left_encoder_data, queue_size=1)
-		self.sub_encoder_ticks =rospy.Subscriber("right_wheel_encoder_node/tick", WheelEncoderStamped, self.right_encoder_data, queue_size=1)
+        self.sub_encoder_ticks_left = rospy.Subscriber(...)
+        self.sub_encoder_ticks_right = rospy.Subscriber(...)
+        self.sub_executed_commands = rospy.Subscriber(...)
 
-    # self.sub_encoder_ticks =rospy.Subscriber("wheels_driver_node/wheels_cmd_executed", WheelsCmdStamped, self.YOUR_FUNCTION_HERE, queue_size=1) # Might be useful.
+        # Publishers
+        self.pub_integrated_distance=dict()
+        self.pub_integrated_distance['left'] = rospy.Publisher(...)
+        self.pub_integrated_distance['right'] = rospy.Publisher(...)
 
-    self.log("Initialized")
+        self.dir = {'left': 0,
+                    'right': 0}
 
-  def left_encoder_data(self, ...):
+        self.integrated_ticks = {'left': 0,
+                                 'right': 0}
 
-    return
+        self.last_total_ticks = {'left': None,
+                                 'right': None}
 
+        self.log("Initialized")
 
-  def right_encoder_data(self, ...):
+    def cb_encoder_data(self, wheel, msg):
+        """ Update encoder distance information from ticks
+        """
 
-    return
+    def cb_executed_commands(self, msg):
+        """
+        """
+        return
 
-	def save_encoder_info(self, ...):
-		# Might be useful to create a rosbag here
-		return
-
-
+    def start_reset(self,...):
+        """ Start or reset distance measurement.
+        """
+        return
 
 if __name__ == '__main__':
-	node = EncoderNode(node_name='my_wheel_encoder_node')
+    node = EncoderNode(node_name='my_wheel_encoder_node')
     # Keep it spinning to keep the node alive
     rospy.spin()
-	rospy.loginfo("wheel_encoder_node is up and running...")
+    rospy.loginfo("wheel_encoder_node is up and running...")
 
 ```
 <end/>
@@ -105,7 +128,7 @@ if __name__ == '__main__':
 #### Get Wheel Encoder Data {#exercise:wheel-encoder-ros-bag}
 Do the following:
 
-- Create a copy of the Duckietown ROS template
+- Create a copy of the Duckietown ROS template.
 
 - Create a subscriber node that is able to obtain the encoder information from both encoders.
 
@@ -113,7 +136,7 @@ Do the following:
 
 - Manually drive your Duckiebot around for ~10 seconds, and record a rosbag with the following parameters: encoder ticks (left and right), wheel commands.
 
-Note: for debugging it might be useful to log any relevant information to the screen.  
+Note: you could record the data from the topics directly with a rosbag (if Keyboard Control is running), but creating the subscriber node is necessary for the next step.  
 
 <end/>
 
@@ -121,7 +144,7 @@ Note: for debugging it might be useful to log any relevant information to the sc
 
 Do the following:
 
-- Modify your previous code to also output the distance travelled by the Duckiebot.
+- Modify your previous code to also output the distance travelled by each wheel of the Duckiebot. Tip: this can be done by integrating the distance traveled by each wheel.
 
 - Publish the distance travelled per wheel to a new topic.
 
