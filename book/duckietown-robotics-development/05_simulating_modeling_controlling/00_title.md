@@ -1,6 +1,6 @@
-# [RH5] Simulating, Modeling and Controlling the Duckiebot {#part:simulating-modeling-controlling status=ready}
+# [RH5] Simulating and Modeling the Duckiebot {#part:simulating-modeling-controlling status=ready}
 
-Excerpt: Learn how to get started with the Duckietown simulator, model the dynamics of the Duckiebot, identify parameters of your model through experimental data and control your Duckiebot using this calibrated model.
+Excerpt: Learn how to get started with the Duckietown simulator, create a ROS wrapper for it and practice representation and modeling techniques for the dynamics of the Duckiebot,
 
 At this point you are familiar with implementing basic functionality for autonomous driving and know how to deploy this functionality to the Duckiebot. While this is a great foundation for implementing more complex behavior, it will not suffice for driving autonomously (and safely!) around Duckietown. 
 
