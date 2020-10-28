@@ -3,7 +3,6 @@
 Excerpt: Odometry Calibration for your Duckiebot
 
 <div class='requirements' markdown='1'>
-<!-- You will only have to have access to dts and know how to use the terminal  -->
   Requires: [Working with Encoders](#odometry-modeling)
 
   Results: Use the Wheel Encoders to Obtain a Better Calibration for your Duckiebot.
@@ -85,7 +84,7 @@ Do the following:
 
 Deliverable 1: Screenshot of the updated `/data/config/calibrations/kinematics/HOSTNAME.yaml` file.
 
-Deliverable 2: Video of your Duckiebot following a defined trajectory (0,0) to (0,X). And a rosbag containing the $$ x $$, $$y$$, and $$\theta$$ values corresponding to your video. 
+Deliverable 2: Video of your Duckiebot following a defined trajectory (0,0) to (0,X). And a rosbag containing the $$ x $$, $$y$$, and $$\theta$$ values corresponding to your video.
 
 
 <end/>

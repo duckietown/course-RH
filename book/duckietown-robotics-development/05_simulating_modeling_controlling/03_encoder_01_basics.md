@@ -1,9 +1,8 @@
-# Odometry with Wheel Encoders {#odometry-encoder status=ready}
+# Odometry with Wheel Encoders {#odometry-modeling status=ready}
 
 Excerpt: Learn how to work with the wheel encoders from the Duckiebot
 
 <div class='requirements' markdown='1'>
-<!-- You will only have to have access to dts and know how to use the terminal  -->
   Requires: [Understanding the DT insfrastructure](#dt-infrastructure)
 
   Requires: [Working with ROS logs](#ros-logs)
@@ -100,8 +99,8 @@ if __name__ == '__main__':
     rospy.spin()
 	rospy.loginfo("wheel_encoder_node is up and running...")
 
-  ```
-  <end/>
+```
+<end/>
 
 #### Get Wheel Encoder Data {#exercise:wheel-encoder-ros-bag}
 Do the following:
