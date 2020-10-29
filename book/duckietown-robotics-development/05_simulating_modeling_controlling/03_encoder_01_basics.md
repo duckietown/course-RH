@@ -32,11 +32,11 @@ The data from each wheel encoders can be used to determined the distance travell
 
 $$ \Delta X = 2 \pi R {N_{ticks}/N_{total}} $$
 
-  - $$ \Delta X $$ is the distance travelled by each wheel
-  - $$ N_{ticks} $$ is the number of ticks measured from each wheel
-  - $$ N_{total} $$ is the number of ticks in one full revolution (i.e., 135).
+  - $$ \Delta X $$ is the distance travelled by each wheel;
+  - $$ N_{ticks} $$ is the number of ticks measured from each wheel;
+  - $$ N_{total} $$ is the number of ticks in one full revolution (in our case that's 135).
 
-Below you can see the WheelEncoderStamped.msg from Duckietown messages:
+Below you can see the `WheelEncoderStamped.msg` from the Duckietown messages package:
 
 ```
 # Enum: encoder type
@@ -50,7 +50,7 @@ uint8 type
 ```
 
 Now you are ready to get started with the Duckietown encoders!
-Here's a useful (but definitely incomplete!) template that will help you get going. Note, this is not the only solution, any solution which implements the required functionality will be considered correct. 
+Here's a useful (but definitely incomplete!) template that will help you get going. Note, this is not the only solution. Any solution which implements the required functionality will be considered correct. 
 
 __Template:__
 
@@ -63,22 +63,18 @@ from duckietown.dtros import DTROS, NodeType, TopicType, DTParam, ParamType
 from duckietown_msgs.msg import Twist2DStamped, WheelEncoderStamped, WheelsCmdStamped
 from std_msgs.msg import Header, Float32
 
-class EncoderNode(DTROS):
+class OdometryNode(DTROS):
 
     def __init__(self, node_name):
         """Wheel Encoder Node
         This implements basic functionality with the wheel encoders.
         """
 
-        # initialize the DTROS parent class
+        # Initialize the DTROS parent class
         super(EncoderNode, self).__init__(node_name=node_name, node_type=NodeType.PERCEPTION)
         self.veh_name = rospy.get_namespace().strip("/")
 
-        # # Set parameters using a robot-specific yaml file if such exists
-        # self.readParamFromFile()
-
-        # # Get static parameters
-        # self._baseline = rospy.get_param('~baseline')
+        # Get static parameters
         self._radius = rospy.get_param(f'/{self.veh_name}/kinematics_node/radius', 100)
 
         # Subscribing to the wheel encoders
@@ -87,37 +83,21 @@ class EncoderNode(DTROS):
         self.sub_executed_commands = rospy.Subscriber(...)
 
         # Publishers
-        self.pub_integrated_distance=dict()
-        self.pub_integrated_distance['left'] = rospy.Publisher(...)
-        self.pub_integrated_distance['right'] = rospy.Publisher(...)
-
-        self.dir = {'left': 0,
-                    'right': 0}
-
-        self.integrated_ticks = {'left': 0,
-                                 'right': 0}
-
-        self.last_total_ticks = {'left': None,
-                                 'right': None}
+        self.pub_integrated_distance_left = rospy.Publisher(...)
+        self.pub_integrated_distance_right = rospy.Publisher(...)
 
         self.log("Initialized")
 
     def cb_encoder_data(self, wheel, msg):
-        """ Update encoder distance information from ticks
+        """ Update encoder distance information from ticks.
         """
 
     def cb_executed_commands(self, msg):
+        """ Use the executed commands to determine the direction of travel of each wheel.
         """
-        """
-        return
-
-    def start_reset(self,...):
-        """ Start or reset distance measurement.
-        """
-        return
-
+        
 if __name__ == '__main__':
-    node = EncoderNode(node_name='my_wheel_encoder_node')
+    node = OdometryNode(node_name='my_odometry_node')
     # Keep it spinning to keep the node alive
     rospy.spin()
     rospy.loginfo("wheel_encoder_node is up and running...")
@@ -137,7 +117,7 @@ Do the following:
 
 - Manually drive your Duckiebot around for ~10 seconds, and record a rosbag with the following parameters: encoder ticks (left and right), wheel commands.
 
-Note: you could record the data from the topics directly with a rosbag (if Keyboard Control is running), but creating the subscriber node is necessary for the next step.  
+Note: You could record the data from the topics directly with a rosbag (if Keyboard Control is running), but creating the subscriber node is necessary for the next step.  
 
 <end/>
 
@@ -145,7 +125,7 @@ Note: you could record the data from the topics directly with a rosbag (if Keybo
 
 Do the following:
 
-- Modify your previous code to also output the distance travelled by each wheel of the Duckiebot. Tip: this can be done by integrating the distance traveled by each wheel.
+- Modify your previous code to also output the distance travelled by each wheel of the Duckiebot. Tip: this can be done by integrating the distance traveled by each wheel, but you need to take care of the direction of rotation of the wheels.
 
 - Publish the distance travelled per wheel to a new topic.
 
