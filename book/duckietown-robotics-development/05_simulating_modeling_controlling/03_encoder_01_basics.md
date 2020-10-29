@@ -28,13 +28,13 @@ Similarly as with the [Braitenberg Vehicles](#exercise:braitenberg-avoiding), we
 - [Launch Files](#ros-launch)
 - [Namespaces and remapping](#ros-namespace-remap)
 
-To calculate the distance from the wheel encoders, we might use the following approach.
+The data from each wheel encoders can be used to determined the distance travelled by each wheel:
 
-$$ \Delta X = 2*\pi * R * {N_{ticks}/N_{total}} $$
+$$ \Delta X = 2 \pi R {N_{ticks}/N_{total}} $$
 
-  - $$ \Delta X $$ is the distance travelled per wheel
-  - $$ N_{ticks} $$ is the number of ticks measured
-  - $$ N_{total} $$ is the number of ticks in one full revolution (e.g. 135).
+  - $$ \Delta X $$ is the distance travelled by each wheel
+  - $$ N_{ticks} $$ is the number of ticks measured from each wheel
+  - $$ N_{total} $$ is the number of ticks in one full revolution (i.e., 135).
 
 Below you can see the WheelEncoderStamped.msg from Duckietown messages:
 
@@ -126,6 +126,7 @@ if __name__ == '__main__':
 <end/>
 
 #### Get Wheel Encoder Data {#exercise:wheel-encoder-ros-bag}
+
 Do the following:
 
 - Create a copy of the Duckietown ROS template.
