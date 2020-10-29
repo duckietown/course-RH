@@ -3,7 +3,7 @@
 Excerpt: Learn how to do proper python development 
 
 
-## Get the duckietown library template
+## Get the Duckietown library template
 
 A boilerplate is provided by the [library template repository](https://github.com/duckietown/template-library).
 
@@ -73,7 +73,7 @@ This repository describes a library called "`duckietown_pondcleaner`" and there 
    
 * `MANIFEST.in`: Deselects the tests to be included in the egg.
  
-* `setup.py`: Containes meta information, definition of the scripts, and 
+* `setup.py`: Contains meta information, definition of the scripts, and 
   the dependencies information.  
 
 ### Python code

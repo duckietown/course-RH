@@ -23,7 +23,7 @@ In Duckietown, everything runs in Docker containers. All you need in order to ru
 
 A boilerplate is provided [here](https://github.com/duckietown/template-ros). The repository contains a lot of files, but do not worry, we will analyze them one by one.
 
-Click on the green button that says "Use this template". 
+Click on the green button that says "Use this template".
 
 <figure>
   <img style="width:40em" src="images/use_this_template.png"/>
@@ -78,7 +78,7 @@ If you correctly installed Docker and the duckietown-shell, you should see a lon
 You can now run your container by executing the following command.
 
 
-    laptop $ dts devel run 
+    laptop $ dts devel run
 
 
 This will show the following message:
@@ -87,9 +87,9 @@ This will show the following message:
 The environment variable VEHICLE_NAME is not set. Using '![LAPTOP_HOSTNAME]'.
 WARNING: robot_type file does not exist. Using 'duckiebot' as default type.
 WARNING: robot_configuration file does not exist.
-=&gt; Launching app...
+= Launching app...
 This is an empty launch script. Update it to launch your application.
-&lt;= App terminated!
+= App terminated!
 ```
 
 **CONGRATULATIONS!** You just built and run your first ROS-based Duckietown-compliant Docker image.
@@ -106,7 +106,7 @@ A ROS package is simply a directory containing two special files, `package.xml` 
 
 Create the file `package.xml` inside `my_package` using your favorite text editor and place/adjust the following content inside it:
 
-<pre trim="1" class="html"> 
+<pre trim="1" class="html">
 <code trim="1" class="html">
 &lt;package&gt;
   &lt;name&gt;my_package&lt;/name&gt;
@@ -192,7 +192,7 @@ dt-exec rosrun my_package my_publisher_node.py
 
 Let us now re-build the image
 
-    laptop $ dts devel build -f 
+    laptop $ dts devel build -f
 
 Note: It is a good idea to make sure that the base image (`dt-ros-commons` in this case) is up to date. You can do so by adding the flag `--pull` to the command above, i.e., `dts devel build -f --pull`.
 
@@ -211,15 +211,15 @@ Press Ctrl-C to interrupt
 Done checking log file disk usage. Usage is &lt;1GB.
 
 started roslaunch server http://172.17.0.4:46725/
-ros_comm version 1.12.14
+ros_comm version 1.15.8
 
 
 SUMMARY
 ========
 
 PARAMETERS
- * /rosdistro: kinetic
- * /rosversion: 1.12.14
+ * /rosdistro: noetic
+ * /rosversion: 1.15.8
 
 NODES
 
@@ -230,10 +230,14 @@ ROS_MASTER_URI=http://172.17.0.4:11311/
 setting /run_id to 45fb649e-e14e-11e9-afd2-0242ac110004
 process[rosout-1]: started with pid [80]
 started core service [/rosout]
-[INFO] [1569606196.137620]: [/my_publisher_node] Initializing...
-[INFO] [1569606196.148146]: Publishing message: 'Hello World!'
-[INFO] [1569606197.149378]: Publishing message: 'Hello World!'
-[INFO] [1569606198.149470]: Publishing message: 'Hello World!'
+
+[INFO] [1602534741.100483]: [/my_publisher_node] Initializing...
+[INFO] [1602534741.137653]: [/my_publisher_node] Health status changed [STARTING] -> [STARTED]
+[INFO] [1602534741.139893]: Publishing message: 'Hello World!'
+[INFO] [1602534742.141385]: Publishing message: 'Hello World!'
+[INFO] [1602534743.141426]: Publishing message: 'Hello World!'
+[INFO] [1602534744.141346]: Publishing message: 'Hello World!'
+
 </code></pre>
 
 **CONGRATULATIONS!** You just built and run your own Duckietown-compliant ROS publisher!
@@ -303,23 +307,23 @@ Let us go back to our `src` folder and create a file called `my_subscriber_node.
 
 import os
 import rospy
-from duckietown import DTROS
+from duckietown.dtros import DTROS, NodeType
 from std_msgs.msg import String
 
-class MyNode(DTROS):
+class MySubscriberNode(DTROS):
 
     def __init__(self, node_name):
         # initialize the DTROS parent class
-        super(MyNode, self).__init__(node_name=node_name)
+        super(MySubscriberNode, self).__init__(node_name=node_name, node_type=NodeType.GENERIC)
         # construct publisher
-        self.sub = rospy.Subscriber("chatter", String, self.callback)
+        self.sub = rospy.Subscriber('chatter', String, self.callback)
 
     def callback(self, data):
         rospy.loginfo("I heard %s", data.data)
 
 if __name__ == '__main__':
     # create the node
-    node = MyNode(node_name='my_subscriber_node')
+    node = MySubscriberNode(node_name='my_subscriber_node')
     # keep spinning
     rospy.spin()
 
@@ -329,17 +333,16 @@ Once again, don’t forget to declare the file `my_subscriber_node.py` as an exe
 
     laptop $ chmod +x ./packages/my_package/src/my_subscriber_node.py
 
-Then edit the following line from `./launchers/default.sh`
+Then add the following line in `./launchers/default.sh`
 
 ```bash
-dt-exec rosrun my_package my_publisher_node.py
+dt-exec rosrun my_package my_subscriber_node.py
 ```
 
-to 
+after
 
 ```bash
 dt-exec rosrun my_package my_publisher_node.py
-dt-exec rosrun my_package my_subscriber_node.py
 ```
 
 Build the image on your Duckiebot again using
@@ -365,7 +368,7 @@ You should see the following output
 
 
 As a fun exercise, open a new terminal and run (without stopping the other process
-    
+
 
     laptop $ dts start_gui_tools ![MY_ROBOT]
 
@@ -374,41 +377,44 @@ and then inside it, run
     laptop $ rqt_graph
 
 
-Have you seen a graph like this before? 
+Have you seen a graph like this before?
 
 
 ## Launch files {#ros-launch status-ready}
 
 
-You edited the `launch.sh` file to remove <pre trim="1" class="html"> <code trim="1" class="html">roscore &#38;</code> </pre> when it was already running. What if there was something which starts a new `rosmaster` when it doesn't exist? 
+You edited the `launch.sh` file to remove <pre trim="1" class="html"> <code trim="1" class="html">roscore &#38;</code> </pre> when it was already running. What if there was something which starts a new `rosmaster` when it doesn't exist?
 
-You also added multiple `rosrun` commands to run the publisher and subscriber. Now imagine writing similar shell scripts for programming multiple robot behaviors. Some basic nodes such as a camera or a motor driver will be running in all operation scenarios of your Duckiebot, but other nodes will be added/removed to run specific behaviors (e.g. lane following with or without obstacle avoidance). You can think of this as an hierarchy where certain branches are activated optionally. 
+You also added multiple `rosrun` commands to run the publisher and subscriber. Now imagine writing similar shell scripts for programming multiple robot behaviors. Some basic nodes such as a camera or a motor driver will be running in all operation scenarios of your Duckiebot, but other nodes will be added/removed to run specific behaviors (e.g. lane following with or without obstacle avoidance). You can think of this as an hierarchy where certain branches are activated optionally.
 
 You can obviously write a "master" `launch.sh` which executes other shell scripts for heirarchies. How do you pass parameters between these scripts? Where do you store all of them? What if you want to use packages created by other people?
 
-ROS again saves the day by providing us with a tool that handles all this! This tool is called [roslaunch](http://wiki.ros.org/roslaunch). 
+ROS again saves the day by providing us with a tool that handles all this! This tool is called [roslaunch](http://wiki.ros.org/roslaunch).
 
 
 In this section, you will see how to use a ROS launch file to start both the publisher and subscriber together.
 
 Create a folder called `launch` inside your package and then create a file inside the folder called `multiple_nodes.launch` with the following content
 
-<pre trim="1" class="html"> 
+<pre trim="1" class="html">
 <code trim="1" class="html">
 &lt;launch&gt;
 
-  &lt;node pkg="my_package" type="my_node.py" name="my_node" output="screen"/&gt;
-  &lt;node pkg="my_package" type="my_node_subscriber.py" name="my_node_subscriber"  output="screen"/&gt;
+  &lt;node pkg="my_package" type="my_publisher_node.py" name="my_publisher_node" output="screen"/&gt;
+  &lt;node pkg="my_package" type="my_subscriber_node.py" name="my_subscriber_node"  output="screen"/&gt;
 
 &lt;/launch&gt;
 </code>
 </pre>
 
 
-Then replace the following lines inside `launch.sh` file 
-<pre trim="1" class="html"><code trim="1" class="html">rosrun my_package my_node.py &#38;
-rosrun my_package my_node_subscriber.py 
-</code></pre>
+Then replace the following lines inside `launch.sh` file
+<pre trim="1" class="html">
+<code trim="1" class="html">
+rosrun my_package my_node.py &#38;
+rosrun my_package my_node_subscriber.py
+</code>
+</pre>
 
 with
 
@@ -418,14 +424,14 @@ roslaunch my_package multiple_nodes.launch
 
 Build and run the image again like above. You should get the same result.
 
-You can read more about how to interpret launch files [here](http://wiki.ros.org/roslaunch/XML)
+You can read more about how to interpret launch files [here](http://wiki.ros.org/roslaunch/XML).
 
 ## Namespaces and Remapping {#ros-namespace-remap status=ready}
 
 If you went through the above link on launch files, you might have come across the terms namespaces and remapping. Understanding namespaces and remapping is very crucial to working with large ROS software stacks.
 
 
-Consider you have two Duckiebots - `donald` and `daisy`. You want them to communicate with each other so you use one `rosmaster` for both the robots. You have two copies of the same node running on each of them which grabs images from the camera and publishes them on a topic called `/image`. Do you see a problem here? Would it not be better if they were called `/donald/image` and `/daisy/image`? Here `donald` and `daisy` are ROS namespaces. 
+Consider you have two Duckiebots - `donald` and `daisy`. You want them to communicate with each other so you use one `rosmaster` for both the robots. You have two copies of the same node running on each of them which grabs images from the camera and publishes them on a topic called `/image`. Do you see a problem here? Would it not be better if they were called `/donald/image` and `/daisy/image`? Here `donald` and `daisy` are ROS namespaces.
 
 
 What if you were dealing with a robot which has two cameras? The names `/daisy/camera_left/image` and `/daisy/camera_right/image` are definitely the way to go. You should also be able to do this without writing a new Python file for the second camera.    
@@ -434,16 +440,20 @@ Let's see how we can do this. First of all, we need to make sure that all the to
 
 Edit the `./packages/my_package/launch/multiple_nodes.launch` to look like this:
 
-<pre trim="1" class="html"> <code trim="1" class="html">&lt;launch&gt;
+<pre trim="1" class="html"> <code trim="1" class="html">
+&lt;launch&gt;
 
   &lt;group ns="&#36;(arg veh)"&gt;  
-  
-    &lt;node pkg="my_package" type="my_node.py" name="my_node" output="screen"/&gt;
-    &lt;node pkg="my_package" type="my_node_subscriber.py" name="my_node_subscriber"  output="screen"/&gt;
+
+    &lt;node pkg="my_package" type="my_publisher_node.py" name="my_publisher_node" output="screen"/&gt;
+    &lt;node pkg="my_package" type="my_subscriber_node.py" name="my_subscriber_node"  output="screen"/&gt;
 
   &lt;/group&gt;
-   
-&lt;/launch&gt;</code></pre>
+
+&lt;/launch&gt;
+
+</code>
+</pre>
 
 Then edit the roslaunch command in `./launch.sh` as follows:
 
@@ -454,7 +464,7 @@ Build and run the image. Once again run `rqt_graph` like above. What changed?
 
 As a next step, we need to ensure that we can launch multiple instances of the same node with different names, and publishing topics corresponding to those names. For example, running two camera nodes with names `camera_left` and `camera_right` respectively, publishing topics `/my_robot/camera_left/image` and `/my_robot/camera_right/image`.
 
-Notice how the `node` tag in the launch file has a `name` attribute. You can have multiple `node` tags with different names for the same python node file. The name provided here will override the name you give inside the python file for the node. 
+Notice how the `node` tag in the launch file has a `name` attribute. You can have multiple `node` tags with different names for the same python node file. The name provided here will override the name you give inside the python file for the node.
 
 Edit the `./packages/my_package/launch/multiple_nodes.launch` file to have two publishers and two subscribers as below:
 
@@ -463,12 +473,11 @@ Edit the `./packages/my_package/launch/multiple_nodes.launch` file to have two p
 &lt;launch&gt;
 
   &lt;group ns="&#36;(arg veh)"&gt;  
-  
-    &lt;node pkg="my_package" type="my_node.py" name="my_node_1" output="screen"/&gt;
-    &lt;node pkg="my_package" type="my_node.py" name="my_node_2" output="screen"/&gt;
-    &lt;node pkg="my_package" type="my_node_subscriber.py" name="my_node_subscriber_1"  output="screen"/&gt;
-    &lt;node pkg="my_package" type="my_node_subscriber.py" name="my_node_subscriber_2"  output="screen"/&gt;
 
+    &lt;node pkg="my_package" type="my_publisher_node.py" name="my_publisher_node_1" output="screen"/&gt;
+    &lt;node pkg="my_package" type="my_publisher_node.py" name="my_publisher_node_2" output="screen"/&gt;
+    &lt;node pkg="my_package" type="my_subscriber_node.py" name="my_subscriber_node_1"  output="screen"/&gt;
+    &lt;node pkg="my_package" type="my_subscriber_node.py" name="my_subscriber_node_2"  output="screen"/&gt;
 
    &lt;/group&gt;
 
@@ -476,7 +485,7 @@ Edit the `./packages/my_package/launch/multiple_nodes.launch` file to have two p
 </code>
 </pre>
 
-Check `rqt_graph`. All communications are happening on one topic. You still cannot differentiate between topics being published by multiple nodes. Turns out doing that is very simple. Open the file `./packages/my_package/src/my_node.py` and edit the declaration of the publisher from
+Check `rqt_graph`. All communications are happening on one topic. You still cannot differentiate between topics being published by multiple nodes. Turns out doing that is very simple. Open the file `./packages/my_package/src/my_publisher_node.py` and edit the declaration of the publisher from
 
 ```python
 ...
@@ -505,16 +514,16 @@ Edit the `./packages/my_package/launch/multiple_nodes.launch` file to contain th
 &lt;launch&gt;
 
   &lt;group ns="&#36;(arg veh)"&gt;  
-  
-    &lt;node pkg="my_package" type="my_node.py" name="my_node_1" output="screen"/&gt;
-    &lt;node pkg="my_package" type="my_node.py" name="my_node_2" output="screen"/&gt;
 
-    &lt;node pkg="my_package" type="my_node_subscriber.py" name="my_node_subscriber_1"  output="screen"&gt;
-        &lt;remap from="~/chatter" to="/&#36;(arg veh)/my_node_1/chatter"/&gt;
+    &lt;node pkg="my_package" type="my_publisher_node.py" name="my_publisher_node_1" output="screen"/&gt;
+    &lt;node pkg="my_package" type="my_publisher_node.py" name="my_publisher_node_2" output="screen"/&gt;
+
+    &lt;node pkg="my_package" type="my_subscriber_node.py" name="my_subscriber_node_1"  output="screen"&gt;
+        &lt;remap from="~/chatter" to="/&#36;(arg veh)/my_publisher_node_1/chatter"/&gt;
     &lt;/node&gt;
-    
-    &lt;node pkg="my_package" type="my_node_subscriber.py" name="my_node_subscriber_2"  output="screen"&gt;
-        &lt;remap from="~/chatter" to="/&#36;(arg veh)/my_node_2/chatter"/&gt;
+
+    &lt;node pkg="my_package" type="my_subscriber_node.py" name="my_subscriber_node_2"  output="screen"&gt;
+        &lt;remap from="~/chatter" to="/&#36;(arg veh)/my_publisher_node_2/chatter"/&gt;
     &lt;/node&gt;
 
    &lt;/group&gt;
@@ -530,8 +539,8 @@ Now, replace
 <pre trim="1" class="html">
 <code trim="1" class="html">
 
-&lt;node pkg="my_package" type="my_node_subscriber.py" name="my_node_subscriber_1"  output="screen"&gt;
-    &lt;remap from="~/chatter" to="/&#36;(arg veh)/my_node_1/chatter"/&gt;
+&lt;node pkg="my_package" type="my_subscriber_node.py" name="my_subscriber_node_1"  output="screen"&gt;
+    &lt;remap from="~/chatter" to="/&#36;(arg veh)/my_publisher_node_1/chatter"/&gt;
 &lt;/node&gt;
 </code>
 </pre>
@@ -541,8 +550,8 @@ with
 <pre trim="1" class="html">
 <code trim="1" class="html">
 
-&lt;node pkg="my_package" type="my_node_subscriber.py" name="my_node_subscriber_1"  output="screen"&gt;
-    &lt;remap from="~/chatter" to="my_node_1/chatter"/&gt;
+&lt;node pkg="my_package" type="my_subscriber_node.py" name="my_subscriber_node_1"  output="screen"&gt;
+    &lt;remap from="~/chatter" to="my_publisher_node_1/chatter"/&gt;
 &lt;/node&gt;
 
 </code>
@@ -555,8 +564,8 @@ How about if you replace it with this:
 <pre trim="1" class="html">
 <code trim="1" class="html">
 
-&lt;node pkg="my_package" type="my_node_subscriber.py" name="my_node_subscriber_1"  output="screen"&gt;
-    &lt;remap from="~/chatter" to="/my_node_1/chatter"/&gt;
+&lt;node pkg="my_package" type="my_subscriber_node.py" name="my_subscriber_node_1"  output="screen"&gt;
+    &lt;remap from="~/chatter" to="/my_publisher_node_1/chatter"/&gt;
 &lt;/node&gt;
 </code>
 </pre>
@@ -566,8 +575,8 @@ How about this?
 <pre trim="1" class="html">
 <code trim="1" class="html">
 
-&lt;remap from="my_node_subscriber_1/chatter" to="my_node_1/chatter"/&gt;
-&lt;node pkg="my_package" type="my_node_subscriber.py" name="my_node_subscriber_1"  output="screen"/&gt;
+&lt;remap from="my_subscriber_node_1/chatter" to="my_publisher_node_1/chatter"/&gt;
+&lt;node pkg="my_package" type="my_subscriber_node.py" name="my_subscriber_node_1"  output="screen"/&gt;
 </code>
 </pre>
 
@@ -576,8 +585,8 @@ Or this?
 <pre trim="1" class="html">
 <code trim="1" class="html">
 
-&lt;remap from="~my_node_subscriber_1/chatter" to="~my_node_1/chatter"/&gt;
-&lt;node pkg="my_package" type="my_node_subscriber.py" name="my_node_subscriber_1"  output="screen"/&gt;
+&lt;remap from="~my_subscriber_node_1/chatter" to="~my_publisher_node_1/chatter"/&gt;
+&lt;node pkg="my_package" type="my_subscriber_node.py" name="my_subscriber_node_1"  output="screen"/&gt;
 </code>
 </pre>
 
@@ -585,7 +594,7 @@ Can you explain why some of them worked, while some did not?
 
 ## Multi-agent Communication {#ros-multi-agent status=ready}
 
-In this subsection, you will learn how to communicate between your laptop and the Duckiebot using ROS. Start by verifying that [Portainer](#exercise:portainer) is running. 
+In this subsection, you will learn how to communicate between your laptop and the Duckiebot using ROS. Start by verifying that [Portainer](#exercise:portainer) is running.
 
 Next, ping your Duckiebot to find its IP address:
 
@@ -598,7 +607,7 @@ Note down the address. Next, find the IP address of your computer. Note that you
 From the output, extract the IP address of the interface from which you are connected to your Duckiebot. For example, if you and your Duckiebot are both connected through WiFi, find your IP address from the WiFi connection.
 
 Run the following command:
-    
+
     laptop $ docker run -it --rm --net host duckietown/dt-ros-commons:daffy-amd64 /bin/bash
 
 Right now, you are inside a ROS-enabled container which is connected to the `rosmaster` running on your laptop. But you want to connect to the `rosmaster` on your duckiebot. To do this, inside the container, run:
@@ -606,13 +615,12 @@ Right now, you are inside a ROS-enabled container which is connected to the `ros
     laptop $ export ROS_MASTER_URI=http://![MY_ROBOT_IP]:11311/
     laptop $ export ROS_IP=![MY_IP]
 
-Replace `![MY_ROBOT_IP]` and `![MY_IP]` from the IP addresses extracted above, in that order. More information about these environment variables [here](wiki.ros.org/ROS/EnvironmentVariables).
+Replace `![MY_ROBOT_IP]` and `![MY_IP]` with the IP addresses extracted above, in that order. More information about these environment variables [here](http://wiki.ros.org/ROS/EnvironmentVariables).
 
 Now, run:
- 
+
     laptop $ rostopic list
 
-You should see topics from your Duckiebot appearing here. Viola! You have successfully established connection between your laptop and Duckiebot through ROS!
+You should see topics from your Duckiebot appearing here. Voilà! You have successfully established connection between your laptop and Duckiebot through ROS!
 
 Are you confused about the `11311` above? You should not be. This is simply the default port number that ROS uses for communication. You can change it for any other free port.
-
