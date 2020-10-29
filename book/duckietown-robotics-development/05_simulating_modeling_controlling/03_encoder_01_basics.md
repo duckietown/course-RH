@@ -89,15 +89,11 @@ class OdometryNode(DTROS):
         self.log("Initialized")
 
     def cb_encoder_data(self, wheel, msg):
-        """ Update encoder distance information from ticks
+        """ Update encoder distance information from ticks.
         """
 
     def cb_executed_commands(self, msg):
-        """ 
-        """
-
-    def start_reset(self,...):
-        """ Start or reset distance measurement.
+        """ Use the executed commands to determine the direction of travel of each wheel.
         """
         
 if __name__ == '__main__':
