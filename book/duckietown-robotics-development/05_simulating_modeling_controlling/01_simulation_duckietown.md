@@ -132,3 +132,8 @@ dt-exec Xvfb :1 -screen 0 1024x768x24 -ac +extension GLX +render -noreset
 export DISPLAY=:1
 ```
 
+### Troubleshooting
+
+Symptom: Despite following the above instructions, when I run my container I get an error like `pyglet.canvas.xlib.NoSuchDisplayException: Cannot connect to "None"`
+
+Resolution: It could be that display :1 is in use or cannot be used by the docker container. Try to change the display number to a higher number (e.g. :33). Check out [this post](https://stackoverflow.com/c/duckietown/questions/103) for more details.
