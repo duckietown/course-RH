@@ -199,7 +199,7 @@ with picamera.PiCamera() as camera:
             sleep(1)
 ```
 
-Instead use this fucntion template if you are using a DB21M based on Jetson Nano 2GB: 
+Instead use this fucntion template if you are using a Duckiebot MOOC Founder's Edition: 
 
 ```python
 #!/usr/bin/env python3
