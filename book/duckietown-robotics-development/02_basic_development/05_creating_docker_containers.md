@@ -199,7 +199,7 @@ with picamera.PiCamera() as camera:
             sleep(1)
 ```
 
-Instead use this fucntion template if you are using a DB-Beta: 
+Instead use this fucntion template if you are using a DB21M based on Jetson Nano 2GB: 
 
 ```python
 #!/usr/bin/env python3
@@ -207,17 +207,46 @@ import cv2
 import numpy as np
 from time import sleep
 
-cap = cv2.VideoCapture(2)
+
+def gst_pipeline_string():
+    # Parameters from the camera_node
+    # Refer here : https://github.com/duckietown/dt-duckiebot-interface/blob/daffy/packages/camera_driver/config/jetson_nano_camera_node/duckiebot.yaml
+    res_w, res_h, fps = 640, 480, 30
+    fov = 'full'
+    # find best mode
+    camera_mode = 3  # 
+    # compile gst pipeline
+    gst_pipeline = """ \
+            nvarguscamerasrc \
+            sensor-mode={} exposuretimerange="100000 80000000" ! \
+            video/x-raw(memory:NVMM), width={}, height={}, format=NV12, 
+                framerate={}/1 ! \
+            nvjpegenc ! \
+            appsink \
+        """.format(
+        camera_mode,
+        res_w,
+        res_h,
+        fps
+    )
+
+    # ---
+    print("Using GST pipeline: `{}`".format(gst_pipeline))
+    return gst_pipeline
+
+
+cap = cv2.VideoCapture()
+cap.open(gst_pipeline_string(), cv2.CAP_GSTREAMER)
 
 while(True):
     # Capture frame-by-frame
     ret, frame = cap.read()
-
-    #Put here your code!
+    # Put here your code!
     # You can now treat output as a normal numpy array
     # Do your magic here
 
     sleep(1)
+
 ```
 
 
@@ -229,6 +258,10 @@ Once you have your `color_detector.py` file ready to be tested, you can build it
 Do you remember what `-H` does? It takes the context (the folder in which you are) and ships it to the device specified by `-H` and build the container there. Once the container is built (typically it takes more time the first time), you can test it with:
 
     $ docker -H ![DUCKIEBOT_NAME].local run -it --privileged colordetector
+
+If you want to run the image on a DB21M instead, you must mount the `argus_socket` volume to allow using the GStreamer pipeline from the Docker container.
+
+    $ docker -H ![DUCKIEBOT_NAME].local run -it --privileged -v /tmp/argus_socket:/tmp/argus_socket colordetector
 
 Again there is the `-H` option (why?) and we also have the `--privileged` option. Do you remember what it does? Try to remove it and see what happens.
 
