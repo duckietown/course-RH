@@ -200,7 +200,7 @@ with picamera.PiCamera() as camera:
             sleep(1)
 ```
 
-Instead use this fucntion template if you are using a Duckiebot MOOC Founder's Edition: 
+Instead use this function template if you are using a Duckiebot MOOC Founder's Edition: 
 
 ```python
 #!/usr/bin/env python3
