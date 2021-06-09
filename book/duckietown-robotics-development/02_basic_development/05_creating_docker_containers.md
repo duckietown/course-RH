@@ -161,7 +161,8 @@ We will divide the image that the camera acquires into `N_SPLITS` equal horizont
 You can start your Dockerfile from `duckietown/dt-duckiebot-interface:daffy-arm32v7`. Most of the stuff you need should already be in there. Make a `requirements.txt` file where you list all your pip dependencies. We would expect that you would need at least `picamera` and `numpy`. Using a `requirements.txt` file is a good practice, especially when you work with big projects. The Dockerfile then copies this file and passes it to pip which installs all the packages you specify there. Finally copy your code in the container and specify it should be the starting command. Here’s an example Dockerfile: 
 
 ```Dockerfile
-FROM duckietown/dt-duckiebot-interface:daffy-arm32v7
+FROM duckietown/dt-duckiebot-interface:daffy-arm32v7 
+# use daffy-arm64v8 if you are using a Duckiebot MOOC Founder's Edition
 
 WORKDIR /color_detector_dir
 
