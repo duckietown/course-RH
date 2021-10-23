@@ -57,7 +57,7 @@ Follow the instructions, then transfer the SD card to the Raspberry Pi and power
 
 TODO: give some sign of life, maybe LEDs. 
 
-Your laptop should be connected to the same network as the Duckiebot, or alternately, you will need to share internet from your laptop to your Duckiebot via an ethernet cable. Further details are described in the [Duckiebot networking](http://docs.duckietown.org/DT18/opmanual_duckiebot/out/duckiebot_network.html) chapter.
+Your laptop should be connected to the same network as the Duckiebot, or alternately, you will need to share internet from your laptop to your Duckiebot via an ethernet cable. Further details are described in the [Duckiebot networking](https://docs.duckietown.org/DT18/opmanual_duckiebot/out/duckiebot_network.html) chapter.
 
 Wait for a minute or so, and then visit the following URL:
 

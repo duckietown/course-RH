@@ -1,4 +1,4 @@
-# Hands-on Robotics Development using Duckietown {#book:RH status=ready}
+# Hands-on Robotics Development using Duckietown {#book:book status=ready}
 
 
 <div id="logo-container">
