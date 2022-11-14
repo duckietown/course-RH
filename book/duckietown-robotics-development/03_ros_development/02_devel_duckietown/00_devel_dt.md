@@ -608,7 +608,7 @@ From the output, extract the IP address of the interface from which you are conn
 
 Run the following command:
 
-    laptop $ docker run -it --rm --net host duckietown/dt-ros-commons:daffy-amd64 /bin/bash
+    laptop $ docker run -it --rm --net host duckietown/dt-ros-commons:daffy /bin/bash
 
 Right now, you are inside a ROS-enabled container which is connected to the `rosmaster` running on your laptop. But you want to connect to the `rosmaster` on your duckiebot. To do this, inside the container, run:
 

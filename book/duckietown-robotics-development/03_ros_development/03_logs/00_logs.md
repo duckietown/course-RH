@@ -88,7 +88,7 @@ Using the following concepts,
 - [Getting data in and out of your container](#docker-poweruser)
 - [Communication between laptop and Duckiebot](#ros-multi-agent)
 
-create a Docker container on your laptop with a folder mounted on the container. You can use the image `duckietown/dt-ros-commons:daffy-amd64`. This time, however, instead of exporting the `ROS_MASTER_URI` and `ROS_IP` after entering the container, do it directly with the `docker run` command specifying environment variables. You already know how from [here](#exercise:ex-docker-envvar).
+create a Docker container on your laptop with a folder mounted on the container. You can use the image `duckietown/dt-ros-commons:daffy`. This time, however, instead of exporting the `ROS_MASTER_URI` and `ROS_IP` after entering the container, do it directly with the `docker run` command specifying environment variables. You already know how from [here](#exercise:ex-docker-envvar).
 
 Run the [lane following demo](+opmanual_duckiebot#demo-lane-following). Once your Duckiebot starts moving, record the camera images and the wheel commands from your Duckiebot using `rosbag` in the container you just created (the one with the folder mounted). In order to save the bags once the container is stopped you should record them in the mounted folder. To do that navigate to the mounted folder using the `cd` command and then run
 
