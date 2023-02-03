@@ -27,7 +27,7 @@ Run a new Ubuntu container where you mount your home directory in the container�
 
     laptop $ docker run -it -v ~:/home ubuntu
 
-In bash `~` is a shortcut for your home directory (`/home/your_username`). Now if you check which files are in the container’s home directory by running `ls /home` you’d see the files you have on your host machine. Try to change one of them (hopefully one not that important file) or to create a new one with, for example, `touch test.txt`. The easiest way to modify a simple file is to append a string to its content with something like `echo "hello" >> test.txt`. Check in your host home folder if the changes appear there as well. Now do the opposite: make a change in your host and observe if there’s a corresponding change in the container. To visualize the content of a simple file you can use the command `cat test.txt`.
+In bash `~` is a shortcut for your home directory (`/home/your_username`). Now if you check which files are in the container’s home directory by running `ls /home` you’d see the files you have on your host machine. Try to change one of them (make sure you don't change any important files) or to create a new one with, for example, `touch test.txt`. The easiest way to modify a simple file is to append a string to its content with something like `echo "hello" >> test.txt`. Check in your host home folder if the changes appear there as well. Now do the opposite: make a change in your host and observe if there’s a corresponding change in the container. To visualize the content of a simple file you can use the command `cat test.txt`.
 
 <end/>
 
